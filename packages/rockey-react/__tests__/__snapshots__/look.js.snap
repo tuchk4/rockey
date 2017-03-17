@@ -1,0 +1,33 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Look 1`] = `
+<div
+  className="Layer-{{ hash }}"
+>
+  Layer
+</div>
+`;
+
+exports[`Look 2`] = `
+<div
+  className="Layer-{{ hash }} PrimaryLayer-{{ hash }}"
+>
+  PrimaryLayer
+</div>
+`;
+
+exports[`Look shortcuts 1`] = `
+<button
+  className="Button-{{ hash }}"
+>
+  Button
+</button>
+`;
+
+exports[`Look shortcuts 2`] = `
+<button
+  className="Button-{{ hash }} PrimaryButton-{{ hash }}"
+>
+  PrimaryButton
+</button>
+`;

@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Anonymys rockey 1`] = `
+<div
+  className="AnonymysRockey1-{{ hash }}"
+>
+  Yo
+</div>
+`;
+
+exports[`rockey named shortcut and named extend 1`] = `
+<button
+  className="MyButton-{{ hash }} PrimaryButton-{{ hash }}"
+/>
+`;
+
+exports[`rockey named shortcut and named extend with custom className 1`] = `
+<button
+  className="YourButton-{{ hash }} custom-class-name"
+/>
+`;
+
+exports[`rockey named shortcut and named extend with custom className 2`] = `
+<button
+  className="YourButton-{{ hash }} PrimaryYourButton-{{ hash }} custom-class-name"
+/>
+`;
+
+exports[`rockey shortcut 1`] = `
+<button
+  className="ShortcutButton1-{{ hash }}"
+/>
+`;
+
+exports[`rockey shortcut and extend 1`] = `
+<button
+  className="ShortcutButton2-{{ hash }} AnonymysRockey2-{{ hash }}"
+/>
+`;
+
+exports[`rockey with displayName 1`] = `
+<div
+  className="MyDiv-{{ hash }}"
+>
+  Yo
+</div>
+`;

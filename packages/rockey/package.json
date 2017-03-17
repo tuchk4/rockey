@@ -1,0 +1,29 @@
+{
+  "name": "rockey",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "classnames": "^2.2.5",
+    "lodash": "^4.17.4"
+  },
+  "files": [
+    "index.js",
+    "condition.js",
+    "rule.js",
+    "insert.js",
+    "when.js",
+    "rockey.min.js",
+    "css",
+    "mixins",
+    "styleSheets",
+    "utils"
+  ],
+  "scripts": {
+    "prepublish": "../../node_modules/.bin/cross-env NODE_ENV=production ../../node_modules/.bin/babel -d ./ ./lib",
+    "dev": "../../node_modules/.bin/cross-env NODE_ENV=production ../../node_modules/.bin/babel -d ./ ./lib --watch"
+  }
+}
