@@ -1,6 +1,6 @@
 import isFunction from 'lodash/isFunction';
 import RockeyHoc from '../lib';
-import htmlTags from 'html-tags';
+import htmlTags from '../lib/htmlTags';
 
 describe('shortcuts', () => {
   it('shortcuts', () => {
