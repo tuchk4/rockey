@@ -1,7 +1,6 @@
 import React from 'react';
 import isString from 'lodash/isString';
 import classnames from 'classnames';
-
 import rule from 'rockey/rule';
 
 const WAS_CALLED_AS_CSS = 'WAS_CALLED_AS_CSS';

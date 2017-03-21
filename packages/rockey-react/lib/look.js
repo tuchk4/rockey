@@ -1,8 +1,9 @@
-import htmlTags from 'html-tags';
 import rule from 'rockey/rule';
 import when from 'rockey/when';
 import insert from 'rockey/insert';
 import condition from 'rockey/condition';
+
+import htmlTags from './htmlTags';
 
 import RockeyHoc from './';
 

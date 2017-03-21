@@ -1,6 +1,7 @@
 import isString from 'lodash/isString';
 import isArray from 'lodash/isArray';
-import htmlTags from 'html-tags';
+
+import htmlTags from './htmlTags';
 
 const ucfirst = s => s.charAt(0).toUpperCase() + s.slice(1);
 let counter = {};
