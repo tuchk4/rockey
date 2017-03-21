@@ -1,12 +1,11 @@
 {
   "name": "rockey-react",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "",
-  "main": "lib/index.js",
+  "main": "index.js",
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "main": "index.js",
   "files": [
     "./assignShorcuts.js",
     "./index.js",
