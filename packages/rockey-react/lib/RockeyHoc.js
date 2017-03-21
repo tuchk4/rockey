@@ -35,15 +35,7 @@ const renderReactComopnent = (
 };
 
 let anonymysRockeyCounter = 0;
-
-const uniq = new Map();
-const getUniqKey = (BaseComponent, strings, values) => {
-  return JSON.stringify([
-    BaseComponent.toString(),
-    ...strings,
-    ...(values || []),
-  ]);
-};
+const childCounter = {};
 
 export const getRockeyHoc = () => {
   const CreateRockeyHoc = (
@@ -97,8 +89,12 @@ export const getRockeyHoc = () => {
             };
 
           case WAS_CALLED_AS_CSS:
+            if (!childCounter[displayName]) {
+              childCounter[displayName] = 0;
+            }
+
             return CreateRockeyHoc(BaseComponent, {
-              displayName: 'Child' + displayName,
+              displayName: `Child${displayName}-${++childCounter[displayName]}`,
               parentCss: css,
             })(args[0], ...args.slice(1));
 

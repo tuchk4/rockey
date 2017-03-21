@@ -34,7 +34,7 @@ exports[`rockey shortcut 1`] = `
 
 exports[`rockey shortcut and extend 1`] = `
 <button
-  className="ChildShortcutButton2-{{ hash }} ShortcutButton2-{{ hash }}"
+  className="ChildShortcutButton2-1-{{ hash }} ShortcutButton2-{{ hash }}"
 />
 `;
 
