@@ -5,7 +5,7 @@ import htmlTags from 'html-tags';
 const ucfirst = s => s.charAt(0).toUpperCase() + s.slice(1);
 let counter = {};
 
-const assignShorcuts = RockeyHoc => {
+const assignShortcuts = RockeyHoc => {
   for (const tag of htmlTags) {
     // ---- tag hoc lazy creation
     Object.defineProperty(RockeyHoc, tag, {
@@ -38,4 +38,4 @@ const assignShorcuts = RockeyHoc => {
   }
 };
 
-export default assignShorcuts;
+export default assignShortcuts;

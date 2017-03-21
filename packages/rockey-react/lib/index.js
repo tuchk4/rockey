@@ -3,7 +3,7 @@ import insert from 'rockey/insert';
 import condition from 'rockey/condition';
 
 import { getRockeyHoc } from './RockeyHoc';
-import assignShorcuts from './assignShorcuts';
+import assignShortcuts from './assignShortcuts';
 import look from './look';
 
 const RootRockeyHoc = getRockeyHoc();
@@ -13,6 +13,6 @@ RootRockeyHoc.when = when;
 RootRockeyHoc.condition = condition;
 RootRockeyHoc.insert = insert;
 
-assignShorcuts(RootRockeyHoc);
+assignShortcuts(RootRockeyHoc);
 
 export default RootRockeyHoc;
