@@ -3,6 +3,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "postinstall": "lerna bootstrap --concurrency=1",
     "test": "jest --coverage",
     "build": "cross-env NODE_ENV=production babel -d ./build/rockey ./pakcages/rockey/",
     "test-dev": "jest --watch",
