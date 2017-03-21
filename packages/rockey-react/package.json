@@ -1,6 +1,6 @@
 {
   "name": "rockey-react",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "",
   "main": "index.js",
   "keywords": [],
@@ -9,6 +9,7 @@
   "files": [
     "assignShortcuts.js",
     "index.js",
+    "htmlTags.js",
     "look.js",
     "RockeyHoc.js",
     "rockey-react.min.js"
