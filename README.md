@@ -1,5 +1,7 @@
 # Rockey
 
+![Rockey travis build](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master)
+
 ```js
 import rockey from 'rockey';
 
