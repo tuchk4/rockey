@@ -10,7 +10,7 @@ exports[`Look 1`] = `
 
 exports[`Look 2`] = `
 <div
-  className="Layer-{{ hash }} PrimaryLayer-{{ hash }}"
+  className="PrimaryLayer-{{ hash }} Layer-{{ hash }}"
 >
   PrimaryLayer
 </div>
@@ -26,7 +26,7 @@ exports[`Look shortcuts 1`] = `
 
 exports[`Look shortcuts 2`] = `
 <button
-  className="Button-{{ hash }} PrimaryButton-{{ hash }}"
+  className="PrimaryButton-{{ hash }} Button-{{ hash }}"
 >
   PrimaryButton
 </button>

@@ -90,7 +90,7 @@ test('inserted above threshold', () => {
 
   const styles = [];
 
-  for (let i = 0; i <= 150; i++) {
+  for (let i = 0; i <= 200; i++) {
     styles.push(
       `
       Button${i} {

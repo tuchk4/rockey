@@ -14,7 +14,7 @@ const assignShorcuts = RockeyHoc => {
           if (args.length === 1 && isString(args[0])) {
             // ---- use with defined displayName
             return RockeyHoc(tag, {
-              displayName: args[0],
+              displayName: ucfirst(args[0]),
             });
           } else if (isArray(args[0])) {
             // ---- use as anonymys tag shortcut

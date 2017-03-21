@@ -97,7 +97,7 @@ export const getRockeyHoc = () => {
 
           case WAS_CALLED_AS_CSS:
             return CreateRockeyHoc(BaseComponent, {
-              displaName: 'Child' + displayName,
+              displayName: 'Child' + displayName,
               parentCss: css,
             })(args[0], ...args.slice(1));
 

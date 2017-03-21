@@ -10,7 +10,7 @@ exports[`Anonymys rockey 1`] = `
 
 exports[`rockey named shortcut and named extend 1`] = `
 <button
-  className="MyButton-{{ hash }} PrimaryButton-{{ hash }}"
+  className="PrimaryButton-{{ hash }} MyButton-{{ hash }}"
 />
 `;
 
@@ -22,7 +22,7 @@ exports[`rockey named shortcut and named extend with custom className 1`] = `
 
 exports[`rockey named shortcut and named extend with custom className 2`] = `
 <button
-  className="YourButton-{{ hash }} PrimaryYourButton-{{ hash }} custom-class-name"
+  className="PrimaryYourButton-{{ hash }} YourButton-{{ hash }} custom-class-name"
 />
 `;
 
@@ -34,7 +34,7 @@ exports[`rockey shortcut 1`] = `
 
 exports[`rockey shortcut and extend 1`] = `
 <button
-  className="ShortcutButton2-{{ hash }} AnonymysRockey2-{{ hash }}"
+  className="ChildShortcutButton2-{{ hash }} ShortcutButton2-{{ hash }}"
 />
 `;
 

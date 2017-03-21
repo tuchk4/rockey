@@ -562,7 +562,7 @@ describe('rule', () => {
     child.addParent(parent);
 
     expect(child.getClassList()).toEqual({
-      PrimaryButton: ['Button-{{ hash }}', 'PrimaryButton-{{ hash }}'],
+      PrimaryButton: ['PrimaryButton-{{ hash }}', 'Button-{{ hash }}'],
     });
 
     expect(insertRules.mock.calls.length).toEqual(2);
@@ -608,9 +608,9 @@ describe('rule', () => {
       })
     ).toEqual({
       PrimaryButton: [
+        'PrimaryButton-{{ hash }}',
         'Button-{{ hash }}',
         'Mixin-colored-{{ hash }}-1',
-        'PrimaryButton-{{ hash }}',
       ],
     });
 
