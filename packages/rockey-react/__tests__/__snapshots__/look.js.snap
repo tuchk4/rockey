@@ -16,6 +16,14 @@ exports[`Look 2`] = `
 </div>
 `;
 
+exports[`Look 3`] = `
+<div
+  className="PrimaryLayer-{{ hash }} Layer-{{ hash }} Mixin-anonWhen-{{ hash }}-1"
+>
+  PrimaryLayer
+</div>
+`;
+
 exports[`Look shortcuts 1`] = `
 <button
   className="Button-{{ hash }}"

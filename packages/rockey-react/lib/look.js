@@ -9,7 +9,7 @@ import RockeyHoc from './';
 
 const look = BaseComponent =>
   (...args) => {
-    const css = rule(args);
+    const css = rule(...args);
 
     return css.transform((tree, create) => {
       const components = Object.keys(tree.components);

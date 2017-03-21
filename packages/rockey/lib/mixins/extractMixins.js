@@ -18,6 +18,11 @@ const createMixin = ({ className, name, componentSequence, mixinFunc }) => {
 
   return (props, { withQueue = false, context } = {}) => {
     const raw = mixinFunc(props);
+
+    if (!raw) {
+      return null;
+    }
+
     let variateClassName = variations.get(raw);
 
     if (!variateClassName) {
@@ -25,10 +30,6 @@ const createMixin = ({ className, name, componentSequence, mixinFunc }) => {
       variations.set(raw, variateClassName);
     } else {
       return variateClassName;
-    }
-
-    if (!raw) {
-      return null;
     }
 
     let nesetdRaw = raw;

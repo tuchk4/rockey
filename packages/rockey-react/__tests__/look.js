@@ -2,7 +2,16 @@ import React from 'react';
 import isFunction from 'lodash/isFunction';
 import renderer from 'react-test-renderer';
 
+import * as styleSheetsModule from 'rockey/styleSheets';
+
+import rockey from '../lib/';
 import look from '../lib/look';
+
+const insertRules = jest.fn();
+const insertMixins = jest.fn();
+
+styleSheetsModule.insertRules = insertRules;
+styleSheetsModule.insertMixins = insertMixins;
 
 jest.mock('rockey/utils/hash', () => {
   return () => '{{ hash }}';
@@ -49,14 +58,21 @@ test('Look shortcuts', () => {
   expect(PrimaryButtonTree).toMatchSnapshot();
 });
 
+const theme = {
+  color: '#000',
+};
+
 test('Look', () => {
   const { Layer, PrimaryLayer } = look(({ children, className }) => (
     <div className={className}>{children}</div>
   ))`
     Layer {
       padding: 10px;
-      border: 1px solid #000;
-      color: green;
+      border: 1px solid ${theme.color};
+
+      ${rockey.when(props => props.green)`
+        color: green;
+      `}
     }
 
     PrimaryLayer {
@@ -67,11 +83,25 @@ test('Look', () => {
   expect(isFunction(Layer)).toBeTruthy();
   expect(isFunction(PrimaryLayer)).toBeTruthy();
 
+  insertRules.mockClear();
+
   const LayerTree = renderer.create(<Layer>Layer</Layer>).toJSON();
   expect(LayerTree).toMatchSnapshot();
+
+  expect(insertRules.mock.calls[0][0]).toEqual({
+    '.Layer-{{ hash }}': {
+      padding: '10px',
+      border: '1px solid #000',
+    },
+  });
 
   const PrimaryLayerTree = renderer
     .create(<PrimaryLayer>PrimaryLayer</PrimaryLayer>)
     .toJSON();
   expect(PrimaryLayerTree).toMatchSnapshot();
+
+  const PrimarySuccessLayerTree = renderer
+    .create(<PrimaryLayer green={true}>PrimaryLayer</PrimaryLayer>)
+    .toJSON();
+  expect(PrimarySuccessLayerTree).toMatchSnapshot();
 });
