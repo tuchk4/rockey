@@ -95,7 +95,7 @@ const css = (raw, mixinsFunctions) => {
           mixins,
           css,
           classList,
-          context
+          context,
         };
       } else {
         mixins = cached.mixins;
@@ -106,21 +106,24 @@ const css = (raw, mixinsFunctions) => {
 
       // rewrite object link to prevent original classList changing
       // when collecting mixins
-      const resultClassList = Object.keys(classList).reduce((mergedClassList, displayName) => {
-        mergedClassList[displayName] = [
-          ...classList[displayName],
-          ...parentFlatClassList
-        ];
+      const resultClassList = Object.keys(classList).reduce(
+        (mergedClassList, displayName) => {
+          mergedClassList[displayName] = [
+            ...classList[displayName],
+            ...parentFlatClassList,
+          ];
 
-        return mergedClassList;
-      }, {});
+          return mergedClassList;
+        },
+        {}
+      );
 
       for (let mixinComponent of Object.keys(mixins)) {
         const mixinClassNames = mixins[mixinComponent].mixins.reduce(
           (mixinClassNames, mixin) => {
             const mixinClassName = mixin(props, {
               withQueue: true,
-              context
+              context,
             });
 
             if (mixinClassName) {

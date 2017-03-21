@@ -33,7 +33,6 @@ const process = (styles, context) => {
 
     let animationName = styles['animation-name'];
     if (!context.animations[animationName]) {
-
       if (animationName !== 'none' && animationName.indexOf('none ') !== 0) {
         console.warn(
           `(generate error) "${animationName}" animation was requested but had not been defined`
@@ -180,7 +179,7 @@ export default (
     mixin = null,
     context = {
       animations: {},
-    }
+    },
   } = {}
 ) => {
   if (Object.keys(tree.styles).length) {

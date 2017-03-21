@@ -38,11 +38,11 @@ const createMixin = ({ className, name, componentSequence, mixinFunc }) => {
     }
 
     const parsed = parse(nesetdRaw);
-    
+
     const { css } = generateCss(parsed, {
       isRoot: false,
       mixin: '.' + variateClassName,
-      context
+      context,
     });
 
     if (withQueue) {

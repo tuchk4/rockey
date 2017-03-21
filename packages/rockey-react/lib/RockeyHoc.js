@@ -41,7 +41,7 @@ const getUniqKey = (BaseComponent, strings, values) => {
   return JSON.stringify([
     BaseComponent.toString(),
     ...strings,
-    ...(values || [])
+    ...(values || []),
   ]);
 };
 
@@ -53,11 +53,12 @@ export const getRockeyHoc = () => {
       parentCss = null,
     } = {}
   ) => {
-
     if (isString(BaseComponent)) {
       displayName = displayName || BaseComponent;
     } else if (!parentCss) {
-      displayName = displayName || BaseComponent.displayName || `AnonymysRockey${++anonymysRockeyCounter}`;
+      displayName = displayName ||
+        BaseComponent.displayName ||
+        `AnonymysRockey${++anonymysRockeyCounter}`;
     } else {
       displayName = displayName || `AnonymysRockey${++anonymysRockeyCounter}`;
     }

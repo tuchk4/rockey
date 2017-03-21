@@ -2,7 +2,6 @@ import mount from './mount';
 
 const sheet = mount();
 
-
 export const insertRules = css => sheet.insertRules(css);
 export const insertMixins = css => sheet.insertMixins(css);
 
