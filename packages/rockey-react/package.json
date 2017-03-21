@@ -1,6 +1,6 @@
 {
   "name": "rockey-react",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "",
   "main": "index.js",
   "keywords": [],
@@ -18,7 +18,7 @@
     "html-tags": "^1.1.1",
     "lodash": "^4.17.4",
     "react": "^15.4.2",
-    "rockey": "^0.0.3"
+    "rockey": "^0.0.4"
   },
   "scripts": {
     "prepublish": "../../node_modules/.bin/cross-env NODE_ENV=production ../../node_modules/.bin/babel -d ./ ./lib",
