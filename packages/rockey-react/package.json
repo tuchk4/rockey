@@ -7,11 +7,11 @@
   "author": "",
   "license": "ISC",
   "files": [
-    "./assignShorcuts.js",
-    "./index.js",
-    "./look.js",
-    "./RockeyHoc.js",
-    "./rockey-react.min.js"
+    "assignShortcuts.js",
+    "index.js",
+    "look.js",
+    "RockeyHoc.js",
+    "rockey-react.min.js"
   ],
   "dependencies": {
     "classnames": "^2.2.5",
