@@ -94,9 +94,12 @@ const QUEUE_THRESHOLD = 200;
 const INSERT_DELTA_TIME_THRESHOLD = 5;
 
 const insert = (node, tree) => {
+  const rules = tree.map(decl => toArray(decl).join(''));
   node.appendChild(
-    document.createTextNode(tree.map(decl => toArray(decl).join('')).join(''))
+    document.createTextNode(rules.join(''))
   );
+
+  return rules;
 };
 
 export default class StyleSheet {
@@ -150,8 +153,8 @@ export default class StyleSheet {
       clearTimeout(this.timeouts.rules);
     }
 
-    this.styleNode.textContent = '';
-    this.styleMixinsNode.textContent = '';
+    this.nodes.rules.textContent = '';
+    this.nodes.mixins.textContent = '';
   }
 
   insert(tree, type) {
@@ -177,16 +180,16 @@ export default class StyleSheet {
 
     const pop = () => {
       if (this.queue.rules.length) {
-        insert(this.nodes.rules, this.queue.rules);
+        const insertedRules = insert(this.nodes.rules, this.queue.rules);
 
-        this.rules = this.rules.concat(this.queue.rules);
+        this.rules = this.rules.concat(insertedRules);
         this.queue.rules.length = 0;
       }
 
       if (this.queue.mixins.length) {
-        insert(this.nodes.mixins, this.queue.mixins);
+        const insertedMixins = insert(this.nodes.mixins, this.queue.mixins);
 
-        this.mixins = this.rules.concat(this.queue.mixins);
+        this.mixins = this.rules.concat(insertedMixins);
         this.queue.mixins.length = 0;
       }
     }

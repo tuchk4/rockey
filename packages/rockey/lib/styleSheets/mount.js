@@ -4,10 +4,15 @@ const isBrowser = typeof document !== 'undefined';
 
 const createStyleSheet = type => {
   if (!isBrowser) {
+    // TODO: add support to server rendering
     return {
+      children: [],
       type,
       innerHtml: '',
-      appendChild: () => {}
+      textContent: '',
+      appendChild: (node) => {
+
+      }
     };
   } else {
     const mountNode = document.createElement('style');
