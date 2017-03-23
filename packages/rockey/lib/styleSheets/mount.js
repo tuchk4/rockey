@@ -7,6 +7,7 @@ const createStyleSheet = type => {
     return {
       type,
       innerHtml: '',
+      appendChild: () => {}
     };
   } else {
     const mountNode = document.createElement('style');
@@ -22,7 +23,7 @@ const createStyleSheet = type => {
 
 const mount = () => {
   return new StyleSheet({
-    main: createStyleSheet('main'),
+    rules: createStyleSheet('rules'),
     mixins: createStyleSheet('mixins'),
   });
 };
