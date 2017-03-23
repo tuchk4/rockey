@@ -10,9 +10,7 @@ const createStyleSheet = type => {
       type,
       innerHtml: '',
       textContent: '',
-      appendChild: (node) => {
-
-      }
+      appendChild: node => {},
     };
   } else {
     const mountNode = document.createElement('style');

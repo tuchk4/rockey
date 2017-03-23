@@ -7,7 +7,6 @@ const isKeyFrames = key => key.indexOf('@keyframes') === 0;
 
 // TODO: add className + description cache
 const stringifyRule = (className, description) => {
-
   // const cacheKey = JSON.stringify(description);
   // if (cache.has(cacheKey)) {
   //
@@ -20,14 +19,15 @@ const stringifyRule = (className, description) => {
 
   return `
     ${className} {
-        ${Object.keys(description).map(key => {
-        if (isArray(description[key])) {
-          return description[key].map(value => `${key}:${value};`).join('');
-        } else {
-          return `${key}:${description[key]};`;
-        }
-      })
-      .join('')}
+        ${Object.keys(description)
+    .map(key => {
+      if (isArray(description[key])) {
+        return description[key].map(value => `${key}:${value};`).join('');
+      } else {
+        return `${key}:${description[key]};`;
+      }
+    })
+    .join('')}
   }
   `;
 
@@ -95,9 +95,7 @@ const INSERT_DELTA_TIME_THRESHOLD = 5;
 
 const insert = (node, tree) => {
   const rules = tree.map(decl => toArray(decl).join(''));
-  node.appendChild(
-    document.createTextNode(rules.join(''))
-  );
+  node.appendChild(document.createTextNode(rules.join('')));
 
   return rules;
 };
@@ -130,7 +128,7 @@ export default class StyleSheet {
     this.nodes = {
       rules: sheets.rules,
       mixins: sheets.mixins,
-    }
+    };
   }
 
   getRules() {
@@ -192,7 +190,7 @@ export default class StyleSheet {
         this.mixins = this.rules.concat(insertedMixins);
         this.queue.mixins.length = 0;
       }
-    }
+    };
 
     if (delta <= INSERT_DELTA_TIME_THRESHOLD) {
       if (this.insertTimeout) {

@@ -50,36 +50,39 @@ test('inserted styles batching', () => {
   clearStyles();
   clearStylesCache();
 
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      const css1 = rule` Button1 { color: red; }`;
-      const css2 = rule` Button2 { color: red; }`;
-      const css3 = rule` Button3 { color: red; }`;
-      // const css4 = rule` Button4 { color: red; }`;
-      // const css5 = rule` Button5 { color: red; }`;
+  return new Promise(
+    (resolve, reject) => {
+      setTimeout(() => {
+        const css1 = rule` Button1 { color: red; }`;
+        const css2 = rule` Button2 { color: red; }`;
+        const css3 = rule` Button3 { color: red; }`;
+        // const css4 = rule` Button4 { color: red; }`;
+        // const css5 = rule` Button5 { color: red; }`;
 
-      css1.getClassList();
-      expect(getRules().length).toEqual(1);
+        css1.getClassList();
+        expect(getRules().length).toEqual(1);
 
-      css2.getClassList();
-      css3.getClassList();
-      expect(getRules().length).toEqual(1);
+        css2.getClassList();
+        css3.getClassList();
+        expect(getRules().length).toEqual(1);
 
+        setTimeout(
+          () => {
+            try {
+              expect(getRules().length).toEqual(3);
 
-
-        setTimeout(() => {
-          try {
-            expect(getRules().length).toEqual(3);
-
-            resolve();
-          } catch (e) {
-            reject(e);
-          }
-        }, 5);
+              resolve();
+            } catch (e) {
+              reject(e);
+            }
+          },
+          5
+        );
       });
-    }, 5);
+    },
+    5
+  );
 });
-
 
 // test('inserted styles with mixin', () => {
 //   clearStyles();
