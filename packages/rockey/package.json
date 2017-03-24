@@ -23,7 +23,7 @@
     "utils"
   ],
   "scripts": {
-    "prepublish": "../../node_modules/.bin/cross-env NODE_ENV=production ../../node_modules/.bin/babel -d ./ ./lib",
-    "dev": "../../node_modules/.bin/cross-env NODE_ENV=production ../../node_modules/.bin/babel -d ./ ./lib --watch"
+    "prepublish": "node tasks/prepublish.js",
+    "dev": "node tasks/prepublish.js --watch"
   }
 }
