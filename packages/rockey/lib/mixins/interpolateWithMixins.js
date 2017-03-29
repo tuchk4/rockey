@@ -2,6 +2,11 @@ import isFunction from 'lodash/isFunction';
 
 let mixinCounter = 0;
 
+const MIXIN_PREFIX = '_MIXIN_';
+
+const getMixinName = mixin =>
+  `${mixin.displayName || mixin.name || `${++mixinCounter}`}`;
+
 const interpolateWithMixins = (strings, ...values) => {
   const mixinsFunctions = {};
 
@@ -10,9 +15,9 @@ const interpolateWithMixins = (strings, ...values) => {
       let value = values[i] === undefined ? '' : values[i];
 
       if (isFunction(value)) {
-        const name = `${value.displayName || value.name || `${++mixinCounter}`}`;
+        const name = getMixinName(value);
 
-        let placeholder = `_MIXIN_${name}`;
+        let placeholder = `${MIXIN_PREFIX}${name}`;
 
         mixinsFunctions[placeholder] = value;
 
@@ -28,3 +33,13 @@ const interpolateWithMixins = (strings, ...values) => {
 };
 
 export default interpolateWithMixins;
+
+export const addMixins = (raw, mixinsFunctions, mixins) => {
+  mixins.forEach(mixin => {
+    const name = `${MIXIN_PREFIX}_ADDED_${getMixinName(mixin)}`;
+    raw = raw + ' ' + name;
+    mixinsFunctions[name] = mixin;
+  });
+
+  return raw;
+};

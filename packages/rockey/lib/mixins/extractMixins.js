@@ -1,6 +1,6 @@
 import parse from '../css/parse';
 import generateCss from '../css/generateCss';
-import { getClassName, generateMixinClassName } from '../css/getClassName';
+import { generateMixinClassName } from '../css/getClassName';
 import { insertMixins } from '../styleSheets';
 
 let queue = {};
@@ -49,7 +49,7 @@ const createMixin = ({ className, name, componentSequence, mixinFunc }) => {
     if (withQueue) {
       Object.assign(queue, css);
     } else {
-      insertMixin(css);
+      insertMixins(css);
     }
 
     return variateClassName;
@@ -98,13 +98,6 @@ const extractMixins = (
         componentSequence: componentSequence.concat(displayName),
       }),
     };
-    // mixins = mixins.concat(
-    //   extractMixins(
-    //     mixinsFunctions,
-    //     component,
-    //     componentSequence.concat(displayName)
-    //   )
-    // );
   }
 
   return mixins;

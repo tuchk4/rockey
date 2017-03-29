@@ -27,7 +27,6 @@ const when = (...args) => {
     if (displayName) {
       anonWhen.displayName = displayName;
     } else {
-      // anonWhen.displayName = `anonWhen${++counter}`;
       anonWhen.displayName = `anonWhen`;
     }
 

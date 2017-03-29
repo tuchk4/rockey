@@ -1,5 +1,4 @@
-import rule, { staticRule } from '../lib/rule';
-import when from '../lib/when';
+import rule from '../lib/rule';
 import { clearCachedClassNames } from '../lib/css/getClassName';
 import * as styleSheetsModule from '../lib/styleSheets';
 
@@ -14,8 +13,6 @@ styleSheetsModule.insertRules = insertRules;
 styleSheetsModule.insertMixins = insertMixins;
 
 console.warn = jest.fn();
-
-const primary = props => props.isPrimary ? `color: blue` : null;
 
 describe('animation', () => {
   beforeEach(() => {

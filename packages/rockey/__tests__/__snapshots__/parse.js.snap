@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`parse: customStyles 1`] = `
+Object {
+  "components": Object {
+    "Button": Object {
+      "components": Object {
+        "Icon": Object {
+          "components": Object {},
+          "mixins": Array [],
+          "modificators": Object {},
+          "styles": Object {
+            "color": "#fff",
+          },
+        },
+      },
+      "mixins": Array [],
+      "modificators": Object {},
+      "styles": Object {
+        "box-shadow": "0 2px 5px rgba(0, 0, 0, .26)",
+        "margin": "5px 6px",
+      },
+    },
+  },
+  "mixins": Array [],
+  "modificators": Object {},
+  "styles": Object {},
+}
+`;

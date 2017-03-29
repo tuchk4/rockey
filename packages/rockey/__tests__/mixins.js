@@ -1,5 +1,4 @@
 import parse from '../lib/css/parse';
-import generateCss from '../lib/css/generateCss';
 import interpolateWithMixins from '../lib/mixins/interpolateWithMixins';
 
 console.warn = jest.fn();
@@ -31,8 +30,6 @@ describe('mixins', () => {
     `;
 
     const generated = parse(raw);
-
-    const classNameMap = generated.classNameMap;
     expect(generated.components.Button.mixins.length).toEqual(1);
   });
 
@@ -46,7 +43,7 @@ describe('mixins', () => {
   //     }
   //   `;
   //
-  //   const generated = parse(raw);
+  //    parse(raw);
   //
   //   const classNameMap = generated.classNameMap;
   //   expect(generated.components.Button.mixins.length).toEqual(2);
@@ -60,7 +57,7 @@ describe('mixins', () => {
       }
     `;
 
-    const generated = parse(raw);
+    parse(raw);
 
     expect(console.warn.mock.calls.length).toEqual(1);
     expect(console.warn.mock.calls[0][1]).toEqual(
@@ -79,7 +76,7 @@ describe('mixins', () => {
       }
     `;
 
-    const generated = parse(raw);
+    parse(raw);
 
     expect(console.warn.mock.calls.length).toEqual(1);
     expect(console.warn.mock.calls[0][1]).toEqual(
@@ -98,7 +95,7 @@ describe('mixins', () => {
       }
     `;
 
-    const generated = parse(raw);
+    parse(raw);
 
     expect(console.warn.mock.calls.length).toEqual(1);
     expect(console.warn.mock.calls[0][1]).toEqual(
@@ -115,7 +112,7 @@ describe('mixins', () => {
       }
     `;
 
-    const generated = parse(raw);
+    parse(raw);
 
     expect(console.warn.mock.calls.length).toEqual(1);
     expect(console.warn.mock.calls[0][1]).toEqual(
@@ -133,7 +130,7 @@ describe('mixins', () => {
       ${primary}
     `;
 
-    const generated = parse(raw);
+    parse(raw);
 
     expect(console.warn.mock.calls.length).toEqual(1);
     expect(console.warn.mock.calls[0][1]).toEqual(
@@ -152,7 +149,7 @@ describe('mixins', () => {
       }
     `;
 
-    const generated = parse(raw);
+    parse(raw);
 
     expect(console.warn.mock.calls.length).toEqual(0);
   });
@@ -166,7 +163,7 @@ describe('mixins', () => {
       }
     `;
 
-    const generated = parse(raw);
+    parse(raw);
 
     expect(console.warn.mock.calls.length).toEqual(0);
   });
@@ -180,7 +177,7 @@ describe('mixins', () => {
       }
     `;
 
-    const generated = parse(raw);
+    parse(raw);
 
     expect(console.warn.mock.calls.length).toEqual(0);
   });
@@ -197,7 +194,7 @@ describe('mixins', () => {
       }
     `;
 
-    const generated = parse(raw);
+    parse(raw);
 
     expect(console.warn.mock.calls.length).toEqual(0);
   });
@@ -213,7 +210,7 @@ describe('mixins', () => {
       }
     `;
 
-    const generated = parse(raw);
+    parse(raw);
 
     expect(console.warn.mock.calls.length).toEqual(0);
   });
@@ -233,7 +230,7 @@ describe('mixins', () => {
       }
     `;
 
-    const generated = parse(raw);
+    parse(raw);
 
     expect(console.warn.mock.calls.length).toEqual(0);
   });
@@ -252,7 +249,7 @@ describe('mixins', () => {
   //     }
   //   `;
   //
-  //   const generated = parse(raw);
+  //    parse(raw);
   //
   //   expect(console.warn.mock.calls.length).toEqual(0);
   // });

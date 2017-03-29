@@ -50,7 +50,7 @@ const parseCss = styles => {
 
 // @replace-start
 const isModificatorStartSymbol = symbol => {
-  return symbol === '@' || symbol === ':';
+  return symbol === '@' || symbol === ':' || symbol === '[';
 };
 // @replace-end
 
@@ -63,6 +63,8 @@ const isModificatorEndSymbol = symbol => {
 const isStartsWithModificator = raw => {
   return 0 === raw.indexOf('@media') ||
     0 === raw.indexOf('@keyframes') ||
+    0 === raw.indexOf('[disabled]') ||
+    0 === raw.indexOf(':focus') ||
     0 === raw.indexOf(':before') ||
     0 === raw.indexOf(':after') ||
     0 === raw.indexOf(':disabled') ||
@@ -218,7 +220,7 @@ const parse = (raw, parent) => {
     if (parts.length === 1) {
       component = parts[0];
     } else {
-      styles += parts.slice(0, -1).join('');
+      styles += parts.slice(0, -1).join(' ');
       component = parts[parts.length - 1];
     }
 
@@ -343,8 +345,12 @@ const parse = (raw, parent) => {
 
       if (isPossibleMixin()) {
         saveMixinString(symbol);
-
         if (isMixinEndSymbol(symbol)) {
+          // TODO:
+          // if (isMixin()) {
+          //
+          // }
+
           possibleMixinEnd();
           // @remove-start
           if (isInValidMixinPosition()) {
@@ -398,7 +404,6 @@ const parse = (raw, parent) => {
     ) {
       openBracket();
       startComponent();
-
       // continue;
     } else if (symbol === '{') {
       if (isInsideComponent()) {

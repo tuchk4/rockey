@@ -4,7 +4,6 @@ const isContainer = key => key.indexOf('@media') === 0;
 const isKeyFrames = key => key.indexOf('@keyframes') === 0;
 
 // const cache = new Map();
-
 // TODO: add className + description cache
 const stringifyRule = (className, description) => {
   // const cacheKey = JSON.stringify(description);
@@ -16,7 +15,6 @@ const stringifyRule = (className, description) => {
   //     }
   //   `;
   // }
-
   return `
     ${className} {
         ${Object.keys(description)
@@ -90,7 +88,6 @@ const getSheetForTag = tag => {
   }
 };
 
-const QUEUE_THRESHOLD = 200;
 const INSERT_DELTA_TIME_THRESHOLD = 5;
 
 const insert = (node, tree) => {

@@ -273,3 +273,87 @@ describe('generate css', () => {
     });
   });
 });
+
+test('generate: customStyles', () => {
+  const generated = generateCss(
+    parse(
+      `
+    Button {
+      font-size: 14px;
+      line-height: 36px;
+      box-sizing: border-box;
+      text-transform: uppercase;
+      border-radius: 3px;
+      user-select: none;
+      border: 0;
+      font-weight: 500;
+      letter-spacing: .010em;
+      outline: 0;
+      cursor: pointer;
+      overflow: hidden;
+      display: inline-block;
+      white-space: nowrap;
+      padding: 0 6px;
+      margin: 6px 8px;
+      min-height: 36px;
+      min-width: 88px;
+      text-align: center;
+      transition:
+        box-shadow .4s cubic-bezier(.25,.8,.25,1),
+        background-color .4s cubic-bezier(.25,.8,.25,1);
+
+      background: transparent;
+
+      :not(:disabled):hover {
+        background-color: transparent
+      }
+
+      :focus {
+        outline: 0;
+      }
+
+      :disabled {
+        color: #ccc;
+        background: transparent;
+      }
+    }
+  `
+    )
+  );
+
+  expect(generated.css).toEqual({
+    [classname(generated.classNameMap.Button)]: {
+      background: 'transparent',
+      border: '0',
+      'border-radius': '3px',
+      'box-sizing': 'border-box',
+      cursor: 'pointer',
+      display: 'inline-block',
+      'font-size': '14px',
+      'font-weight': '500',
+      'letter-spacing': '.010em',
+      'line-height': '36px',
+      margin: '6px 8px',
+      'min-height': '36px',
+      'min-width': '88px',
+      outline: '0',
+      overflow: 'hidden',
+      padding: '0 6px',
+      'text-align': 'center',
+      'text-transform': 'uppercase',
+      transition: 'box-shadow .4s cubic-bezier(.25,.8,.25,1),        background-color .4s cubic-bezier(.25,.8,.25,1)',
+      'user-select': 'none',
+      'white-space': 'nowrap',
+    },
+    [classname(generated.classNameMap.Button) + ':disabled']: {
+      background: 'transparent',
+      color: '#ccc',
+    },
+    [classname(generated.classNameMap.Button) + ':focus']: {
+      outline: '0',
+    },
+    [classname(generated.classNameMap.Button) + ':not(:disabled)']: {
+      'background-color': 'transparent',
+    },
+  });
+});

@@ -2,15 +2,15 @@ import isPlainObject from 'lodash/isPlainObject';
 
 import parse from './css/parse';
 import generateCss from './css/generateCss';
-import interpolateWithMixins from './mixins/interpolateWithMixins';
+import interpolateWithMixins, {
+  addMixins,
+} from './mixins/interpolateWithMixins';
 import extractMixins, { insertQueuedMixins } from './mixins/extractMixins';
 import interpolateString from './utils/interpolateString';
 
 import { insertRules } from './styleSheets';
 
 export const clearStylesCache = () => {};
-
-const cachedClassList = new Map();
 
 const css = (raw, mixinsFunctions) => {
   let parent = null;
@@ -19,6 +19,14 @@ const css = (raw, mixinsFunctions) => {
 
   // ---
   return {
+    // get raw() {
+    //   return raw;
+    // },
+    //
+    // get parent() {
+    //   return parent;
+    // },
+
     wrapWith(displayName) {
       raw = `${displayName}{ ${raw} }`;
     },
@@ -29,6 +37,10 @@ const css = (raw, mixinsFunctions) => {
 
     addParent(rule) {
       parent = rule;
+    },
+
+    addMixins(mixins) {
+      raw = addMixins(raw, mixinsFunctions, mixins);
     },
 
     transform(transformFunc) {
@@ -146,7 +158,9 @@ const css = (raw, mixinsFunctions) => {
             mixinClassNames
           );
         } else {
-          throw new Error('zxxxc');
+          throw new Error(
+            'TODO: This case should be unreachable. Worng mixin position.'
+          );
         }
       }
 

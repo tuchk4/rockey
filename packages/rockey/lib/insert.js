@@ -1,5 +1,4 @@
 import { rule, staticRule } from './rule';
-import hash from './utils/hash';
 
 const insert = (strings, ...values) => {
   const css = rule(strings, ...values);

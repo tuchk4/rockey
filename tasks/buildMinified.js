@@ -8,25 +8,25 @@ const gzipSize = require('gzip-size');
 
 const { argv } = require('yargs');
 
-const package = argv.package;
+const packageName = argv.package;
 const allowed = ['rockey', 'rockey-react'];
 
-if (allowed.indexOf(package) === -1) {
-  throw new Error(`package "${package}" is not allowed`);
+if (allowed.indexOf(packageName) === -1) {
+  throw new Error(`package "${packageName}" is not allowed`);
 }
 
-const FILE_NAME = `${package}.min.js`;
+const FILE_NAME = `${packageName}.min.js`;
 
 const compiler = webpack({
-  context: path.resolve(__dirname, '..', 'packages', package),
+  context: path.resolve(__dirname, '..', 'packages', packageName),
 
   entry: './index.js',
 
   output: {
-    path: path.resolve(__dirname, '..', 'packages', package),
+    path: path.resolve(__dirname, '..', 'packages', packageName),
     filename: FILE_NAME,
-    library: toCamelCase(package),
-    libraryTarget: 'umd'
+    library: toCamelCase(packageName),
+    libraryTarget: 'umd',
   },
 
   externals: {
@@ -34,25 +34,26 @@ const compiler = webpack({
       root: 'React',
       commonjs2: 'react',
       commonjs: 'react',
-      amd: 'react'
-    }
+      amd: 'react',
+    },
   },
 
   plugins: [
     new webpack.optimize.UglifyJsPlugin({
+      beautify: false,
       compress: {
         warnings: false,
         drop_console: false,
-      }
+      },
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"',
     }),
-  ]
+  ],
 });
 
 console.log('');
-console.log(`   Minify: ${chalk.cyan(package)}`);
+console.log(`   Minify: ${chalk.cyan(packageName)}`);
 console.log('');
 
 compiler.run((err, stats) => {
@@ -60,12 +61,18 @@ compiler.run((err, stats) => {
     console.log(err);
   } else {
     const size = gzipSize.sync(
-      fs.readFileSync(path.resolve(__dirname, '..', 'packages', package, FILE_NAME))
+      fs.readFileSync(
+        path.resolve(__dirname, '..', 'packages', packageName, FILE_NAME)
+      )
     );
 
     console.log('');
-    console.log(`   output: ${chalk.cyan(`packages/${package}/${FILE_NAME}`)}`);
-    console.log(`   gzipped, the UMD build is ${chalk.green(prettyBytes(size))}`);
+    console.log(
+      `   output: ${chalk.cyan(`packages/${packageName}/${FILE_NAME}`)}`
+    );
+    console.log(
+      `   gzipped, the UMD build is ${chalk.green(prettyBytes(size))}`
+    );
     console.log('');
   }
 });

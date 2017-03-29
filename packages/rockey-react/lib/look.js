@@ -5,9 +5,22 @@ import condition from 'rockey/condition';
 
 import htmlTags from './htmlTags';
 
-import RockeyHoc from './';
+import rockey from './';
 
-const look = BaseComponent =>
+const createRockeyHoc = (BaseComponent, displayName, css) => {
+  if (BaseComponent.extends) {
+    return BaseComponent.extends(displayName, css);
+  } else {
+    return rockey(displayName, BaseComponent, css);
+  }
+};
+
+const look = (
+  BaseComponent,
+  {
+    extendBase = true,
+  } = {}
+) =>
   (...args) => {
     const css = rule(...args);
 
@@ -22,7 +35,7 @@ const look = BaseComponent =>
       }
 
       const parentDisplayName = components[0];
-      const parentCss = create({
+      const baseCss = create({
         components: {
           [parentDisplayName]: tree.components[parentDisplayName],
         },
@@ -38,20 +51,25 @@ const look = BaseComponent =>
             [displayName]: tree.components[displayName],
           },
         });
-        comopnentCss.addParent(parentCss);
 
-        children[displayName] = RockeyHoc(BaseComponent, {
+        if (extendBase) {
+          comopnentCss.addParent(baseCss);
+        }
+
+        children[displayName] = createRockeyHoc(
+          BaseComponent,
           displayName,
-          parentCss: comopnentCss,
-        });
+          comopnentCss
+        );
       }
 
       return {
         ...children,
-        [parentDisplayName]: RockeyHoc(BaseComponent, {
-          displayName: parentDisplayName,
-          parentCss: parentCss,
-        }),
+        [parentDisplayName]: createRockeyHoc(
+          BaseComponent,
+          parentDisplayName,
+          baseCss
+        ),
       };
     });
   };

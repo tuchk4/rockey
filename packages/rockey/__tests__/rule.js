@@ -1,6 +1,5 @@
 import rule, { staticRule, clearStylesCache } from '../lib/rule';
 import when from '../lib/when';
-import { getClassName } from '../lib/css/getClassName';
 import * as styleSheetsModule from '../lib/styleSheets';
 
 jest.mock('../lib/utils/hash', () => {

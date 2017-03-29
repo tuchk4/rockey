@@ -38,8 +38,7 @@ describe('condition', () => {
       return true;
     });
 
-    const color = '#ffcc33';
-    const raw = expect(
+    expect(
       () => conditionFunc`
       color: red;
       ${() => {}}

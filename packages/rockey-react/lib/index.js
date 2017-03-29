@@ -6,7 +6,28 @@ import { getRockeyHoc } from './RockeyHoc';
 import assignShortcuts from './assignShortcuts';
 import look from './look';
 
-const RootRockeyHoc = getRockeyHoc();
+const RockeyHoc = getRockeyHoc();
+
+const RootRockeyHoc = (...args) => {
+  let displayName = null;
+  let BaseComponent = null;
+  let parentCss = null;
+
+  // TODO: check types
+  if (args.length === 1) {
+    BaseComponent = args[0];
+    parentCss = args[1];
+  } else {
+    displayName = args[0];
+    BaseComponent = args[1];
+    parentCss = args[2];
+  }
+
+  return RockeyHoc(BaseComponent, {
+    displayName,
+    parentCss,
+  });
+};
 
 RootRockeyHoc.look = look;
 RootRockeyHoc.when = when;

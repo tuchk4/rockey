@@ -3,23 +3,23 @@
 exports[`inserted styles 1`] = `
 Array [
   "
+    .Button-{{ hash }}:not(:disabled) {
+        background-color:transparent;
+  }
+  
+    .Button-{{ hash }}:focus {
+        outline:0;
+  }
+  
+    .Button-{{ hash }}:disabled {
+        color:#ccc;background:transparent;
+  }
+  
     .Button-{{ hash }} {
-        color:red;
+        font-size:14px;line-height:36px;box-sizing:border-box;text-transform:uppercase;border-radius:3px;user-select:none;border:0;font-weight:500;letter-spacing:.010em;outline:0;cursor:pointer;overflow:hidden;display:inline-block;white-space:nowrap;padding:0 6px;margin:6px 8px;min-height:36px;min-width:88px;text-align:center;transition:box-shadow .4s cubic-bezier(.25,.8,.25,1),        background-color .4s cubic-bezier(.25,.8,.25,1);background:transparent;
   }
   ",
 ]
 `;
 
 exports[`inserted styles 2`] = `Array []`;
-
-exports[`inserted styles 3`] = `
-Array [
-  "
-    .Button-{{ hash }} {
-        color:red;
-  }
-  ",
-]
-`;
-
-exports[`inserted styles 4`] = `Array []`;

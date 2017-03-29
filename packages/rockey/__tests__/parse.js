@@ -644,3 +644,21 @@ describe('parse', () => {
     });
   });
 });
+
+test('parse: customStyles', () => {
+  const parsed = parse(
+    `
+    Button {
+      box-shadow: 0 2px 5px rgba(0, 0, 0, .26);
+
+      Icon {
+        color: #fff
+      }
+
+      margin: 5px 6px;
+    }
+  `
+  );
+
+  expect(parsed).toMatchSnapshot();
+});

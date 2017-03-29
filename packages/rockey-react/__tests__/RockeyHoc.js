@@ -33,9 +33,9 @@ test('Anonymys rockey', () => {
 });
 
 test('rockey with displayName', () => {
-  const MyDiv = rockey(({ className }) => <div className={className}>Yo</div>, {
-    displayName: 'MyDiv',
-  })`
+  const MyDiv = rockey('MyDiv', ({ className }) => (
+    <div className={className}>Yo</div>
+  ))`
     padding: 10px;
     border: 1px solid #000;
   `;

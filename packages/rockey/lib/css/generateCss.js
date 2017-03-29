@@ -1,5 +1,3 @@
-// import values from 'lodash/values';
-import hash from '../utils/hash';
 import mergeCss from './utils/mergeCss';
 
 import {
@@ -10,6 +8,8 @@ import {
 
 const getSelector = (displayName, parent, mixin) => {
   if (
+    displayName[0] !== '[' &&
+    displayName[0] !== ':' &&
     displayName[0] !== '.' &&
     displayName[0] !== '#' &&
     displayName[0] === displayName[0].toUpperCase()
@@ -25,7 +25,7 @@ const isKeyFrames = key => key.indexOf('@keyframes') === 0;
 const isNot = key => key.indexOf(':not') === 0;
 
 // TODO: remove code duplic.
-const process = (styles, context) => {
+function process(styles, context) {
   let processed = styles;
 
   if (styles['animation-name']) {
@@ -65,15 +65,15 @@ const process = (styles, context) => {
   }
 
   return processed;
-};
+}
 
-const processModificators = (
+function processModificators(
   tree,
   {
     parent,
     context,
   }
-) => {
+) {
   const css = {};
 
   for (const modificatorKey of Object.keys(tree.modificators)) {
@@ -128,16 +128,16 @@ const processModificators = (
   }
 
   return css;
-};
+}
 
-const generateCss = (
+function generateCss(
   tree,
   {
     parent,
     mixin,
     context,
   }
-) => {
+) {
   const css = {};
 
   if (parent && Object.keys(tree.modificators)) {
@@ -169,7 +169,7 @@ const generateCss = (
   }
 
   return css;
-};
+}
 
 export default (
   tree,

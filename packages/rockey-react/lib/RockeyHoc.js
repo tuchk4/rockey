@@ -1,121 +1,135 @@
 import React from 'react';
-import isString from 'lodash/isString';
 import classnames from 'classnames';
-import rule from 'rockey/rule';
 
-const WAS_CALLED_AS_CSS = 'WAS_CALLED_AS_CSS';
-const WAS_CALLED_AS_CSS_EXTENDS = 'WAS_CALLED_AS_CSS_EXTENDS';
+import isString from 'lodash/isString';
+import isObject from 'lodash/isObject';
+import isArray from 'lodash/isArray';
+
+import rule from 'rockey/rule';
+import look from './look';
+
+const WAS_CALLED_AS_ANONYM_EXTEND = 'WAS_CALLED_AS_ANONYM_EXTEND';
+const WAS_CALLED_AS_NAMED_EXTEND = 'WAS_CALLED_AS_NAMED_EXTEND';
 const WAS_CALLED_AS_REACT_COMPONENT = 'WAS_CALLED_AS_REACT_COMPONENT';
 
 const getCallType = (...args) => {
   if (args.length === 1 && isString(args[0])) {
-    return WAS_CALLED_AS_CSS_EXTENDS;
-  } else if (Array.isArray(args[0])) {
-    return WAS_CALLED_AS_CSS;
+    return WAS_CALLED_AS_NAMED_EXTEND;
+  } else if (isArray(args[0]) || (isObject(args[0]) && args.length === 1)) {
+    return WAS_CALLED_AS_ANONYM_EXTEND;
   } else {
     return WAS_CALLED_AS_REACT_COMPONENT;
   }
-};
-
-const renderReactComopnent = (
-  BaseComponent,
-  {
-    props,
-    css,
-    displayName,
-  }
-) => {
-  const classList = css ? css.getClassList(props) : {};
-
-  return React.createElement(BaseComponent, {
-    ...props,
-    className: classnames(classList[displayName], props.className),
-  });
 };
 
 let anonymysRockeyCounter = 0;
 const childCounter = {};
 
 export const getRockeyHoc = () => {
-  const CreateRockeyHoc = (
+  const RockeyHoc = (
     BaseComponent,
     {
       displayName,
-      parentCss = null,
+      parentName,
+      // mixins,
+      css,
     } = {}
   ) => {
-    if (isString(BaseComponent)) {
-      displayName = displayName || BaseComponent;
-    } else if (!parentCss) {
-      displayName = displayName ||
-        BaseComponent.displayName ||
-        `AnonymysRockey${++anonymysRockeyCounter}`;
-    } else {
-      displayName = displayName || `AnonymysRockey${++anonymysRockeyCounter}`;
-    }
+    const name = displayName || `AnonymysRockey${++anonymysRockeyCounter}`;
+    let queuedMixins = null;
 
-    return (...args) => {
+    const FlexibleRockeyHoc = (...args) => {
       const CALL_TYPE = getCallType(...args);
 
-      if (CALL_TYPE === WAS_CALLED_AS_REACT_COMPONENT) {
-        return renderReactComopnent(BaseComponent, {
-          props: args[0],
-          displayName,
-          css: parentCss,
-        });
-      }
+      switch (CALL_TYPE) {
+        // ----
+        case WAS_CALLED_AS_NAMED_EXTEND:
+          const childComponentName = args[0];
 
-      const css = rule(...args);
-
-      if (parentCss) {
-        css.addParent(parentCss);
-      }
-
-      css.wrapWith(displayName);
-
-      const RockeyHoc = function RockeyHoc(...args) {
-        const CALL_TYPE = getCallType(...args);
-
-        switch (CALL_TYPE) {
-          case WAS_CALLED_AS_CSS_EXTENDS:
-            return (childStrings, ...childValues) => {
-              const childCss = rule(childStrings, ...childValues);
-
-              return CreateRockeyHoc(BaseComponent, {
-                displayName: args[0],
-                parentCss: css,
-              })(childStrings, ...childValues);
-            };
-
-          case WAS_CALLED_AS_CSS:
-            if (!childCounter[displayName]) {
-              childCounter[displayName] = 0;
-            }
-
-            return CreateRockeyHoc(BaseComponent, {
-              displayName: `Child${displayName}-${++childCounter[displayName]}`,
-              parentCss: css,
-            })(args[0], ...args.slice(1));
-
-          case WAS_CALLED_AS_REACT_COMPONENT:
-            return renderReactComopnent(BaseComponent, {
-              props: args[0],
-              displayName,
+          return (...args) => {
+            return RockeyHoc(BaseComponent, {
+              displayName: childComponentName,
               css,
-            });
+            })(...args);
+          };
 
-          default:
-            throw new Error('Wrong component call');
-        }
-      };
+        // ----
+        case WAS_CALLED_AS_ANONYM_EXTEND:
+          const componentCss = rule(...args);
+          if (css) {
+            componentCss.addParent(css);
+          }
 
-      RockeyHoc.displayName = `Rockey(${displayName})`;
+          if (queuedMixins) {
+            componentCss.addMixins(queuedMixins);
+          }
 
-      return RockeyHoc;
+          if (!childCounter[name]) {
+            childCounter[name] = 0;
+          }
+
+          const childName = parentName
+            ? `Child${name}-${++childCounter[name]}`
+            : name;
+
+          componentCss.wrapWith(childName);
+
+          return RockeyHoc(BaseComponent, {
+            displayName: childName,
+            parentName: name,
+            css: componentCss,
+          });
+
+        // ----
+        case WAS_CALLED_AS_REACT_COMPONENT:
+          const props = args[0];
+          const classList = css ? css.getClassList(props) : {};
+          return React.createElement(BaseComponent, {
+            ...props,
+            className: classnames(classList[name], props.className),
+          });
+
+        default:
+          throw new Error('Wrong component call');
+      }
     };
+
+    FlexibleRockeyHoc.displayName = `Rockey(${name})`;
+
+    FlexibleRockeyHoc.extends = (displayName, childCss) => {
+      childCss.addParent(css);
+
+      return RockeyHoc(BaseComponent, {
+        displayName: displayName,
+        parentName: name,
+        css: childCss,
+      });
+    };
+
+    FlexibleRockeyHoc.look = (...args) => {
+      const component = RockeyHoc(BaseComponent, {
+        displayName,
+        parentName,
+        css,
+      });
+
+      return look(component, {
+        extendBase: false,
+      })(...args);
+    };
+
+    FlexibleRockeyHoc.addMixins = mixins => {
+      if (css) {
+        css.addMixins(mixins);
+      } else {
+        queuedMixins = mixins;
+      }
+    };
+
+    return FlexibleRockeyHoc;
   };
 
-  return CreateRockeyHoc;
+  return RockeyHoc;
 };
 
 const RockeyHoc = getRockeyHoc();
