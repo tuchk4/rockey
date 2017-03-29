@@ -83,7 +83,16 @@ export const getRockeyHoc = () => {
         // ----
         case WAS_CALLED_AS_REACT_COMPONENT:
           const props = args[0];
-          const classList = css ? css.getClassList(props) : {};
+          let classList = null;
+
+          if (css) {
+            classList = css.getClassList(props);
+          } else {
+            const emptyCss = rule``;
+            emptyCss.wrapWith(displayName);
+            classList = emptyCss.getClassList();
+          }
+
           return React.createElement(BaseComponent, {
             ...props,
             className: classnames(classList[name], props.className),
