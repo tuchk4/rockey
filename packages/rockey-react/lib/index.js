@@ -11,21 +11,21 @@ const RockeyHoc = getRockeyHoc();
 const RootRockeyHoc = (...args) => {
   let displayName = null;
   let BaseComponent = null;
-  let parentCss = null;
+  let css = null;
 
   // TODO: check types
   if (args.length === 1) {
     BaseComponent = args[0];
-    parentCss = args[1];
+    css = args[1];
   } else {
     displayName = args[0];
     BaseComponent = args[1];
-    parentCss = args[2];
+    css = args[2];
   }
 
   return RockeyHoc(BaseComponent, {
     displayName,
-    parentCss,
+    css,
   });
 };
 
