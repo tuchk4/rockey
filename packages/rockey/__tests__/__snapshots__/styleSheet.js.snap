@@ -3,7 +3,7 @@
 exports[`inserted styles 1`] = `
 Array [
   "
-    .Button-{{ hash }}:not(:disabled) {
+    .Button-{{ hash }}:not(:disabled):hover {
         background-color:transparent;
   }
   

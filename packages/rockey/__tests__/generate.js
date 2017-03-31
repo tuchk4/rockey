@@ -352,7 +352,7 @@ test('generate: customStyles', () => {
     [classname(generated.classNameMap.Button) + ':focus']: {
       outline: '0',
     },
-    [classname(generated.classNameMap.Button) + ':not(:disabled)']: {
+    [classname(generated.classNameMap.Button) + ':not(:disabled):hover']: {
       'background-color': 'transparent',
     },
   });

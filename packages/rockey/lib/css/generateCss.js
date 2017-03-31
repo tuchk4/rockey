@@ -106,8 +106,8 @@ function processModificators(
       let updatedModificatorKey = modificatorKey;
 
       if (isNot(modificatorKey)) {
-        const matches = modificatorKey.match(/\(([^\)]+)\)/);
-        updatedModificatorKey = `:not(${getSelector(matches[1])})`;
+        const matches = modificatorKey.match(/\(([^\)]+)\)(.*)/);
+        updatedModificatorKey = `:not(${getSelector(matches[1])})${matches[2]}`;
       }
 
       // merge?

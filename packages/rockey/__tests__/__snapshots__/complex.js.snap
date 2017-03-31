@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`complex 1`] = `
+Object {
+  "components": Object {
+    "Button": Object {
+      "components": Object {},
+      "mixins": Array [],
+      "modificators": Object {
+        ":not([disabled]):hover": Object {
+          "components": Object {},
+          "mixins": Array [],
+          "modificators": Object {},
+          "styles": Object {
+            "background-color": "transparent",
+          },
+        },
+      },
+      "styles": Object {},
+    },
+  },
+  "mixins": Array [],
+  "modificators": Object {},
+  "styles": Object {},
+}
+`;
+
+exports[`complex 2`] = `
+Object {
+  ".Button-{{ hash }}:not([disabled]):hover": Object {
+    "background-color": "transparent",
+  },
+}
+`;
