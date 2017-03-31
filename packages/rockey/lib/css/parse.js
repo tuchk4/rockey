@@ -60,21 +60,45 @@ const isModificatorEndSymbol = symbol => {
 };
 // @replace-end
 
+// TODO: make this func beauty :)
 const isStartsWithModificator = raw => {
   return 0 === raw.indexOf('@media') ||
     0 === raw.indexOf('@keyframes') ||
-    0 === raw.indexOf('[disabled]') ||
-    0 === raw.indexOf(':focus') ||
-    0 === raw.indexOf(':before') ||
-    0 === raw.indexOf(':after') ||
-    0 === raw.indexOf(':disabled') ||
-    0 === raw.indexOf(':hover') ||
-    0 === raw.indexOf(':link') ||
-    0 === raw.indexOf(':active') ||
-    0 === raw.indexOf(':visited') ||
-    0 === raw.indexOf(':nth') ||
+    0 === raw.indexOf('::after') ||
+    0 === raw.indexOf('::before') ||
+    0 === raw.indexOf('::first-letter') ||
     0 === raw.indexOf('::first-line') ||
-    0 === raw.indexOf(':not');
+    0 === raw.indexOf(':active') ||
+    0 === raw.indexOf(':checked') ||
+    0 === raw.indexOf(':disabled') ||
+    0 === raw.indexOf(':empty') ||
+    0 === raw.indexOf(':enabled') ||
+    0 === raw.indexOf(':first-child') ||
+    0 === raw.indexOf(':first-of-type') ||
+    0 === raw.indexOf(':focus') ||
+    0 === raw.indexOf(':hover') ||
+    0 === raw.indexOf(':in-range') ||
+    0 === raw.indexOf(':invalid') ||
+    0 === raw.indexOf(':lang') ||
+    0 === raw.indexOf(':last-child') ||
+    0 === raw.indexOf(':last-of-type') ||
+    0 === raw.indexOf(':link') ||
+    0 === raw.indexOf(':not') ||
+    0 === raw.indexOf(':nth-child') ||
+    0 === raw.indexOf(':nth-last-child') ||
+    0 === raw.indexOf(':nth-last-of-type') ||
+    0 === raw.indexOf(':nth-of-type') ||
+    0 === raw.indexOf(':only-of-type') ||
+    0 === raw.indexOf(':only-child') ||
+    0 === raw.indexOf(':optional') ||
+    0 === raw.indexOf(':out-of-range') ||
+    0 === raw.indexOf(':read-only') ||
+    0 === raw.indexOf(':read-write') ||
+    0 === raw.indexOf(':required') ||
+    0 === raw.indexOf(':root') ||
+    0 === raw.indexOf(':target') ||
+    0 === raw.indexOf(':valid') ||
+    0 === raw.indexOf(':visited');
 };
 
 const parse = (raw, parent) => {

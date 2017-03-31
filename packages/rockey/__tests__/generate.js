@@ -58,7 +58,7 @@ describe('generate css', () => {
       [`${classname(classNameMap.Button)}:hover`]: {
         color: 'purple',
       },
-      [`${classname(classNameMap.Button)}:before`]: {
+      [`${classname(classNameMap.Button)}::before`]: {
         width: '16px',
       },
       [`${classname(classNameMap.Button)} ${getClassName('Icon')}`]: {
@@ -258,7 +258,7 @@ describe('generate css', () => {
       [`${classname(classNameMap.Button)}:hover`]: {
         color: 'blue',
       },
-      [`${classname(classNameMap.Button)}:after`]: {
+      [`${classname(classNameMap.Button)}::after`]: {
         color: 'purple',
       },
       [`${classname(classNameMap.Button)}:nth-child(2)`]: {

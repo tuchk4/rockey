@@ -32,7 +32,7 @@ export const styles = {
         color: purple;
       }
 
-      :before {
+      ::before {
         width: 16px;
       }
 
@@ -182,7 +182,7 @@ export const styles = {
         color: blue;
       }
 
-      :after {
+      ::after {
         color: purple;
       }
 
@@ -281,7 +281,7 @@ describe('parse', () => {
                 color: 'purple',
               },
             },
-            ':before': {
+            '::before': {
               ...struct,
               styles: {
                 width: '16px',
@@ -614,7 +614,7 @@ describe('parse', () => {
                 color: 'blue',
               },
             },
-            ':after': {
+            '::after': {
               ...struct,
               styles: {
                 color: 'purple',
