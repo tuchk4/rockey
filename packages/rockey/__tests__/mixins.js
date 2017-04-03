@@ -61,7 +61,7 @@ describe('mixins', () => {
 
     expect(console.warn.mock.calls.length).toEqual(1);
     expect(console.warn.mock.calls[0][1]).toEqual(
-      'Button - color: red; background: _MIXIN_isRaised'
+      'Button - color: red; background: _MIXIN_isRaised1'
     );
   });
 
@@ -80,7 +80,7 @@ describe('mixins', () => {
 
     expect(console.warn.mock.calls.length).toEqual(1);
     expect(console.warn.mock.calls[0][1]).toEqual(
-      'Icon - background: _MIXIN_primary'
+      'Icon - background: _MIXIN_primary1'
     );
   });
 
@@ -99,7 +99,7 @@ describe('mixins', () => {
 
     expect(console.warn.mock.calls.length).toEqual(1);
     expect(console.warn.mock.calls[0][1]).toEqual(
-      ':hover - background: _MIXIN_primary'
+      ':hover - background: _MIXIN_primary1'
     );
   });
 

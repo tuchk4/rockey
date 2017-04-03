@@ -18,7 +18,6 @@ const createMixin = ({ className, name, componentSequence, mixinFunc }) => {
 
   return (props, { withQueue = false, context } = {}) => {
     const raw = mixinFunc(props);
-
     if (!raw) {
       return null;
     }

@@ -9,6 +9,7 @@ const getMixinName = mixin =>
 
 const interpolateWithMixins = (strings, ...values) => {
   const mixinsFunctions = {};
+  let counter = 0;
 
   const raw = strings.reduce(
     (rule, part, i) => {
@@ -17,8 +18,7 @@ const interpolateWithMixins = (strings, ...values) => {
       if (isFunction(value)) {
         const name = getMixinName(value);
 
-        let placeholder = `${MIXIN_PREFIX}${name}`;
-
+        let placeholder = `${MIXIN_PREFIX}${name}${++counter}`;
         mixinsFunctions[placeholder] = value;
 
         value = placeholder;
