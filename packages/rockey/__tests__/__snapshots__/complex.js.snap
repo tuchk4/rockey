@@ -1,5 +1,41 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`coma in modificators 1`] = `
+Object {
+  "components": Object {
+    "Layer": Object {
+      "components": Object {},
+      "mixins": Array [],
+      "modificators": Object {
+        "::after, ::before": Object {
+          "components": Object {},
+          "mixins": Array [],
+          "modificators": Object {},
+          "styles": Object {
+            "color": "red",
+          },
+        },
+      },
+      "styles": Object {},
+    },
+  },
+  "mixins": Array [],
+  "modificators": Object {},
+  "styles": Object {},
+}
+`;
+
+exports[`coma in modificators 2`] = `
+Object {
+  ".Layer-{{ hash }}::after": Object {
+    "color": "red",
+  },
+  ".Layer-{{ hash }}::before": Object {
+    "color": "red",
+  },
+}
+`;
+
 exports[`complex 1`] = `
 Object {
   "components": Object {

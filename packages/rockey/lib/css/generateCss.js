@@ -113,10 +113,19 @@ function processModificators(
 
       // merge?
       if (Object.keys(modificator.styles).length) {
-        css[`${parent}${updatedModificatorKey}`] = process(
-          modificator.styles,
-          context
-        );
+        if (updatedModificatorKey.indexOf(',') !== -1) {
+          updatedModificatorKey.split(',').forEach(mod => {
+            css[`${parent}${mod.trim()}`] = process(
+              modificator.styles,
+              context
+            );
+          });
+        } else {
+          css[`${parent}${updatedModificatorKey}`] = process(
+            modificator.styles,
+            context
+          );
+        }
       }
 
       Object.assign(

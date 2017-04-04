@@ -21,3 +21,20 @@ test('complex', () => {
 
   expect(generated.css).toMatchSnapshot();
 });
+
+test('coma in modificators', () => {
+  const parsed = parse(
+    `
+    Layer {
+      ::after, ::before {
+        color: red;
+      }
+    }
+  `
+  );
+
+  expect(parsed).toMatchSnapshot();
+  const generated = generateCss(parsed);
+
+  expect(generated.css).toMatchSnapshot();
+});
