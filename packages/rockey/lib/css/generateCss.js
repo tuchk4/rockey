@@ -111,20 +111,20 @@ function processModificators(
         updatedModificatorKey = `:not(${getSelector(matches[1])})${matches[2]}`;
       }
 
-      // merge?
       if (Object.keys(modificator.styles).length) {
         if (updatedModificatorKey.indexOf(',') !== -1) {
           updatedModificatorKey.split(',').forEach(mod => {
-            css[`${parent}${mod.trim()}`] = process(
-              modificator.styles,
-              context
-            );
+            mergeCss(css, {
+              [`${parent}${mod.trim()}`]: process(modificator.styles, context),
+            });
           });
         } else {
-          css[`${parent}${updatedModificatorKey}`] = process(
-            modificator.styles,
-            context
-          );
+          mergeCss(css, {
+            [`${parent}${updatedModificatorKey}`]: process(
+              modificator.styles,
+              context
+            ),
+          });
         }
       }
 
