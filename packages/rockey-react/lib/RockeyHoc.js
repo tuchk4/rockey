@@ -8,15 +8,15 @@ import isArray from 'lodash/isArray';
 import rule from 'rockey/rule';
 import look from './look';
 
-const WAS_CALLED_AS_ANONYM_EXTEND = 'WAS_CALLED_AS_ANONYM_EXTEND';
-const WAS_CALLED_AS_NAMED_EXTEND = 'WAS_CALLED_AS_NAMED_EXTEND';
+const COMPONENT_EXTENDS = 'COMPONENT_EXTENDS';
+const DEFINE_COMPONENT_NAME = 'DEFINE_COMPONENT_NAME';
 const WAS_CALLED_AS_REACT_COMPONENT = 'WAS_CALLED_AS_REACT_COMPONENT';
 
 const getCallType = (...args) => {
   if (args.length === 1 && isString(args[0])) {
-    return WAS_CALLED_AS_NAMED_EXTEND;
+    return DEFINE_COMPONENT_NAME;
   } else if (isArray(args[0]) || (isObject(args[0]) && args.length === 1)) {
-    return WAS_CALLED_AS_ANONYM_EXTEND;
+    return COMPONENT_EXTENDS;
   } else {
     return WAS_CALLED_AS_REACT_COMPONENT;
   }
@@ -25,6 +25,12 @@ const getCallType = (...args) => {
 let anonymysRockeyCounter = 0;
 const childCounter = {};
 
+const createEmtpyCss = name => {
+  const css = rule``;
+  css.wrapWith(name);
+  return css;
+};
+
 export const getRockeyHoc = () => {
   const RockeyHoc = (
     BaseComponent,
@@ -32,6 +38,7 @@ export const getRockeyHoc = () => {
       displayName,
       parentName,
       css,
+      at,
     } = {}
   ) => {
     const name = displayName || `AnonymysRockey${++anonymysRockeyCounter}`;
@@ -41,34 +48,39 @@ export const getRockeyHoc = () => {
       const CALL_TYPE = getCallType(...args);
 
       switch (CALL_TYPE) {
-        // ---- TODO: CALL DEFINE NAME
-        case WAS_CALLED_AS_NAMED_EXTEND:
+        case DEFINE_COMPONENT_NAME:
           const childComponentName = args[0];
 
           return RockeyHoc(BaseComponent, {
             displayName: childComponentName,
-            // parentName: name,
+            parentName: name,
             css,
+            at: DEFINE_COMPONENT_NAME,
           });
 
-        // ---- TODO: CALL WITH DEFINED CSS
-        case WAS_CALLED_AS_ANONYM_EXTEND:
+        case COMPONENT_EXTENDS:
           const componentCss = rule(...args);
-          if (css) {
-            componentCss.addParent(css);
-          }
 
           if (queuedMixins) {
             componentCss.addMixins(queuedMixins);
           }
 
-          if (!childCounter[parentName]) {
-            childCounter[parentName] = 0;
+          if (css) {
+            componentCss.addParent(css);
           }
 
-          const childName = parentName
-            ? `Child${parentName}-${++childCounter[parentName]}`
-            : name;
+          // TODO: ?
+          let childName = null;
+
+          if (parentName && at !== DEFINE_COMPONENT_NAME) {
+            if (!childCounter[parentName]) {
+              childCounter[parentName] = 0;
+            }
+
+            childName = `Child${parentName}-${++childCounter[parentName]}`;
+          } else {
+            childName = name;
+          }
 
           componentCss.wrapWith(childName);
 
@@ -76,21 +88,26 @@ export const getRockeyHoc = () => {
             displayName: childName,
             parentName: name,
             css: componentCss,
+            at: COMPONENT_EXTENDS,
           });
 
-        // ----
         case WAS_CALLED_AS_REACT_COMPONENT:
           const props = args[0];
+
           if (!css) {
-            // NOTE: mb overdie argument is not good
-            css = rule``;
-            css.wrapWith(name);
+            css = createEmtpyCss(name);
           }
 
           const classList = css.getClassList(props);
+          let selector = name;
+
+          if (at === DEFINE_COMPONENT_NAME) {
+            selector = parentName;
+          }
+
           return React.createElement(BaseComponent, {
             ...props,
-            className: classnames(classList[name], props.className),
+            className: classnames(classList[selector], props.className),
           });
 
         default:
@@ -100,8 +117,11 @@ export const getRockeyHoc = () => {
 
     FlexibleRockeyHoc.displayName = `Rockey(${name})`;
 
-    // TODO: check if css object available
     FlexibleRockeyHoc.extends = (displayName, childCss) => {
+      if (!css) {
+        css = createEmtpyCss(name);
+      }
+
       childCss.addParent(css);
 
       return RockeyHoc(BaseComponent, {
