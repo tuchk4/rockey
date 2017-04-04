@@ -82,6 +82,29 @@ test('rockey named shortcut and named extend', () => {
   expect(tree).toMatchSnapshot();
 });
 
+test('rockey shortcut and named extend', () => {
+  const Button = rockey.button`
+    color; red;
+    border: 1px solid #000;
+  `;
+
+  const PrimaryButton = Button('SuperPrimaryButton')`
+    color: blue;
+  `;
+
+  const SuperButton = PrimaryButton`
+    color: blue;
+  `;
+
+  const buttonTree = renderer.create(<Button />).toJSON();
+  const primaryButtonTree = renderer.create(<PrimaryButton />).toJSON();
+  const superButtonTree = renderer.create(<SuperButton />).toJSON();
+
+  expect(buttonTree).toMatchSnapshot();
+  expect(primaryButtonTree).toMatchSnapshot();
+  expect(superButtonTree).toMatchSnapshot();
+});
+
 test('rockey named shortcut and named extend with custom className', () => {
   const YourButton = rockey.button('YourButton')`
     color; red;

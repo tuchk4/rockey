@@ -18,15 +18,16 @@ const css = (raw, mixinsFunctions) => {
   let cached = null;
 
   return {
-    // raw() {
-    //   return raw;
-    // },
+    get raw() {
+      return raw;
+    },
 
     // get parent() {
     //   return parent;
     // },
 
     wrapWith(displayName) {
+      // NOTE: cannot wrap if raw is already tree
       raw = `${displayName}{ ${raw} }`;
     },
 

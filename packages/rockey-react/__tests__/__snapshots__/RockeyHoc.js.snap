@@ -38,6 +38,24 @@ exports[`rockey shortcut and extend 1`] = `
 />
 `;
 
+exports[`rockey shortcut and named extend 1`] = `
+<button
+  className="ShortcutButton3-{{ hash }}"
+/>
+`;
+
+exports[`rockey shortcut and named extend 2`] = `
+<button
+  className="SuperPrimaryButton-{{ hash }} ShortcutButton3-{{ hash }}"
+/>
+`;
+
+exports[`rockey shortcut and named extend 3`] = `
+<button
+  className="ChildSuperPrimaryButton-1-{{ hash }} SuperPrimaryButton-{{ hash }} ShortcutButton3-{{ hash }}"
+/>
+`;
+
 exports[`rockey with displayName 1`] = `
 <div
   className="MyDiv-{{ hash }}"

@@ -31,7 +31,6 @@ export const getRockeyHoc = () => {
     {
       displayName,
       parentName,
-      // mixins,
       css,
     } = {}
   ) => {
@@ -42,18 +41,17 @@ export const getRockeyHoc = () => {
       const CALL_TYPE = getCallType(...args);
 
       switch (CALL_TYPE) {
-        // ----
+        // ---- TODO: CALL DEFINE NAME
         case WAS_CALLED_AS_NAMED_EXTEND:
           const childComponentName = args[0];
 
-          return (...args) => {
-            return RockeyHoc(BaseComponent, {
-              displayName: childComponentName,
-              css,
-            })(...args);
-          };
+          return RockeyHoc(BaseComponent, {
+            displayName: childComponentName,
+            // parentName: name,
+            css,
+          });
 
-        // ----
+        // ---- TODO: CALL WITH DEFINED CSS
         case WAS_CALLED_AS_ANONYM_EXTEND:
           const componentCss = rule(...args);
           if (css) {
@@ -64,12 +62,12 @@ export const getRockeyHoc = () => {
             componentCss.addMixins(queuedMixins);
           }
 
-          if (!childCounter[name]) {
-            childCounter[name] = 0;
+          if (!childCounter[parentName]) {
+            childCounter[parentName] = 0;
           }
 
           const childName = parentName
-            ? `Child${name}-${++childCounter[name]}`
+            ? `Child${parentName}-${++childCounter[parentName]}`
             : name;
 
           componentCss.wrapWith(childName);
@@ -83,15 +81,13 @@ export const getRockeyHoc = () => {
         // ----
         case WAS_CALLED_AS_REACT_COMPONENT:
           const props = args[0];
-
           if (!css) {
-            // NOTE: mb overdie variable at arguments is not good
+            // NOTE: mb overdie argument is not good
             css = rule``;
             css.wrapWith(name);
           }
 
           const classList = css.getClassList(props);
-
           return React.createElement(BaseComponent, {
             ...props,
             className: classnames(classList[name], props.className),
@@ -104,6 +100,7 @@ export const getRockeyHoc = () => {
 
     FlexibleRockeyHoc.displayName = `Rockey(${name})`;
 
+    // TODO: check if css object available
     FlexibleRockeyHoc.extends = (displayName, childCss) => {
       childCss.addParent(css);
 
@@ -126,6 +123,7 @@ export const getRockeyHoc = () => {
       })(...args);
     };
 
+    // TODO: create css object instead of queuedMixns
     FlexibleRockeyHoc.addMixins = mixins => {
       if (css) {
         css.addMixins(mixins);
