@@ -22,6 +22,10 @@ const css = (raw, mixinsFunctions) => {
       return raw;
     },
 
+    get mixins() {
+      return mixinsFunctions;
+    },
+
     // get parent() {
     //   return parent;
     // },

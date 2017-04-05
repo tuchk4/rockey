@@ -8,6 +8,9 @@ import isArray from 'lodash/isArray';
 import rule from 'rockey/rule';
 import look from './look';
 
+import RockeyHocWithHandlers from './utils/RockeyHocWithHandlers';
+import { ROCKEY_MIXIN_HANDLER_KEY } from './handler';
+
 const COMPONENT_EXTENDS = 'COMPONENT_EXTENDS';
 const DEFINE_COMPONENT_NAME = 'DEFINE_COMPONENT_NAME';
 const WAS_CALLED_AS_REACT_COMPONENT = 'WAS_CALLED_AS_REACT_COMPONENT';
@@ -98,17 +101,40 @@ export const getRockeyHoc = () => {
             css = createEmtpyCss(name);
           }
 
-          const classList = css.getClassList(props);
           let selector = name;
 
           if (at === DEFINE_COMPONENT_NAME) {
             selector = parentName;
           }
 
-          return React.createElement(BaseComponent, {
-            ...props,
-            className: classnames(classList[selector], props.className),
+          const handlers = [];
+          Object.keys(css.mixins).forEach(key => {
+            const mixin = css.mixins[key];
+
+            if (mixin[ROCKEY_MIXIN_HANDLER_KEY]) {
+              handlers.push(mixin);
+            }
           });
+
+          if (handlers.length) {
+            return (
+              <RockeyHocWithHandlers
+                css={css}
+                selector={selector}
+                handlers={handlers}
+                BaseComponent={BaseComponent}
+                proxy={props}
+              />
+            );
+          } else {
+            const classList = css.getClassList(props);
+            const className = classnames(classList[selector], props.className);
+
+            return React.createElement(BaseComponent, {
+              ...props,
+              className,
+            });
+          }
 
         default:
           throw new Error('Wrong component call');

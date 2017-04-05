@@ -11,7 +11,9 @@
     "index.js",
     "htmlTags.js",
     "look.js",
+    "handler.js",
     "RockeyHoc.js",
+    "utils/RockeyHocWithHandlers.js",
     "rockey-react.min.js"
   ],
   "dependencies": {

@@ -1,12 +1,13 @@
+import isFunction from 'lodash/isFunction';
 import interpolateString from './utils/interpolateString';
 
-let counter = 0;
+// let counter = 0;
 
 const when = (...args) => {
   let displayName = null;
   let mixinFunc = null;
 
-  if (args.length == 1) {
+  if (args.length === 1) {
     mixinFunc = args[0];
   } else {
     displayName = args[0];
@@ -14,11 +15,18 @@ const when = (...args) => {
   }
 
   return (strings, ...values) => {
-    const inline = interpolateString(strings, ...values);
+    let inline = null;
+    let inlineAsFunction = null;
+
+    if (isFunction(strings)) {
+      inlineAsFunction = strings;
+    } else {
+      inline = interpolateString(strings, ...values);
+    }
 
     const anonWhen = (props = {}) => {
       if (mixinFunc(props)) {
-        return inline;
+        return inlineAsFunction ? inlineAsFunction(props) : inline;
       }
 
       return null;

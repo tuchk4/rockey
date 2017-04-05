@@ -5,6 +5,7 @@ import condition from 'rockey/condition';
 import { getRockeyHoc } from './RockeyHoc';
 import assignShortcuts from './assignShortcuts';
 import look from './look';
+import handler from './handler';
 
 const RockeyHoc = getRockeyHoc();
 
@@ -33,6 +34,7 @@ RootRockeyHoc.look = look;
 RootRockeyHoc.when = when;
 RootRockeyHoc.condition = condition;
 RootRockeyHoc.insert = insert;
+RootRockeyHoc.handler = handler;
 
 assignShortcuts(RootRockeyHoc);
 

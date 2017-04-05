@@ -2,6 +2,8 @@
 /index.js
 /look.js
 /RockeyHoc.js
+/handler.js
+/utils/RockeyHocWithHandlers.js
 /htmlTags.js
 /rockey-react.min.js
 /etc
