@@ -56,20 +56,27 @@ const look = (
           comopnentCss.addParent(baseCss);
         }
 
-        children[displayName] = createRockeyHoc(
+        const ChildRockeyHoc = createRockeyHoc(
           BaseComponent,
           displayName,
           comopnentCss
         );
+
+        children[displayName] = ChildRockeyHoc;
+        BaseComponent[displayName] = ChildRockeyHoc;
       }
+
+      const ParentRockeyHoc = createRockeyHoc(
+        BaseComponent,
+        parentDisplayName,
+        baseCss
+      );
+
+      BaseComponent[parentDisplayName] = ParentRockeyHoc;
 
       return {
         ...children,
-        [parentDisplayName]: createRockeyHoc(
-          BaseComponent,
-          parentDisplayName,
-          baseCss
-        ),
+        [parentDisplayName]: ParentRockeyHoc,
       };
     });
   };
