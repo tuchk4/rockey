@@ -44,25 +44,52 @@ const parseCss = styles => {
   cache.set(key, stylesJson);
   return stylesJson;
 };
+// TODO: make this func beauty :)
 const isStartsWithModificator = raw => {
   return 0 === raw.indexOf('@media') ||
     0 === raw.indexOf('@keyframes') ||
-    0 === raw.indexOf(':before') ||
-    0 === raw.indexOf(':after') ||
-    0 === raw.indexOf(':disabled') ||
-    0 === raw.indexOf(':hover') ||
-    0 === raw.indexOf(':link') ||
-    0 === raw.indexOf(':active') ||
-    0 === raw.indexOf(':visited') ||
-    0 === raw.indexOf(':nth') ||
+    0 === raw.indexOf('::after') ||
+    0 === raw.indexOf('::before') ||
+    0 === raw.indexOf('::first-letter') ||
     0 === raw.indexOf('::first-line') ||
-    0 === raw.indexOf(':not');
+    0 === raw.indexOf(':active') ||
+    0 === raw.indexOf(':checked') ||
+    0 === raw.indexOf(':disabled') ||
+    0 === raw.indexOf(':empty') ||
+    0 === raw.indexOf(':enabled') ||
+    0 === raw.indexOf(':first-child') ||
+    0 === raw.indexOf(':first-of-type') ||
+    0 === raw.indexOf(':focus') ||
+    0 === raw.indexOf(':hover') ||
+    0 === raw.indexOf(':in-range') ||
+    0 === raw.indexOf(':invalid') ||
+    0 === raw.indexOf(':lang') ||
+    0 === raw.indexOf(':last-child') ||
+    0 === raw.indexOf(':last-of-type') ||
+    0 === raw.indexOf(':link') ||
+    0 === raw.indexOf(':not') ||
+    0 === raw.indexOf(':nth-child') ||
+    0 === raw.indexOf(':nth-last-child') ||
+    0 === raw.indexOf(':nth-last-of-type') ||
+    0 === raw.indexOf(':nth-of-type') ||
+    0 === raw.indexOf(':only-of-type') ||
+    0 === raw.indexOf(':only-child') ||
+    0 === raw.indexOf(':optional') ||
+    0 === raw.indexOf(':out-of-range') ||
+    0 === raw.indexOf(':read-only') ||
+    0 === raw.indexOf(':read-write') ||
+    0 === raw.indexOf(':required') ||
+    0 === raw.indexOf(':root') ||
+    0 === raw.indexOf(':target') ||
+    0 === raw.indexOf(':valid') ||
+    0 === raw.indexOf(':visited');
 };
 const parse = (raw, parent) => {
   let openedBrackets = 0;
   let openedModificatorBrackets = 0;
   let styles = '';
   let component = null;
+  let combinedComponents = [];
   let components = {};
   let possibleModificator = 0;
   let modificators = {};
@@ -90,7 +117,10 @@ const parse = (raw, parent) => {
       }
     }
     if (!!!component && !!!modificator) {
-      if (!possibleModificator && (symbol === '@' || symbol === ':')) {
+      if (
+        !possibleModificator &&
+        (symbol === '@' || symbol === ':' || symbol === '[')
+      ) {
         possibleModificator = true;
         currentBackup = current;
         current = '';
@@ -112,12 +142,35 @@ const parse = (raw, parent) => {
       (symbol === '{' && openedBrackets === 0)
     ) {
       openedBrackets++;
-      const parts = current.trim().split(' ');
+      let parts = current.trim().split(' ');
       if (parts.length === 1) {
         component = parts[0];
       } else {
-        styles += parts.slice(0, -1).join('');
-        component = parts[parts.length - 1];
+        const components = [];
+        let i = 0;
+        for (i = parts.length - 1; i >= 0; i--) {
+          const part = parts[i];
+          const charCode = part.charCodeAt(0);
+          /* All chars starts with uppercase or xxx% for animations  */ if (
+            (charCode >= 65 && charCode <= 90) || part[part.length - 1] === '%'
+          ) {
+            components.push(part.replace(',', '').trim());
+          } else if (part[0] === '~' || part[0] === '+') {
+            components[components.length - 1] = part[0] +
+              components[components.length - 1];
+          } else {
+            break;
+          }
+        }
+        if (components.length) {
+          component = components[0];
+          combinedComponents = components.slice(1);
+          parts = parts.slice(0, i + 1);
+        } else {
+          component = parts[parts.length - 1];
+          parts = parts.slice(0, -1);
+        }
+        styles += parts.join(' ');
       }
       current = '';
       // continue;
@@ -144,6 +197,7 @@ const parse = (raw, parent) => {
           components[component] = parse(current, {
             parentType: 'component',
             name: component,
+            combinedComponents,
           });
           component = null;
           current = '';
@@ -176,10 +230,11 @@ const parse = (raw, parent) => {
   return {
     mixins,
     components,
+    combinedComponents: (parent && parent.combinedComponents) || [],
     styles: parseCss(styles),
     modificators,
   };
 };
 export default inline => {
-  return parse(inline.replace(/\r|\n/g, ''));
+  return parse(inline.replace(/\r|\n/g, '').replace(/\s+/g, ' '));
 };
