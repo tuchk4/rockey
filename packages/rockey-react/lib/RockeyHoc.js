@@ -101,15 +101,20 @@ export const getRockeyHoc = () => {
             css = createEmtpyCss(name);
           }
 
-          let selector = name;
-
+          let finshCssRule = null;
           if (at === DEFINE_COMPONENT_NAME) {
-            selector = parentName;
+            // wrap with name because Function is used as React comopnent
+            // but currect css object === parentCss. line :60
+            finshCssRule = createEmtpyCss(name);
+            finshCssRule.addParent(css);
+          } else {
+            finshCssRule = css;
           }
 
+          // collect handler mixins
           const handlers = [];
-          Object.keys(css.mixins).forEach(key => {
-            const mixin = css.mixins[key];
+          Object.keys(finshCssRule.mixins).forEach(key => {
+            const mixin = finshCssRule.mixins[key];
 
             if (mixin[ROCKEY_MIXIN_HANDLER_KEY]) {
               handlers.push(mixin);
@@ -119,16 +124,16 @@ export const getRockeyHoc = () => {
           if (handlers.length) {
             return (
               <RockeyHocWithHandlers
-                css={css}
-                selector={selector}
+                css={finshCssRule}
+                selector={name}
                 handlers={handlers}
                 BaseComponent={BaseComponent}
                 proxy={props}
               />
             );
           } else {
-            const classList = css.getClassList(props);
-            const className = classnames(classList[selector], props.className);
+            const classList = finshCssRule.getClassList(props);
+            const className = classnames(classList[name], props.className);
 
             return React.createElement(BaseComponent, {
               ...props,
