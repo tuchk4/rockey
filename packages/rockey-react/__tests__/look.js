@@ -105,3 +105,27 @@ test('Look', () => {
     .toJSON();
   expect(PrimarySuccessLayerTree).toMatchSnapshot();
 });
+
+test('Comopnent Look', () => {
+  const Button = rockey.button('MyBytton');
+
+  Button.look`
+    Primary {
+      color: blue;
+    }
+
+    Warning {
+      color: red;
+    }
+  `;
+
+  const PrimaryTree = renderer
+    .create(<Button.Primary>Button.Primary</Button.Primary>)
+    .toJSON();
+  expect(PrimaryTree).toMatchSnapshot();
+
+  const WarningTree = renderer
+    .create(<Button.Warning>Button.Warning</Button.Warning>)
+    .toJSON();
+  expect(WarningTree).toMatchSnapshot();
+});

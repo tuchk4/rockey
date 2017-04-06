@@ -341,7 +341,7 @@ test('generate: customStyles', () => {
       padding: '0 6px',
       'text-align': 'center',
       'text-transform': 'uppercase',
-      transition: 'box-shadow .4s cubic-bezier(.25,.8,.25,1),        background-color .4s cubic-bezier(.25,.8,.25,1)',
+      transition: 'box-shadow .4s cubic-bezier(.25,.8,.25,1), background-color .4s cubic-bezier(.25,.8,.25,1)',
       'user-select': 'none',
       'white-space': 'nowrap',
     },

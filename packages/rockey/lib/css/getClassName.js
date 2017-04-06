@@ -21,7 +21,7 @@ export const getNotYetDefiendComponents = () => {
   return components;
 };
 
-export const getClassName = (displayName, parent) => {
+export const getClassName = (displayName, parent, pre = '') => {
   let className = null;
 
   if (!comopnentsClassList.has(displayName)) {
@@ -35,7 +35,7 @@ export const getClassName = (displayName, parent) => {
     className = comopnentsClassList.get(displayName);
   }
 
-  return parent ? `${parent} .${className}` : `.${className}`;
+  return parent ? `${parent} ${pre}.${className}` : `${pre}.${className}`;
 };
 
 export default getClassName;

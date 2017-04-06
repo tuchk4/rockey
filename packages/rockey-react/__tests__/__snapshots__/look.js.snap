@@ -1,5 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Comopnent Look 1`] = `
+<button
+  className="Primary-{{ hash }} MyBytton-{{ hash }}"
+>
+  Button.Primary
+</button>
+`;
+
+exports[`Comopnent Look 2`] = `
+<button
+  className="Warning-{{ hash }} MyBytton-{{ hash }}"
+>
+  Button.Warning
+</button>
+`;
+
 exports[`Look 1`] = `
 <div
   className="Layer-{{ hash }}"

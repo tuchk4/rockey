@@ -107,6 +107,7 @@ const parse = (raw, parent) => {
   let styles = '';
 
   let component = null;
+  let combinedComponents = [];
   let components = {};
 
   let possibleModificator = 0;
@@ -239,13 +240,42 @@ const parse = (raw, parent) => {
 
   // @replace-start
   const startComponent = () => {
-    const parts = current.trim().split(' ');
-
+    let parts = current.trim().split(' ');
     if (parts.length === 1) {
       component = parts[0];
     } else {
-      styles += parts.slice(0, -1).join(' ');
-      component = parts[parts.length - 1];
+      const components = [];
+
+      let i = 0;
+      for (i = parts.length - 1; i >= 0; i--) {
+        const part = parts[i];
+        const charCode = part.charCodeAt(0);
+
+        /* All chars starts with uppercase or xxx% for animations  */
+        if (
+          (charCode >= 65 && charCode <= 90) || part[part.length - 1] === '%'
+        ) {
+          components.push(part.replace(',', '').trim());
+        } else if (part[0] === '~' || part[0] === '+') {
+          components[components.length - 1] = part[0] +
+            components[components.length - 1];
+        } else {
+          break;
+        }
+      }
+
+      if (components.length) {
+        component = components[0];
+        combinedComponents = components.slice(1);
+
+        parts = parts.slice(0, i + 1);
+      } else {
+        component = parts[parts.length - 1];
+
+        parts = parts.slice(0, -1);
+      }
+
+      styles += parts.join(' ');
     }
 
     current = '';
@@ -277,6 +307,7 @@ const parse = (raw, parent) => {
     components[component] = parse(current, {
       parentType: 'component',
       name: component,
+      combinedComponents,
     });
 
     component = null;
@@ -370,11 +401,6 @@ const parse = (raw, parent) => {
       if (isPossibleMixin()) {
         saveMixinString(symbol);
         if (isMixinEndSymbol(symbol)) {
-          // TODO:
-          // if (isMixin()) {
-          //
-          // }
-
           possibleMixinEnd();
           // @remove-start
           if (isInValidMixinPosition()) {
@@ -389,10 +415,7 @@ const parse = (raw, parent) => {
                 `${parent.name} - ${nearestCode}`
               );
             } else {
-              console.warn(
-                'seems wrong mixin position',
-                `mixin should not be at root`
-              );
+              console.warn('mixin should not be at root');
             }
           }
           // @remove-end
@@ -475,11 +498,12 @@ const parse = (raw, parent) => {
   return {
     mixins,
     components,
+    combinedComponents: (parent && parent.combinedComponents) || [],
     styles: parseCss(styles),
     modificators,
   };
 };
 
 export default inline => {
-  return parse(inline.replace(/\r|\n/g, ''));
+  return parse(inline.replace(/\r|\n/g, '').replace(/\s+/g, ' '));
 };

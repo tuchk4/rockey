@@ -634,4 +634,25 @@ describe('rule', () => {
       },
     });
   });
+
+  it('mixin inside mixin', () => {
+    const css = rule`
+      Button {
+        color: red;
+
+        ${props => {
+      return `
+            color: green;
+            ${function(props) {
+        return 'color: red';
+      }}
+          `;
+    }}
+      }
+    `;
+
+    expect(() => css.getClassList()).toThrow(
+      'Mixin restuls should not contain other mixins'
+    );
+  });
 });

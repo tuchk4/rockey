@@ -1,8 +1,6 @@
 import isFunction from 'lodash/isFunction';
 import interpolateString from './utils/interpolateString';
 
-// let counter = 0;
-
 const when = (...args) => {
   let displayName = null;
   let mixinFunc = null;

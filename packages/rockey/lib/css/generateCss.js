@@ -7,6 +7,12 @@ import {
 } from './getClassName';
 
 const getSelector = (displayName, parent, mixin) => {
+  let pre = '';
+  if (displayName[0] === '+' || displayName[0] === '~') {
+    pre = displayName[0];
+    displayName = displayName.slice(1);
+  }
+
   if (
     displayName[0] !== '[' &&
     displayName[0] !== '@' &&
@@ -15,9 +21,9 @@ const getSelector = (displayName, parent, mixin) => {
     displayName[0] !== '#' &&
     displayName[0] === displayName[0].toUpperCase()
   ) {
-    return `${mixin || ''}${getClassName(displayName, parent)}`;
+    return `${mixin || ''}${getClassName(displayName, parent, pre)}`;
   } else {
-    return `${mixin || ''}${parent ? `${parent} ${displayName}` : `${displayName}`}`;
+    return `${mixin || ''}${parent ? `${parent} ${pre}${displayName}` : `${pre}${displayName}`}`;
   }
 };
 
@@ -113,9 +119,11 @@ function processModificators(
 
       if (Object.keys(modificator.styles).length) {
         if (updatedModificatorKey.indexOf(',') !== -1) {
+          const processed = process(modificator.styles, context);
+
           updatedModificatorKey.split(',').forEach(mod => {
             mergeCss(css, {
-              [`${parent}${mod.trim()}`]: process(modificator.styles, context),
+              [`${parent}${mod.trim()}`]: processed,
             });
           });
         } else {
@@ -135,6 +143,8 @@ function processModificators(
         })
       );
     }
+
+    // console.log('processModificators', modificator.combinedComponents);
   }
 
   return css;
@@ -174,12 +184,26 @@ function generateCss(
     );
 
     if (Object.keys(component.styles).length) {
-      css[selector] = process(component.styles, context);
+      // css[selector] = process(component.styles, context);
+      css[
+        [
+          selector,
+          ...component.combinedComponents.map(s =>
+            getSelector(s, parent, mixin)),
+        ].join(',')
+      ] = process(component.styles, context);
     }
+
+    // console.log('generateCss', css);
+    // console.log('generateCss', component.combinedComponents);
   }
 
   return css;
 }
+
+// function merge(css, styles, context) {
+//
+// }
 
 export default (
   tree,

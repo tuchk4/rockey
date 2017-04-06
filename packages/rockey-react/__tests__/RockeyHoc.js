@@ -106,7 +106,9 @@ test('rockey shortcut and named extend', () => {
 });
 
 test('rockey named shortcut and named extend with custom className', () => {
-  const YourButton = rockey.button('YourButton')`
+  const BaseButton = rockey.button('BaseButton');
+
+  const YourButton = BaseButton('YourButton')`
     color; red;
     border: 1px solid #000;
   `;
@@ -114,6 +116,19 @@ test('rockey named shortcut and named extend with custom className', () => {
   const PrimaryButton = YourButton('PrimaryYourButton')`
     color: blue;
   `;
+
+  const SecondaryButton = YourButton`
+    color: blue;
+  `;
+
+  const SuperButton = SecondaryButton('SuperButton')`
+    color: blue;
+  `;
+
+  const BaseButtonTree = renderer
+    .create(<BaseButton className="custom-class-name" />)
+    .toJSON();
+  expect(BaseButtonTree).toMatchSnapshot();
 
   const YourButtonTree = renderer
     .create(<YourButton className="custom-class-name" />)
@@ -124,4 +139,14 @@ test('rockey named shortcut and named extend with custom className', () => {
     .create(<PrimaryButton className="custom-class-name" />)
     .toJSON();
   expect(PrimaryButtonTree).toMatchSnapshot();
+
+  const SecondaryButtonTree = renderer
+    .create(<SecondaryButton className="custom-class-name" />)
+    .toJSON();
+  expect(SecondaryButtonTree).toMatchSnapshot();
+
+  const SuperButtonTree = renderer
+    .create(<SuperButton className="custom-class-name" />)
+    .toJSON();
+  expect(SuperButtonTree).toMatchSnapshot();
 });

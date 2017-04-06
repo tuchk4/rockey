@@ -2,12 +2,15 @@
 
 exports[`coma in modificators 1`] = `
 Object {
+  "combinedComponents": Array [],
   "components": Object {
     "Layer": Object {
+      "combinedComponents": Array [],
       "components": Object {},
       "mixins": Array [],
       "modificators": Object {
         "::after, ::before": Object {
+          "combinedComponents": Array [],
           "components": Object {},
           "mixins": Array [],
           "modificators": Object {},
@@ -38,12 +41,15 @@ Object {
 
 exports[`complex 1`] = `
 Object {
+  "combinedComponents": Array [],
   "components": Object {
     "Button": Object {
+      "combinedComponents": Array [],
       "components": Object {},
       "mixins": Array [],
       "modificators": Object {
         ":not([disabled]):hover": Object {
+          "combinedComponents": Array [],
           "components": Object {},
           "mixins": Array [],
           "modificators": Object {},
@@ -65,6 +71,24 @@ exports[`complex 2`] = `
 Object {
   ".Button-{{ hash }}:not([disabled]):hover": Object {
     "background-color": "transparent",
+  },
+}
+`;
+
+exports[`complex selectors 1`] = `
+Object {
+  ".Bar-{{ hash }}": Object {
+    "color": "green",
+    "font-size": "10px",
+  },
+  ".Bar-{{ hash }} +.NextChild-{{ hash }}": Object {
+    "color": "red'",
+  },
+  ".Bar-{{ hash }} .SucceessButton-{{ hash }},.Bar-{{ hash }} .PrimaryButton-{{ hash }},.Bar-{{ hash }} .WarningButton-{{ hash }}": Object {
+    "padding": "10px",
+  },
+  ".Bar-{{ hash }} ~.NextFirst-{{ hash }}": Object {
+    "padding": "20px",
   },
 }
 `;

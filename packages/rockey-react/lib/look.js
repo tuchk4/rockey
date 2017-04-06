@@ -1,3 +1,4 @@
+import React from 'react';
 import rule from 'rockey/rule';
 import when from 'rockey/when';
 import insert from 'rockey/insert';
@@ -88,7 +89,14 @@ look.insert = insert;
 for (const tag of htmlTags) {
   // ---- tag hoc lazy creation
   Object.defineProperty(look, tag, {
-    get: () => (...args) => look(tag)(...args),
+    get: () =>
+      (...args) => {
+        const TagComponent = props => {
+          return React.createElement(tag, props);
+        };
+
+        return look(TagComponent)(...args);
+      },
   });
 }
 

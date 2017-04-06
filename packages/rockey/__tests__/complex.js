@@ -38,3 +38,32 @@ test('coma in modificators', () => {
 
   expect(generated.css).toMatchSnapshot();
 });
+
+test('complex selectors', () => {
+  const parsed = parse(
+    `
+    Bar {
+      font-size: 10px;
+
+      + NextChild {
+        color: red'
+      }
+
+      ~ NextFirst {
+        padding: 20px;
+      }
+
+      color: green;
+
+      WarningButton, PrimaryButton, SucceessButton {
+        padding: 10px;
+      }
+    }
+  `
+  );
+
+  // expect(parsed).toMatchSnapshot();
+  const generated = generateCss(parsed);
+
+  expect(generated.css).toMatchSnapshot();
+});

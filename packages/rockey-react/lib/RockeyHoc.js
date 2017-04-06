@@ -169,9 +169,15 @@ export const getRockeyHoc = () => {
         css,
       });
 
-      return look(component, {
+      const childComponents = look(component, {
         extendBase: false,
       })(...args);
+
+      Object.keys(childComponents).forEach(key => {
+        FlexibleRockeyHoc[key] = childComponents[key];
+      });
+
+      return childComponents;
     };
 
     // TODO: create css object instead of queuedMixns

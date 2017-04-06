@@ -2,10 +2,13 @@
 
 exports[`parse: customStyles 1`] = `
 Object {
+  "combinedComponents": Array [],
   "components": Object {
     "Button": Object {
+      "combinedComponents": Array [],
       "components": Object {
         "Icon": Object {
+          "combinedComponents": Array [],
           "components": Object {},
           "mixins": Array [],
           "modificators": Object {},

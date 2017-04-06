@@ -206,6 +206,7 @@ export const struct = {
   components: {},
   styles: {},
   modificators: {},
+  combinedComponents: [],
 };
 
 describe('parse', () => {

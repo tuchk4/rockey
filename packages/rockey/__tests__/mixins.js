@@ -115,7 +115,7 @@ describe('mixins', () => {
     parse(raw);
 
     expect(console.warn.mock.calls.length).toEqual(1);
-    expect(console.warn.mock.calls[0][1]).toEqual(
+    expect(console.warn.mock.calls[0][0]).toEqual(
       'mixin should not be at root'
     );
   });
@@ -133,7 +133,7 @@ describe('mixins', () => {
     parse(raw);
 
     expect(console.warn.mock.calls.length).toEqual(1);
-    expect(console.warn.mock.calls[0][1]).toEqual(
+    expect(console.warn.mock.calls[0][0]).toEqual(
       'mixin should not be at root'
     );
   });
@@ -234,23 +234,4 @@ describe('mixins', () => {
 
     expect(console.warn.mock.calls.length).toEqual(0);
   });
-
-  // ---
-  // it('mixins results should contain only strings', () => {
-  //   const { raw } = interpolateWithMixins`
-  //     Button {
-  //       color: red
-  //       ${() => {
-  //         return `
-  //           color: blue;
-  //           ${() => {}}
-  //         `
-  //       }}
-  //     }
-  //   `;
-  //
-  //    parse(raw);
-  //
-  //   expect(console.warn.mock.calls.length).toEqual(0);
-  // });
 });

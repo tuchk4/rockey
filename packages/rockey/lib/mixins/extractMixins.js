@@ -22,6 +22,14 @@ const createMixin = ({ className, name, componentSequence, mixinFunc }) => {
       return null;
     }
 
+    if (
+      raw.indexOf('return') !== -1 ||
+      raw.indexOf('=>') !== -1 ||
+      raw.indexOf('function') !== -1
+    ) {
+      throw new Error('Mixin restuls should not contain other mixins');
+    }
+
     let variateClassName = variations.get(raw);
 
     if (!variateClassName) {
