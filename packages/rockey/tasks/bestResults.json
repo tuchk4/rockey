@@ -39,7 +39,7 @@
     "postcssNested": 5.254,
     "postcssNestedSafeParser": 5.067,
     "parseOptimized": 2.508,
-    "parse": 3.535
+    "parse": 3.252
   },
   "50000": {
     "postcssNested": 297.777,

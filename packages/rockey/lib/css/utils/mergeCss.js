@@ -7,9 +7,7 @@ const mergeCss = (main, child) => {
     const value = child[key];
 
     if (main[key]) {
-      Object.assign(main, {
-        [key]: Object.assign({}, main[key], value),
-      });
+      Object.assign(main[key], value);
     } else {
       Object.assign(main, {
         [key]: value,

@@ -184,26 +184,22 @@ function generateCss(
     );
 
     if (Object.keys(component.styles).length) {
-      // css[selector] = process(component.styles, context);
-      css[
-        [
+      if (component.combinedComponents.length) {
+        const combined = [
           selector,
           ...component.combinedComponents.map(s =>
             getSelector(s, parent, mixin)),
-        ].join(',')
-      ] = process(component.styles, context);
-    }
+        ].join(',');
 
-    // console.log('generateCss', css);
-    // console.log('generateCss', component.combinedComponents);
+        css[combined] = process(component.styles, context);
+      } else {
+        css[selector] = process(component.styles, context);
+      }
+    }
   }
 
   return css;
 }
-
-// function merge(css, styles, context) {
-//
-// }
 
 export default (
   tree,
