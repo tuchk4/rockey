@@ -10,6 +10,7 @@
     "optimize-parse": "node ./packages/rockey/tasks/optimizeParse.js",
     "best-results": "cross-env NODE_ENV=development babel-node ./packages/rockey/tasks/bestResults.js",
     "dev": "node ./tasks/dev",
+    "clean": "node ./tasks/clean",
     "minify": "node ./tasks/minify",
     "precommit": "lint-staged"
   },
@@ -41,6 +42,7 @@
     "pretty-bytes": "^4.0.2",
     "react": "^15.4.2",
     "react-test-renderer": "^15.4.2",
+    "rimraf": "^2.6.1",
     "spawn-sync": "^1.0.15",
     "webpack": "^2.2.1",
     "yargs": "^7.0.2"
