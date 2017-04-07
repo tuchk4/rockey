@@ -4,6 +4,12 @@ import classnames from 'classnames';
 export default class RockeyHocWithHandlers extends React.Component {
   missedHandler = false;
 
+  componentWillMount() {
+    this.props.handlers.forEach(handler => {
+      handler.clear();
+    });
+  }
+
   render() {
     const {
       handlers,

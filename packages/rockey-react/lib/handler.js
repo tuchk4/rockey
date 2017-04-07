@@ -12,6 +12,11 @@ const handler = (event, condition) => {
     };
 
     mixin[ROCKEY_MIXIN_HANDLER_KEY] = true;
+
+    mixin.clear = () => {
+      eventArguments = null;
+    };
+
     mixin.assign = (...args) => {
       if (condition(...args)) {
         eventArguments = args;
