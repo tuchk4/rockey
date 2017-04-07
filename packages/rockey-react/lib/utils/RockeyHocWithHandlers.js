@@ -2,7 +2,7 @@ import React from 'react';
 import classnames from 'classnames';
 
 export default class RockeyHocWithHandlers extends React.Component {
-  missedHandler = false;
+  missedHandler = {};
 
   componentWillMount() {
     this.props.handlers.forEach(handler => {
@@ -20,27 +20,44 @@ export default class RockeyHocWithHandlers extends React.Component {
     } = this.props;
 
     const componentHandlers = {};
+    const groupedHandlers = {};
 
     handlers.forEach(handler => {
-      componentHandlers[handler.event] = (e, ...args) => {
-        e.persist();
+      this.missedHandler[handler.event] = false;
 
-        if (proxy[handler.event]) {
-          proxy[handler.event](e, ...args);
-        }
+      if (!componentHandlers[handler.event]) {
+        componentHandlers[handler.event] = (e, ...args) => {
+          e.persist();
 
-        if (handler.assign(e, ...args)) {
-          this.missedHandler = false;
+          if (proxy[handler.event]) {
+            proxy[handler.event](e, ...args);
+          }
+
+          console.log(handler.event);
+
+          groupedHandlers[handler.event].forEach(handler => {
+            handler(e, ...args);
+          });
+        };
+      }
+
+      if (!groupedHandlers[handler.event]) {
+        groupedHandlers[handler.event] = [];
+      }
+
+      groupedHandlers[handler.event].push((...args) => {
+        if (handler.assign(...args)) {
+          this.missedHandler[handler.event] = false;
 
           this.forceUpdate();
         } else {
-          if (!this.missedHandler) {
+          if (!this.missedHandler[handler.event]) {
             this.forceUpdate();
           }
 
-          this.missedHandler = true;
+          this.missedHandler[handler.event] = true;
         }
-      };
+      });
     });
 
     const classList = css.getClassList(proxy);
