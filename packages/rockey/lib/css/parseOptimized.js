@@ -146,7 +146,7 @@ const parse = (raw, parent) => {
       if (parts.length === 1) {
         component = parts[0];
       } else {
-        const components = [];
+        combinedComponents = [];
         let i = 0;
         for (i = parts.length - 1; i >= 0; i--) {
           const part = parts[i];
@@ -154,17 +154,18 @@ const parse = (raw, parent) => {
           /* All chars starts with uppercase or xxx% for animations  */ if (
             (charCode >= 65 && charCode <= 90) || part[part.length - 1] === '%'
           ) {
-            components.push(part.replace(',', '').trim());
+            combinedComponents.push(part.replace(',', '').trim());
           } else if (part[0] === '~' || part[0] === '+') {
-            components[components.length - 1] = part[0] +
-              components[components.length - 1];
+            let size = combinedComponents.length;
+            combinedComponents[size - 1] = part[0] +
+              combinedComponents[size - 1];
           } else {
             break;
           }
         }
-        if (components.length) {
-          component = components[0];
-          combinedComponents = components.slice(1);
+        if (combinedComponents.length) {
+          component = combinedComponents[0];
+          combinedComponents = combinedComponents.slice(1);
           parts = parts.slice(0, i + 1);
         } else {
           component = parts[parts.length - 1];
@@ -199,6 +200,7 @@ const parse = (raw, parent) => {
             name: component,
             combinedComponents,
           });
+          combinedComponents = [];
           component = null;
           current = '';
         } else {
