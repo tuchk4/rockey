@@ -39,7 +39,7 @@ test('coma in modificators', () => {
   expect(generated.css).toMatchSnapshot();
 });
 
-test('complex selectors', () => {
+test('complex selectors #1', () => {
   const parsed = parse(
     `
     Bar {
@@ -57,6 +57,41 @@ test('complex selectors', () => {
 
       WarningButton, PrimaryButton, SucceessButton {
         padding: 10px;
+      }
+    }
+  `
+  );
+
+  // expect(parsed).toMatchSnapshot();
+  const generated = generateCss(parsed);
+
+  expect(generated.css).toMatchSnapshot();
+});
+
+test('complex selectors #2', () => {
+  const parsed = parse(
+    `
+    Bar, Foo {
+      font-size: 10px;
+
+      WarningButton, PrimaryButton, SucceessButton {
+        padding: 10px;
+
+        + Icon {
+          padding-right: 15px;
+        }
+
+        Spinner {
+          color: yellow;
+        }
+
+        :hover, :active, :focus {
+          color: red;
+        }
+
+        @media (max-width: 699px) {
+          background: green;
+        }
       }
     }
   `

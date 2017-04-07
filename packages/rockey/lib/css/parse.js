@@ -244,6 +244,7 @@ const parse = (raw, parent) => {
     if (parts.length === 1) {
       component = parts[0];
     } else {
+      // TODO: rename variable
       const components = [];
 
       let i = 0;

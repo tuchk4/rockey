@@ -74,10 +74,25 @@ function process(styles, context) {
   return processed;
 }
 
+function combineSelector(selector, parentClassName, parents) {
+  let key = `${selector}`;
+
+  if (parents.length) {
+    const regexp = new RegExp(parentClassName, 'g');
+    parents.forEach(p => {
+      key += `, ${selector.replace(regexp, getSelector(p))}`;
+    });
+  }
+
+  return key;
+}
+
 function processModificators(
   tree,
   {
     parent,
+    parents = [],
+    parentClassName,
     context,
   }
 ) {
@@ -87,13 +102,15 @@ function processModificators(
     const modificator = tree.modificators[modificatorKey];
 
     if (isMedia(modificatorKey)) {
+      debugger;
       css[modificatorKey] = generateCss(modificator, {
         parent,
+        parents,
+        parentClassName,
       });
 
-      if (Object.keys(modificator.styles).length) {
-        css[modificatorKey][parent] = modificator.styles;
-      }
+      const combined = combineSelector(parent, parentClassName, parents);
+      css[modificatorKey][combined] = modificator.styles;
     } else if (isKeyFrames(modificatorKey)) {
       let animationName = modificatorKey.split(' ')[1];
 
@@ -121,17 +138,30 @@ function processModificators(
         if (updatedModificatorKey.indexOf(',') !== -1) {
           const processed = process(modificator.styles, context);
 
+          const combined = [];
           updatedModificatorKey.split(',').forEach(mod => {
-            mergeCss(css, {
-              [`${parent}${mod.trim()}`]: processed,
-            });
+            combined.push(
+              combineSelector(
+                `${parent}${mod.trim()}`,
+                parentClassName,
+                parents
+              )
+            );
+          });
+
+          mergeCss(css, {
+            [combined.join(',')]: processed,
           });
         } else {
+          const processed = process(modificator.styles, context);
+
+          const combined = combineSelector(
+            `${parent}${updatedModificatorKey}`,
+            parentClassName,
+            parents
+          );
           mergeCss(css, {
-            [`${parent}${updatedModificatorKey}`]: process(
-              modificator.styles,
-              context
-            ),
+            [combined]: processed,
           });
         }
       }
@@ -140,11 +170,10 @@ function processModificators(
         css,
         generateCss(modificator, {
           parent: `${parent}${updatedModificatorKey}`,
+          parents: tree.combinedComponents,
         })
       );
     }
-
-    // console.log('processModificators', modificator.combinedComponents);
   }
 
   return css;
@@ -154,6 +183,9 @@ function generateCss(
   tree,
   {
     parent,
+    parents = [],
+    parentClassName,
+    parentSelector,
     mixin,
     context,
   }
@@ -167,34 +199,55 @@ function generateCss(
       processModificators(tree, {
         context,
         parent,
+        parents: tree.combinedComponents,
+        parentClassName,
       })
     );
   }
 
-  for (const className of Object.keys(tree.components)) {
-    const component = tree.components[className];
-    const selector = getSelector(className, parent, mixin);
+  for (const displayName of Object.keys(tree.components)) {
+    const component = tree.components[displayName];
+    const selector = getSelector(displayName, parent, mixin);
+    const className = getSelector(displayName);
 
-    mergeCss(
-      css,
-      generateCss(component, {
-        parent: selector,
-        context,
-      })
-    );
+    let componentCss = generateCss(component, {
+      parent: selector,
+      parentClassName: className,
+      parents: component.combinedComponents,
+      context,
+    });
+
+    let processedComponentCss = {};
+    if (parents) {
+      // TODO: use reduce
+      Object.keys(componentCss).forEach(key => {
+        if (!isMedia(key)) {
+          let combined = combineSelector(key, parentClassName, parents);
+          processedComponentCss[combined] = componentCss[key];
+        } else {
+          processedComponentCss[key] = {};
+
+          Object.keys(componentCss[key]).forEach(key2 => {
+            let combined2 = combineSelector(key2, parentClassName, parents);
+            processedComponentCss[key][combined2] = componentCss[key][key2];
+          });
+        }
+      });
+
+      componentCss = processedComponentCss;
+    }
+
+    mergeCss(css, componentCss);
 
     if (Object.keys(component.styles).length) {
-      if (component.combinedComponents.length) {
-        const combined = [
-          selector,
-          ...component.combinedComponents.map(s =>
-            getSelector(s, parent, mixin)),
-        ].join(',');
+      let combined = combineSelector(selector, parentClassName, parents);
+      combined = combineSelector(
+        combined,
+        className,
+        component.combinedComponents
+      );
 
-        css[combined] = process(component.styles, context);
-      } else {
-        css[selector] = process(component.styles, context);
-      }
+      css[combined] = process(component.styles, context);
     }
   }
 
@@ -230,6 +283,7 @@ export default (
       rootCss,
       generateCss(tree, {
         parent,
+        parents: tree.combinedComponents,
         mixin,
         context,
       })
