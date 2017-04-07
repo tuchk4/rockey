@@ -2,9 +2,17 @@ import { when } from 'rockey';
 
 export const ROCKEY_MIXIN_HANDLER_KEY = '__ROCKEY_MIXIN_HANDLER_KEY__';
 
+let counters = {};
+
 const handler = (event, condition) => {
+  if (!counters[event]) {
+    counters[event] = 0;
+  }
+
   return (...args) => {
-    const rockeyWhenFunction = when(() => true)(...args);
+    const rockeyWhenFunction = when(`${event}${++counters[event]}`, () => true)(
+      ...args
+    );
 
     let eventArguments = null;
     const mixin = () => {

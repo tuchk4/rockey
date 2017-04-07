@@ -6,7 +6,11 @@ import {
   generateAnimationName,
 } from './getClassName';
 
-const getSelector = (displayName, parent, mixin) => {
+const isMedia = key => key.indexOf('@media') === 0;
+const isKeyFrames = key => key.indexOf('@keyframes') === 0;
+const isNot = key => key.indexOf(':not') === 0;
+
+export const getSelector = (displayName, parent, mixin) => {
   let pre = '';
   if (displayName[0] === '+' || displayName[0] === '~') {
     pre = displayName[0];
@@ -27,9 +31,36 @@ const getSelector = (displayName, parent, mixin) => {
   }
 };
 
-const isMedia = key => key.indexOf('@media') === 0;
-const isKeyFrames = key => key.indexOf('@keyframes') === 0;
-const isNot = key => key.indexOf(':not') === 0;
+export function combineSelector(selector, parentClassName, parents) {
+  let key = `${selector}`;
+
+  if (parents.length && parentClassName) {
+    const regexp = new RegExp(parentClassName, 'g');
+    parents.forEach(p => {
+      key += `, ${selector.replace(regexp, getSelector(p))}`;
+    });
+  }
+
+  return key;
+}
+
+function updateCombinedComponents(className, iteration1, iteration2) {
+  let combined = combineSelector(
+    className,
+    iteration1.parentClassName,
+    iteration1.parents
+  );
+
+  if (iteration2) {
+    combined = combineSelector(
+      combined,
+      iteration2.parentClassName,
+      iteration2.parents
+    );
+  }
+
+  return combined;
+}
 
 // TODO: remove code duplic.
 function process(styles, context) {
@@ -72,34 +103,6 @@ function process(styles, context) {
   }
 
   return processed;
-}
-
-function combineSelector(selector, parentClassName, parents) {
-  let key = `${selector}`;
-
-  if (parents.length && parentClassName) {
-    const regexp = new RegExp(parentClassName, 'g');
-    parents.forEach(p => {
-      key += `, ${selector.replace(regexp, getSelector(p))}`;
-    });
-  }
-
-  return key;
-}
-
-function updateCombinedComponents(className, iteration1, iteration2) {
-  let combined = combineSelector(
-    className,
-    iteration1.parentClassName,
-    iteration1.parents
-  );
-  combined = combineSelector(
-    combined,
-    iteration2.parentClassName,
-    iteration2.parents
-  );
-
-  return combined;
 }
 
 function processModificators(
@@ -239,44 +242,21 @@ function generateCss(
       // TODO: use reduce
       Object.keys(componentCss).forEach(key => {
         if (!isMedia(key)) {
-          const combined = updateCombinedComponents(
-            key,
-            {
-              parentClassName,
-              parents,
-            },
-            {
-              parentClassName: className,
-              parents: component.combinedComponents,
-            }
-          );
-
-          // let combined = combineSelector(key, parentClassName, parents);
-          // combined = combineSelector(
-          //   combined,
-          //   className,
-          //   component.combinedComponents
-          // );
+          const combined = updateCombinedComponents(key, {
+            parentClassName,
+            parents,
+          });
 
           processedComponentCss[combined] = componentCss[key];
         } else {
           processedComponentCss[key] = {};
 
           Object.keys(componentCss[key]).forEach(classNameInsideMedia => {
-            // const combinedInsideMedia = updateCombinedComponents(key, parentClassName, {
-            //   parents,
-            //   componentParents: component.combinedComponents
-            // });
-
             const combinedInsideMedia = updateCombinedComponents(
               classNameInsideMedia,
               {
                 parentClassName,
                 parents,
-              },
-              {
-                parentClassName: className,
-                parents: component.combinedComponents,
               }
             );
 
@@ -304,13 +284,6 @@ function generateCss(
           parents: component.combinedComponents,
         }
       );
-
-      // let combined = combineSelector(selector, parentClassName, parents);
-      // combined = combineSelector(
-      //   combined,
-      //   className,
-      //   component.combinedComponents
-      // );
 
       css[combined] = process(component.styles, context);
     }

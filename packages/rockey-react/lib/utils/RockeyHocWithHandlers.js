@@ -33,8 +33,6 @@ export default class RockeyHocWithHandlers extends React.Component {
             proxy[handler.event](e, ...args);
           }
 
-          console.log(handler.event);
-
           groupedHandlers[handler.event].forEach(handler => {
             handler(e, ...args);
           });
