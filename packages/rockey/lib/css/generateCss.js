@@ -77,7 +77,7 @@ function process(styles, context) {
 function combineSelector(selector, parentClassName, parents) {
   let key = `${selector}`;
 
-  if (parents.length) {
+  if (parents.length && parentClassName) {
     const regexp = new RegExp(parentClassName, 'g');
     parents.forEach(p => {
       key += `, ${selector.replace(regexp, getSelector(p))}`;
@@ -85,6 +85,21 @@ function combineSelector(selector, parentClassName, parents) {
   }
 
   return key;
+}
+
+function updateCombinedComponents(className, iteration1, iteration2) {
+  let combined = combineSelector(
+    className,
+    iteration1.parentClassName,
+    iteration1.parents
+  );
+  combined = combineSelector(
+    combined,
+    iteration2.parentClassName,
+    iteration2.parents
+  );
+
+  return combined;
 }
 
 function processModificators(
@@ -102,11 +117,11 @@ function processModificators(
     const modificator = tree.modificators[modificatorKey];
 
     if (isMedia(modificatorKey)) {
-      debugger;
       css[modificatorKey] = generateCss(modificator, {
         parent,
         parents,
         parentClassName,
+        context,
       });
 
       const combined = combineSelector(parent, parentClassName, parents);
@@ -170,7 +185,9 @@ function processModificators(
         css,
         generateCss(modificator, {
           parent: `${parent}${updatedModificatorKey}`,
-          parents: tree.combinedComponents,
+          parentClassName,
+          parents,
+          context,
         })
       );
     }
@@ -222,14 +239,50 @@ function generateCss(
       // TODO: use reduce
       Object.keys(componentCss).forEach(key => {
         if (!isMedia(key)) {
-          let combined = combineSelector(key, parentClassName, parents);
+          const combined = updateCombinedComponents(
+            key,
+            {
+              parentClassName,
+              parents,
+            },
+            {
+              parentClassName: className,
+              parents: component.combinedComponents,
+            }
+          );
+
+          // let combined = combineSelector(key, parentClassName, parents);
+          // combined = combineSelector(
+          //   combined,
+          //   className,
+          //   component.combinedComponents
+          // );
+
           processedComponentCss[combined] = componentCss[key];
         } else {
           processedComponentCss[key] = {};
 
-          Object.keys(componentCss[key]).forEach(key2 => {
-            let combined2 = combineSelector(key2, parentClassName, parents);
-            processedComponentCss[key][combined2] = componentCss[key][key2];
+          Object.keys(componentCss[key]).forEach(classNameInsideMedia => {
+            // const combinedInsideMedia = updateCombinedComponents(key, parentClassName, {
+            //   parents,
+            //   componentParents: component.combinedComponents
+            // });
+
+            const combinedInsideMedia = updateCombinedComponents(
+              classNameInsideMedia,
+              {
+                parentClassName,
+                parents,
+              },
+              {
+                parentClassName: className,
+                parents: component.combinedComponents,
+              }
+            );
+
+            processedComponentCss[key][combinedInsideMedia] = componentCss[key][
+              classNameInsideMedia
+            ];
           });
         }
       });
@@ -240,12 +293,24 @@ function generateCss(
     mergeCss(css, componentCss);
 
     if (Object.keys(component.styles).length) {
-      let combined = combineSelector(selector, parentClassName, parents);
-      combined = combineSelector(
-        combined,
-        className,
-        component.combinedComponents
+      const combined = updateCombinedComponents(
+        selector,
+        {
+          parentClassName,
+          parents,
+        },
+        {
+          parentClassName: className,
+          parents: component.combinedComponents,
+        }
       );
+
+      // let combined = combineSelector(selector, parentClassName, parents);
+      // combined = combineSelector(
+      //   combined,
+      //   className,
+      //   component.combinedComponents
+      // );
 
       css[combined] = process(component.styles, context);
     }
