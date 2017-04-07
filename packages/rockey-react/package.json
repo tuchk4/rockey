@@ -11,11 +11,15 @@
     "index.js",
     "htmlTags.js",
     "look.js",
+    "recompose.js",
     "handler.js",
     "RockeyHoc.js",
     "utils/RockeyHocWithHandlers.js",
     "rockey-react.min.js"
   ],
+  "peerDependencies": {
+    "recompose": "^0.22.0"
+  },
   "dependencies": {
     "classnames": "^2.2.5",
     "lodash": "^4.17.4",
