@@ -2,7 +2,6 @@ import React from 'react';
 import classnames from 'classnames';
 
 import isString from 'lodash/isString';
-import isObject from 'lodash/isObject';
 import isArray from 'lodash/isArray';
 
 import rule from 'rockey/rule';
@@ -18,7 +17,7 @@ const WAS_CALLED_AS_REACT_COMPONENT = 'WAS_CALLED_AS_REACT_COMPONENT';
 const getCallType = (...args) => {
   if (args.length === 1 && isString(args[0])) {
     return DEFINE_COMPONENT_NAME;
-  } else if (isArray(args[0]) || (isObject(args[0]) && args.length === 1)) {
+  } else if (isArray(args[0])) {
     return COMPONENT_EXTENDS;
   } else {
     return WAS_CALLED_AS_REACT_COMPONENT;

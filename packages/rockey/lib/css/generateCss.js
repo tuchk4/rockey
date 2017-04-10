@@ -18,11 +18,12 @@ export const getSelector = (displayName, parent, mixin) => {
   }
 
   if (
-    displayName[0] !== '[' &&
-    displayName[0] !== '@' &&
-    displayName[0] !== ':' &&
     displayName[0] !== '.' &&
     displayName[0] !== '#' &&
+    displayName[0] !== ':' &&
+    displayName[0] !== '*' &&
+    displayName[0] !== '[' &&
+    displayName[0] !== '@' &&
     displayName[0] === displayName[0].toUpperCase()
   ) {
     return `${mixin || ''}${getClassName(displayName, parent, pre)}`;
