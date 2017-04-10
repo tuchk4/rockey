@@ -159,3 +159,103 @@ const { Card, PrimaryCard } = look(Card)`
   }
 `;
 ```
+
+
+------
+
+
+### Nested Selectors
+
+```js
+const Header = rockey.div('Header')`
+  font-size: 18px;
+  font-weight: bold;
+  padding: 5px;
+`;
+
+const CardBody = rockey.div('CardBody')`
+ padding: 5px;
+`;
+
+const Card= rockey.div`
+  margin: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  box-shadow: 1px 1px 3px #ccc;
+  font-family: 'Roboto', sans-serif;
+  width: 200px;
+
+  Header {
+    background: rgba(0, 0, 255, .1);
+    color: #3399ff;
+  }
+
+  CardBody {
+    ${when('error', props => props.error)`
+      color: red;
+    `}
+  }
+`;
+```
+
+
+### Write CSS that Depends on Props
+
+React example:
+
+```js
+const Button = rockey.Button('MuButton');
+render(<Button>Hello</Button>) // <Button class="MuButton-1fed">
+```
+
+To define name for mixin name use named function:
+```js
+import when from 'rockey/when';
+
+const Button = rockey.button('MuButton')`
+  color: red;
+  ${when('isPrimary', props => props.primary)`
+    color: blue;
+  `}
+`;
+
+render(<Button primary={true}>Hello</Button>); // <Button class="MuButton-1fed isPrimary-eefc">
+```
+
+### Class Name Extending
+
+This example available at [Webpakbin - Buttons](https://www.webpackbin.com/bins/-KflMmHbcVU01PD6h43F)
+```js
+import rockey from 'rockey-react';
+
+// Create button from shortcut
+const Button = rockey.button`
+  font-family: 'Roboto', sans-serif;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 5px;
+  margin: 5px;
+  background: white;
+  border: 1px solid #ccc;
+`;
+
+// extending Button component and its styles with defined name
+// with PrimaryButton displayName that is also used in className
+const PrimaryButton = Button('PrimaryButton')`
+  color: blue;
+`;
+
+// anonymous extending Button component and its styles
+const SuperButton = PrimaryButton`
+  color: red;
+`;
+
+render(<Button>Hello</Button>);
+// <Button class="AnonButton1-ffea">
+
+render(<PrimaryButton>Hello</PrimaryButton>);
+// <Button class="PrimaryButton-1fed AnonButton1-ffea">
+
+render(<SuperButton>Hello</SuperButton>);
+// <Button class="ChildPrimaryButton1-cca3 PrimaryButton-1fed AnonButton1-ffea">
+```

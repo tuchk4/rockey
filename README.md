@@ -9,17 +9,16 @@ npm install --save rockey
 npm install --save rockey-react
 ```
 
-![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master)
+![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.5-alpha.32af5f74/rockey.min.js?compression=gzip&label=rockey%20gzip) ![rockey-react gzip size](http://img.badgesize.io/https://unpkg.com/rockey-react@0.0.8-alpha.32af5f74/rockey-react.min.js?compression=gzip&label=rockey%20react%20gzip)
 
 ---
 
 <img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [Rockey at Medium](https://medium.com/@valeriy.sorokobatko/forgekit-785eb17a9b50#.bo3ijxdbm)
 
-
 ## Documentation
 
-- [rockey](https://github.com/tuchk4/rockey/tree/master/packages/rockey) ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.5-alpha.32af5f74/rockey.min.js?compression=gzip&label=gzip%20size)
-- [rockey-react](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react) ![rockey-react gzip size](http://img.badgesize.io/https://unpkg.com/rockey-react@0.0.8-alpha.32af5f74/rockey-react.min.js?compression=gzip&label=gzip%20size)
+- [rockey](https://github.com/tuchk4/rockey/tree/master/packages/rockey)
+- [rockey-react](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react)
 
 
 ## Advantages
@@ -63,11 +62,43 @@ Card {
 }
 ```
 
-### Fast. And will be More Faster
+### Framework Agnostic
+
+`rockey` could be used in any application.
+
+```js
+import rockey from 'rockey';
+
+const rule = rockey`
+  Button {
+    color: black;
+
+    ${when(props => props.primary)`
+      color: blue;
+    `}
+
+    Icon {
+      margin: 5px;
+    }
+  }
+`;
+
+const classList = rule.getClassList({
+  primary: true
+});
+
+const className = classList.Button;
+```
+
+- [`rockey-react`](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react) - example of integration with React. Provide a lot of additional features like - Split Component into different looks and Handlers mixins (mixins that depends on events like *onChange*, *onMouseMove* etc).
+
+### Fast. And Will be More Faster!
 
 Rendering CSS string, generating CSS rules and inserting them into DOM is really fast.
 
-There is example of css-in-js ways in React application https://tuchk4.github.io/css-in-js-app/ with examples of different libraries:
+#### [tuchk4.github.io/css-in-js-app](https://tuchk4.github.io/css-in-js-app)
+
+There is React application with implemented different css-in-js ways:
 
 - [rockey](https://github.com/tuchk4/rockey)
 - [Glamor](https://github.com/threepointone/glamor)
@@ -80,143 +111,58 @@ Each bundle is lazy initializing (so for better results update page before test 
 there are:
 
 - Timers for rendering 1000 same components and 1000 different components with styles defined in JS.
-- Checkbox to switch component `primary` property
+- Checkbox to switch `primary` property
 - Input to change text
 - Links to source code of each bundle
 
-### Framework Agnostic
-
-`rockey` could be used in any application.
-
-- [`rockey-react`](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react) - example of integration with React. Provide a lot of additional features like - Component look spiting and Handlers mixins.
-
 ### Class Name Extending
+
+Each rule is composed of current styles and all parents. But all CSS rules does not merged into one
+class. Instead used multiple classes. Thats why extending works correctly - when change CSS values of parent class via devtools - it will be applied for all children.
 
 ### Write CSS that Depends on Props
 
-Use functional mixins inside css.
+Wrap CSS code with functions that takes props as arguments and return CSS. Support nested selectors, pseudo classes and all other features expect - other mixins.
 
-rockey:
+To keep syntax much better use *when* function.
 
+Rockey example:
 ```js
-import rule from 'rockey';
+import rockey, { when } from 'rockey';
 
-const rule = rule`
+const rule = rockey`
   Button {
     color: red;
-    ${props => props.primary ? `color: blue;` : null}
+    ${when(props => props.primary)`
+      color: blue;
+    `}
   }
 `;
 
-const classList = rule.getClassList();
-expect(classList).toEqual({
-  Button: "Button-1fed"
-});
-
-const primaryClassList = rule.getClassList({
+rule.getClassList({
   primary: true
-});
-expect(primaryClassList).toEqual({
-  Button: "Button-1fed AnonMixin1-eefc"
 });
 ```
 
-rockey-react:
-
+Rockey React example:
 ```js
-import rule from 'rockey-react';
+import rockey from 'rockey-react';
 
 const Button = rockey.button`
   color: red;
-  ${props => props.primary ? `color: blue;` : null}
-`;
-
-render(<Button>Hello</Button>) // <Button class="AnonButton-1fed">
-render(<Button primary={true}>Hello</Button>) // <Button class="AnonButton-1fed AnonMixin1-eefc">
-```
-
-*NOTE:* generated class names with *Anon* prefix because Components and mixins names were not defined.
-
-To define name for component name:
-```js
-const Button = rockey.Button('MuButton');
-render(<Button>Hello</Button>) // <Button class="MuButton-1fed">
-```
-
-To define name for mixin name use named function:
-```js
-const Button = rockey.button('MuButton')`
-  color: red;
-  ${
-    function isPrimary(props){
-      return props.primary ? `color: blue;` : null
-    }
-  }
-`;
-
-render(<Button primary={true}>Hello</Button>) // <Button class="MuButton-1fed isPrimary-eefc">
-```
-
-Or `when` helper:
-```js
-const Button = rockey.Button('MuButton');
-render(<Button>Hello</Button>) // <Button class="MuButton-1fed">
-```
-
-To define name for mixin name use named function:
-```js
-// import when from 'rockey/when';
-// or
-import { when }  from 'rockey';
-
-const Button = rockey.button('MuButton')`
-  color: red;
-  ${when('isPrimary', props => props.primary)`
+  ${rockey.when(props => props.primary)`
     color: blue;
   `}
 `;
 
-render(<Button primary={true}>Hello</Button>) // <Button class="MuButton-1fed isPrimary-eefc">
+<Button primary={true}>Yo</Button>
 ```
-
 
 ### Uniq Class Names
 
 Each time generate uniq class names with randomly generated hash. Same as [css-modules](https://github.com/css-modules/css-modules).
 
 ### Nested Selectors
-
-```js
-const Header = rockey.div('Header')`
-  font-size: 18px;
-  font-weight: bold;
-  padding: 5px;
-`;
-
-const CardBody = rockey.div('CardBody')`
- padding: 5px;
-`;
-
-const Card= rockey.div`
-  margin: 5px;
-  border: 1px solid #ccc;
-  border-radius: 3px;
-  box-shadow: 1px 1px 3px #ccc;
-  font-family: 'Roboto', sans-serif;
-  width: 200px;
-
-  Header {
-    background: rgba(0, 0, 255, .1);
-    color: #3399ff;
-  }
-
-  CardBody {
-    ${when('error', props => props.error)`
-      color: red;
-    `}
-  }
-`;
-```
 
 ### Small Size
 
@@ -230,10 +176,14 @@ const Card= rockey.div`
 
 ## Current Disadvantages
 
+This is a very new and young library and not all features are implemented yet.
+But with each new release this list will be much and much shorter until there are no disadvantages :)
+
 - There is no auto-prefixer. Will be added in nearest release. Because styles are generating in realtime
 prefixes will be added only for current browser.
 - There is no CSS validation. Will be added in nearest release. Will work only if `process.NODE_ENV === 'development'`
 - There is not way to remove inserted rules. Will be added a bit later.
+- Does not support hot-reload.  Will be added a bit later.
 
 ## Contribute
 
