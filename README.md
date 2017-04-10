@@ -35,7 +35,7 @@ Each generated classname is readable and comprehensible. The same components ren
 ### ~100% CSS Syntax
 
 There is no needs to import specific function to render *@media*, *keyframes*, *font-faces*
-or pseudo classes like *:hover* or *::after**.
+or pseudo classes like *:hover* or *::after*.
 
 Support nested and multiple selectors.
 
@@ -87,8 +87,8 @@ there are:
 ### Framework Agnostic
 
 `rockey` could be used in any application.
-There is package of integration rockey with react. Provide a lot of additional features
-like - Component look spiting and Handlers mixins.
+
+- [`rockey-react`](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react) - example of integration with React. Provide a lot of additional features like - Component look spiting and Handlers mixins.
 
 ### Class Name Extending
 
