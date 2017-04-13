@@ -39,3 +39,4 @@ RootRockeyHoc.handler = handler;
 assignShortcuts(RootRockeyHoc);
 
 export default RootRockeyHoc;
+export { when };
