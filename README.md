@@ -13,8 +13,6 @@ npm install --save rockey-react
 
 ---
 
-<img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [Rockey at Medium](https://medium.com/@valeriy.sorokobatko/forgekit-785eb17a9b50#.bo3ijxdbm)
-
 ## Documentation
 
 - [rockey](https://github.com/tuchk4/rockey/tree/master/packages/rockey)

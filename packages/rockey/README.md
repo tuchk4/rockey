@@ -35,8 +35,8 @@ const className = classList.Button;
 Other methods are mostly used in internal rockey infrastructure, for integrations with
 other libraries and for new features.
 
-- *getClassList(props)* - returns class list for all defined components
-- *addParent(rule)* - add parent rule. Class list will be merged with parent classes
+- **getClassList(props)** - returns class list for all defined components
+- **addParent(rule)** - add parent rule. Class list will be merged with parent classes
 
 ```js
 const baseButtonRule = rockey`
@@ -63,7 +63,7 @@ primaryButtonRule.getClassList({
 });
 ```
 
-- *wrapWith(selector)* - wrap rules CSS with selector.
+- **wrapWith(selector)** - wrap rules CSS with selector.
 
 ```js
 const rule = rockey`
@@ -85,8 +85,8 @@ Layer {
 }
 ```
 
-- *addMixins(mixins)* - add mixins to rule
-- *transform(callback)* - helps to split rule into multiple lesser rules and defined relations between them
+- **addMixins(mixins)** - add mixins to rule
+- **transform(callback)** - helps to split rule into multiple lesser rules and defined relations between them
 
 For example: split rule into multiple rules and make each component to be child of previous component.
 
