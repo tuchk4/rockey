@@ -188,6 +188,9 @@ export const getRockeyHoc = () => {
       }
     };
 
+    FlexibleRockeyHoc.propTypes = BaseComponent.propTypes;
+    FlexibleRockeyHoc.defaultProps = BaseComponent.defaultProps;
+
     return FlexibleRockeyHoc;
   };
 
