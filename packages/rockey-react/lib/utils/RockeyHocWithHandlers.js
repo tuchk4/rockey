@@ -15,6 +15,7 @@ const reset = (list, handlers, missed, forceUpdate) => {
     });
   });
 };
+
 const resetOnOver = (handlers, missed, forceUpdate) => {
   reset(HANDLERS_SHOULD_BE_RESETED_ON_OVER, handlers, missed, forceUpdate);
 };
@@ -122,7 +123,7 @@ export default class RockeyHocWithHandlers extends React.Component {
     }
 
     return (
-      <BaseComponent {...componentHandlers} className={className} {...proxy} />
+      <BaseComponent {...proxy} {...componentHandlers} className={className} />
     );
   }
 }

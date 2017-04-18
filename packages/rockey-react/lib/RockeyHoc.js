@@ -148,7 +148,8 @@ export const getRockeyHoc = () => {
       }
     };
 
-    FlexibleRockeyHoc.displayName = `Rockey(${name})`;
+    // FlexibleRockeyHoc.displayName = `Rockey(${name})`;
+    FlexibleRockeyHoc.displayName = name;
 
     FlexibleRockeyHoc.extends = (displayName, childCss) => {
       if (!css) {
