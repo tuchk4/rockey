@@ -26,10 +26,6 @@ const css = (raw, mixinsFunctions) => {
       return mixinsFunctions;
     },
 
-    // get parent() {
-    //   return parent;
-    // },
-
     wrapWith(displayName) {
       // NOTE: cannot wrap if raw is already tree
       raw = `${displayName}{ ${raw} }`;
@@ -176,10 +172,7 @@ const css = (raw, mixinsFunctions) => {
 };
 
 export const rule = (strings, ...values) => {
-  const interpolated = interpolateWithMixins(strings, ...values);
-
-  const raw = interpolated.raw;
-  const mixinsFunctions = interpolated.mixinsFunctions;
+  const { raw, mixinsFunctions } = interpolateWithMixins(strings, ...values);
 
   return css(raw, mixinsFunctions);
 };

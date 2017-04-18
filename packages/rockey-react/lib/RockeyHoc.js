@@ -112,13 +112,16 @@ export const getRockeyHoc = () => {
 
           // collect handler mixins
           const handlers = [];
-          Object.keys(finshCssRule.mixins).forEach(key => {
-            const mixin = finshCssRule.mixins[key];
+          // TODO: remove this condition. mixins alwasy should be array
+          if (finshCssRule.mixins) {
+            Object.keys(finshCssRule.mixins).forEach(key => {
+              const mixin = finshCssRule.mixins[key];
 
-            if (mixin[ROCKEY_MIXIN_HANDLER_KEY]) {
-              handlers.push(mixin);
-            }
-          });
+              if (mixin[ROCKEY_MIXIN_HANDLER_KEY]) {
+                handlers.push(mixin);
+              }
+            });
+          }
 
           if (handlers.length) {
             return (
