@@ -1,6 +1,6 @@
 {
   "version": "1.0.0",
-  "description": "",
+  "description": "Stressless styles for components using js. Write CSS with functional mixins according to the component structure using components names",
   "main": "index.js",
   "scripts": {
     "test": "jest --coverage",
@@ -14,9 +14,21 @@
     "minify": "node ./tasks/minify",
     "precommit": "lint-staged"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "react",
+    "css",
+    "css-in-js",
+    "rockey"
+  ],
+  "author": "Valerii Sorokobatko <valeriy.sorokobatko@gmail.com> (https://github.com/tuchk4)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tuchk4/rockey/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tuchk4/rockey.git"
+  },
   "devDependencies": {
     "babel-cli": "^6.24.0",
     "babel-eslint": "^7.2.1",

@@ -1,11 +1,23 @@
 {
   "name": "rockey-react",
   "version": "0.0.8",
-  "description": "",
+  "description": "Stressless styles for components using js. Write CSS with functional mixins according to the component structure using components names",
   "main": "index.js",
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "react",
+    "css",
+    "css-in-js",
+    "rockey"
+  ],
+  "author": "Valerii Sorokobatko <valeriy.sorokobatko@gmail.com> (https://github.com/tuchk4)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tuchk4/rockey/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tuchk4/rockey.git"
+  },
   "files": [
     "assignShortcuts.js",
     "index.js",
