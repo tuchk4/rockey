@@ -96,7 +96,7 @@ Rendering CSS string, generating CSS rules and inserting them into DOM is really
 
 #### [tuchk4.github.io/css-in-js-app](https://tuchk4.github.io/css-in-js-app)
 
-There is React application with implemented different css-in-js ways:
+There is React application with implemented different css-in-js approaches:
 
 - [rockey](https://github.com/tuchk4/rockey)
 - [Glamor](https://github.com/threepointone/glamor)
