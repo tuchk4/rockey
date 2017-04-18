@@ -8,6 +8,7 @@
 /utils
 
 /index.js
+/props.js
 /condition.js
 /rule.js
 /insert.js

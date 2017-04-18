@@ -14,6 +14,7 @@
     "index.js",
     "condition.js",
     "rule.js",
+    "props.js",
     "insert.js",
     "when.js",
     "rockey.min.js",

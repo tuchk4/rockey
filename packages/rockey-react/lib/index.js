@@ -1,4 +1,5 @@
 import when from 'rockey/when';
+import props from 'rockey/props';
 import insert from 'rockey/insert';
 import condition from 'rockey/condition';
 
@@ -32,6 +33,7 @@ const RootRockeyHoc = (...args) => {
 
 RootRockeyHoc.look = look;
 RootRockeyHoc.when = when;
+RootRockeyHoc.props = props;
 RootRockeyHoc.condition = condition;
 RootRockeyHoc.insert = insert;
 RootRockeyHoc.handler = handler;
