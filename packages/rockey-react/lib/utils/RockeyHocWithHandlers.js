@@ -44,7 +44,7 @@ export default class RockeyHocWithHandlers extends React.Component {
       }
 
       groupedHandlers[handler.event].push((...args) => {
-        if (handler.assign(...args)) {
+        if (handler.assign(...args, proxy)) {
           this.missedHandler[handler.event] = false;
 
           this.forceUpdate();

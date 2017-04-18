@@ -16,7 +16,7 @@ const handler = (event, condition) => {
 
     let eventArguments = null;
     const mixin = () => {
-      return eventArguments ? rockeyWhenFunction(eventArguments) : null;
+      return eventArguments ? rockeyWhenFunction(...eventArguments) : null;
     };
 
     mixin[ROCKEY_MIXIN_HANDLER_KEY] = true;

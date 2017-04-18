@@ -22,9 +22,9 @@ const when = (...args) => {
       inline = interpolateString(strings, ...values);
     }
 
-    const anonWhen = (props = {}) => {
-      if (mixinFunc(props)) {
-        return inlineAsFunction ? inlineAsFunction(props) : inline;
+    const anonWhen = (...props) => {
+      if (mixinFunc(...props)) {
+        return inlineAsFunction ? inlineAsFunction(...props) : inline;
       }
 
       return null;

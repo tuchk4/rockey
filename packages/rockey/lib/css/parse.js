@@ -1,3 +1,7 @@
+// @remove-start
+import isEqual from 'lodash/isEqual';
+// @remove-end
+
 // const validateRule = (rule, value) => {};
 // const autoprefixRule = (rule, value) => {};
 
@@ -295,17 +299,48 @@ const parse = (raw, parent) => {
   // @replace-start
   const saveComponent = () => {
     // @remove-start
-    if (components[component]) {
+    if (
+      components[component] &&
+      isEqual(
+        combinedComponents.sort(),
+        components[component].combinedComponents.sort()
+      )
+    ) {
       throw new Error(
         `(parse error) "${component}" duplicated definiton at one block`
       );
     }
     // @remove-end
-    components[component] = parse(current, {
+
+    const parsed = parse(current, {
       parentType: 'component',
       name: component,
       combinedComponents,
     });
+
+    if (components[component]) {
+      components[component] = {
+        mixins: [...components[component].mixins, ...parsed.mixins],
+        components: {
+          ...components[component].components,
+          ...parsed.components,
+        },
+        modificators: {
+          ...components[component].modificators,
+          ...parsed.modificators,
+        },
+        combinedComponents: [
+          ...components[component].combinedComponents,
+          ...parsed.combinedComponents,
+        ],
+        styles: {
+          ...components[component].styles,
+          ...parsed.styles,
+        },
+      };
+    } else {
+      components[component] = parsed;
+    }
 
     combinedComponents = [];
 
