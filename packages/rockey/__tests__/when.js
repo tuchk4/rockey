@@ -25,7 +25,7 @@ describe('when', () => {
       color: blue
     `;
 
-    const raw = whenFunc();
+    const raw = whenFunc({});
     expect(raw).toEqual(null);
   });
 

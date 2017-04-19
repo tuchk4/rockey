@@ -1,5 +1,5 @@
 import { clearStylesCache } from '../lib/rule';
-import insert, { insertStatic } from '../lib/insert';
+import insert from '../lib/insert';
 import * as styleSheetsModule from '../lib/styleSheets';
 
 const insertRules = jest.fn();
@@ -20,45 +20,29 @@ describe('insert', () => {
   });
 
   it('insert', () => {
-    const css = insert`
-      color: red;
-
-      ${props => `
-        background: #ffcc33;
-      `}
-    `;
-
-    expect(css()).toEqual(['Insert-{{ hash }}', 'Mixin-anon-{{ hash }}-1']);
-
-    expect(insertRules.mock.calls.length).toEqual(1);
-    expect(insertRules.mock.calls[0][0]).toEqual({
-      '.Insert-{{ hash }}': {
-        color: 'red',
-      },
-    });
-
-    expect(insertMixins.mock.calls.length).toEqual(1);
-    expect(insertMixins.mock.calls[0][0]).toEqual({
-      '.Mixin-anon-{{ hash }}-1.Insert-{{ hash }}': {
-        background: '#ffcc33',
-      },
-    });
-  });
-
-  it('insert static', () => {
-    const classList = insertStatic`
+    insert`
       Button {
         color: red;
       }
     `;
 
-    expect(classList).toEqual(['InsertStatic-{{ hash }}']);
-
     expect(insertRules.mock.calls.length).toEqual(1);
     expect(insertRules.mock.calls[0][0]).toEqual({
-      '.InsertStatic-{{ hash }} .Button-{{ hash }}': {
+      '.Button-{{ hash }}': {
         color: 'red',
       },
     });
+  });
+
+  it('insert with mixin should throw exception', () => {
+    expect(
+      () => insert`
+      Button {
+        color: red;
+
+        ${props => {}}
+      }
+    `
+    ).toThrow('Static rule should not contain mixins');
   });
 });

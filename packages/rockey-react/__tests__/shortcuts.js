@@ -26,10 +26,10 @@ describe('shortcuts', () => {
 
     expect(isFunction(Button)).toBeTruthy();
     expect(Button.name).toEqual('FlexibleRockeyHoc');
-    expect(Button.displayName).toEqual('Rockey(ShortcutButton1)');
+    expect(Button.displayName).toEqual('ShortcutButton1');
 
     expect(isFunction(MyButton)).toBeTruthy();
     expect(MyButton.name).toEqual('FlexibleRockeyHoc');
-    expect(MyButton.displayName).toEqual('Rockey(MyButton)');
+    expect(MyButton.displayName).toEqual('MyButton');
   });
 });
