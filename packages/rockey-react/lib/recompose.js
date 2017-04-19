@@ -1,10 +1,10 @@
 import React from 'react';
 import isString from 'lodash/isString';
 import isFunction from 'lodash/isFunction';
-import isArray from 'lodash/isArray';
+// import isArray from 'lodash/isArray';
 
 import compose from 'recompose/compose';
-import setDisplayName from 'recompose/setDisplayName';
+// import setDisplayName from 'recompose/setDisplayName';
 
 import { getRockeyHoc } from './RockeyHoc';
 import htmlTags from './htmlTags';
@@ -13,17 +13,26 @@ const ucfirst = s => s.charAt(0).toUpperCase() + s.slice(1);
 
 const RockeyHoc = getRockeyHoc();
 
-const RecomposeRockeyHoc = (displayName, BaseComponent) =>
-  (...enhacners) => {
-    const RecomposeHoc = compose(
-      setDisplayName(ucfirst(displayName)),
-      ...enhacners
-    )(BaseComponent);
+const RecomposeRockeyHoc = (...args) => {
+  let displayName = null;
+  let BaseComponent = null;
+
+  // TODO: check types
+  if (args.length === 1) {
+    BaseComponent = args[0];
+  } else {
+    displayName = args[0];
+    BaseComponent = args[1];
+  }
+
+  return (...enhacners) => {
+    const RecomposeHoc = compose(...enhacners)(BaseComponent);
 
     return RockeyHoc(RecomposeHoc, {
       displayName: ucfirst(displayName),
     });
   };
+};
 
 let counter = {};
 
