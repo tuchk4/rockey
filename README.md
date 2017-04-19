@@ -1,8 +1,8 @@
-# Rockey <sup>CSS in js</sup>
+# Rockey <sup>Component Based CSS in JS</sup>
 
-Stressless styles for components using js. Write CSS with functional mixins according to the component structure using components names.
+Stressless CSS for components using JS. Write Component Based CSS with functional mixins.
 
-<img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [Medium: CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
+<img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
 
 ```bash
 npm install --save rockey
@@ -33,7 +33,7 @@ CSS in JS approach — is native JS. You don’t need additional tools to us
 - More cleaner file structure
 - Easier to run tests
 
-More details explanation at Medium Post - <img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [Medium: CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
+More details explanation at Medium Post - <img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
 
 ## Features and Advantages
 
@@ -74,6 +74,12 @@ Each generated classname is clear and readable. The same components renders with
 Card {
   CardHeader, CardFooter {
     padding: 15px;
+  }
+
+  CardBody {
+    + Button {
+      padding-left: 15px;
+    }
   }
 
   :hover {
@@ -223,7 +229,7 @@ There is precommit hook (via [husky](http://npmjs.com/package/husky)) to run [pr
 ## Feedback wanted
 
 This is a very new approach and library and not all features are implemented yet. Feel free to [file issue or suggest feature](https://github.com/tuchk4/rockey/issues/new) to help me to make rockey better.
-Or ping me on twitter @tuchk4.
+Or ping me on twitter [@tuchk4](https://twitter.com/tuchk4).
 
 🎉
 

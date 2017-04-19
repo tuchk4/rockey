@@ -1,14 +1,12 @@
 # Rockey React
 
-<img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [Medium: CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
-
-![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey-react gzip size](http://img.badgesize.io/https://unpkg.com/rockey-react@0.0.8-alpha.32af5f74/rockey-react.min.js?compression=gzip&label=rockey%20react%20gzip)
-
--  <img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [Rockey at Medium](https://medium.com/@valeriy.sorokobatko/forgekit-785eb17a9b50#.bo3ijxdbm)
+<img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
 
 ```bash
 npm i --save rockey-react
 ```
+
+![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey-react gzip size](http://img.badgesize.io/https://unpkg.com/rockey-react@0.0.8-alpha.32af5f74/rockey-react.min.js?compression=gzip&label=rockey%20react%20gzip)
 
 ## Api
 
@@ -30,7 +28,7 @@ const Component = rockey(BaseComponent)`
 `;
 ```
 
-Now Component could used as React component:
+Now *Component* could be used as React component:
 
 ```js
 <Component/>
@@ -59,6 +57,7 @@ Available all valid html tags. Create anonymus component from shortcuts:
 
 ```js
 import rockey from 'rockey-react';
+
 const Block = rockey.div`
   padding: 5px;
   border: 1px solid #000;
@@ -69,6 +68,7 @@ Create named component from shortcuts:
 
 ```js
 import rockey from 'rockey-react';
+
 const Block = rockey.div('Block')`
   padding: 5px;
   border: 1px solid #000;
@@ -126,10 +126,9 @@ Demos:
 - [Card and PrimaryCard look](https://www.webpackbin.com/bins/-KfkcTYPzpyglHKfmuKh)
 
 Most component features could be implemented as component’s prop or as Higher Order Component.
-Means:
 
 ```js
-<Button primary={true}/>I'm Button</Button>
+<Button primary={true}>I'm Button</Button>
 <PrimaryButton>I'm PrimaryButton</PrimaryButton>
 ```
 
@@ -147,6 +146,8 @@ There is the approach that helps to make more correct decision:
 - *ripple* - could be used in any state. So it should be used as prop.
 - *disabled* - could be used in any state. So it should be used as prop.
 - *success* - could not be used along with *warning* and *primary*. So it should be implemented as Higher Order Component.
+
+If there is no ❌ — feature should be implemented as props. If there is a least one ❌ — feature should be implemented as Higher Order Component.
 
 And rockey *look* feature helps with this.
 
@@ -179,15 +180,21 @@ const Button = rockey.button`
   background: none;
 `;
 
-const PrimryButton = Button`
+const PrimryButton = Button('PrimryButton')`
   color: blue;
 `;
 
-const SuccessButton = Button`
+const SuccessButton = Button('SuccessButton')`
   color: green;
 `;
 ```
-Demo - [Anon Buttons extending](https://www.webpackbin.com/bins/-Ki0oy6hS3vdQZluouKZ)
+
+Demos:
+
+> NOTE: difference only in generated CSS class names
+
+- [Named Extending: raised Button / PrimaryButton / SuccessButton](https://www.webpackbin.com/bins/-Ki4zp8QqriEj4VSKgvg)
+- [Anonymous Extending: raised Button / PrimaryButton / SuccessButton](https://www.webpackbin.com/bins/-Ki0oy6hS3vdQZluouKZ)
 
 or:
 
@@ -213,6 +220,8 @@ const { PrimaryButton, SuccessButton } = Button.look`
 // or
 <Button.PrimaryButton />
 ```
+
+Dome: [Look: raised Button / PrimaryButton / SuccessButton](https://www.webpackbin.com/bins/-Ki0oy6hS3vdQZluouKZ)
 
 
 ### Recompose shortcut
@@ -257,7 +266,7 @@ const Line = rockempose.span(
 ## Feedback wanted
 
 This is a very new approach and library and not all features are implemented yet. Feel free to [file issue or suggest feature](https://github.com/tuchk4/rockey/issues/new) to help me to make rockey better.
-Or ping me on twitter @tuchk4.
+Or ping me on twitter [@tuchk4](https://twitter.com/tuchk4).
 
 🎉
 

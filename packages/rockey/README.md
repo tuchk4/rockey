@@ -2,28 +2,33 @@
 
 Stressless styles for components using js. Write CSS with functional mixins according to the component structure using components names.
 
-<img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [Medium: CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
-
-![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.5-alpha.32af5f74/rockey.min.js?compression=gzip&label=rockey%20gzip)
+<img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
 
 ```bash
 npm install --save rockey
 ```
 
+![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.5-alpha.32af5f74/rockey.min.js?compression=gzip&label=rockey%20gzip)
+
 ## Api
 
 - [rule](#rule)
-  - [rule.getClassList](#rule.getClassList)
-  - [rule.addParent](#rule.addParent)
-  - [rule.wrapWith](#rule.wrapWith)
-  - [rule.addMixins](#rule.addMixins)
-  - [rule.transform](#rule.transform)
+  - [rule.getClassList](#rulegetclasslist)
+  - [rule.addParent](#ruleaddparent)
+  - [rule.wrapWith](#rulewrapwith)
+  - [rule.addMixins](#ruleaddmixins)
+  - [rule.transform](#ruletransform)
 - [when](#when)
 - [condition](#condition)
 - [insert](#insert)
 
+> NOTE: that in most cases developers uses only *getClassList* and *addParent* methods.
+Other methods are mostly used in internal rockey infrastructure, for integrations with
+other libraries and for new features.
 
 ### rule
+
+Very similar with css-modules.
 
 ```js
 import rule from 'rockey';
@@ -38,10 +43,6 @@ const css = rule`
   }
 `;
 ```
-
-> NOTE: that in most cases developers uses only *getClassList* and *addParent* methods.
-Other methods are mostly used in internal rockey infrastructure, for integrations with
-other libraries and for new features.
 
 #### rule.getClassList
 
@@ -65,7 +66,7 @@ const className = classList.Button;
 Inserted CSS:
 
 ```css
-.Button-{{ hash }}
+.Button-{{ hash }} {
   color: black;
 }
 
@@ -76,7 +77,7 @@ Inserted CSS:
 
 #### rule.addParent
 
-Add parent rule. Child rule classnames will be merged with parent rule classnames.
+Add parent rule. Child rule class names will be merged with parent.
 It is possible to add only one parent.
 
 ```js
@@ -103,13 +104,14 @@ primaryButtonCss.getClassList({
   small: true
 });
 
-primaryButtonCss.PrimaryButton // ['PrimaryButton-{{ hash }}', 'Button-{{ hash }}', 'AnonMixin1-{{ hash }}']
+const className = primaryButtonCss.PrimaryButton
+// ['PrimaryButton-{{ hash }}', 'Button-{{ hash }}', 'AnonMixin1-{{ hash }}']
 ```
 
 Inserted CSS:
 
 ```css
-.Button-{{ hash }{
+.Button-{{ hash }} {
   color: black;
   background: white;
 }
@@ -140,7 +142,8 @@ const css = rule`
 css.wrapWith('Layer');
 
 const classList = css.getClassList();
-classList.Layer // ['Layer-{{ hash }}']
+const className = classList.Layer
+// ['Layer-{{ hash }}']
 ```
 
 Inserted CSS:
@@ -153,10 +156,10 @@ Inserted CSS:
 
 #### rule.addMixins
 
-Api to add mixins. After this *addMixins()* rule should be wrapped with *wrapWith()*
-
 > NOTE: this method is mostly used in internal rockey infrastructure and for integrations with
 other libraries. Try not to use it in applications.
+
+Api to add mixins. After this *addMixins()* rule should be wrapped with *wrapWith()*
 
 ```js
 import rule from 'rockey';
@@ -171,20 +174,22 @@ css.addMixins([
 
 css.wrapWith('Button');
 
-css.getClassList({
+const classList = css.getClassList({
   small: true
 });
+const className = classList.Button;
+// ['.Button-{{ hash }}', 'AnonMixin1-{{ hash }}']
 ```
 
 #### rule.transform
 
-Transform current css tree and setup relations between defined components
-
 > NOTE: this method is mostly used in internal rockey infrastructure and for integrations with
 other libraries. Try not to use it in applications.
 
+Transform current CSS tree and setup relations between defined components
+
 For example: split rule into multiple rules and make each component to be child of previous component.
-This is how [rockey-react](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react) *look* feature works.
+This is how rockey-react [looks](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react#looks) feature works.
 
 ```js
 import rule from 'rockey';
@@ -192,6 +197,10 @@ import rule from 'rockey';
 const css = rule`
   Base {
     background: none;
+
+    ${function isSmall(props) {
+      return props.small ? `font-size: 12px;` : null
+    }}
   }
 
   Sized {
@@ -221,9 +230,20 @@ const components = css.transform((tree, create) => {
   return rules;
 });
 
-components.Base.getClassList(); // [ "Base-{{ hash }}" ]
-components.Sized.getClassList(); // [ "Sized-{{ hash }}", "Base-{{ hash }}" ]
-components.Colored.getClassList(); // [ "Colored-{{ hash }}", "Sized-{{ hash }}", "Base-{{ hash }}" ]
+components.Base.getClassList({
+  small: true
+});
+// ['.Base-{{ hash }}', '.Mixin-isSmall-{{ hash }}']
+
+components.Sized.getClassList({
+  small: true
+});
+// ['.Sized-{{ hash }}', '.Base-{{ hash }}', '.Mixin-isSmall-{{ hash }}']
+
+components.Colored.getClassList({
+  small: true
+});
+// ['.Colored-{{ hash }}', '.Sized-{{ hash }}', '.Base-{{ hash }}', '.Mixin-isSmall-{{ hash }}']
 ```
 
 ### when
@@ -234,7 +254,7 @@ import { when } from 'rockey';
 ```
 
 Helps to to keep syntax much better and cleaner when use mixins.
-Fulfilled each time when *getClassList()* is called.
+Called each time with *rule.getClassList()*.
 
 ```js
 import rule from 'rockey';
@@ -257,7 +277,8 @@ const classList = css.getClassList({
   primary: true
 });
 
-classList.Button; // ['Button-{{ hash }}', 'AnonMixin1-{{ hash }}']
+const className = classList.Button;
+// ['.Button-{{ hash }}', '.AnonMixin1-{{ hash }}']
 ```
 
 Inserted CSS:
@@ -299,7 +320,8 @@ const classList = css.getClassList({
   primary: true
 });
 
-classList.Button; // ['Button-{{ hash }}', 'isPrimary-{{ hash }}']
+const className = classList.Button;
+// ['.Button-{{ hash }}', '.isPrimary-{{ hash }}']
 ```
 
 Inserted CSS:
@@ -345,7 +367,7 @@ import condition from 'rockey/condition';
 import { condition } from 'rockey';
 ```
 
-Same as *when* but it is called only when CSS string is parsing.
+Same as *when* but it is called only when CSS string is parsing and does not takes *props* at arguments.
 
 ```js
 import rule from 'rockey';
@@ -395,7 +417,7 @@ rule.insert`
 ## Feedback wanted
 
 This is a very new approach and library and not all features are implemented yet. Feel free to [file issue or suggest feature](https://github.com/tuchk4/rockey/issues/new) to help me to make rockey better.
-Or ping me on twitter @tuchk4.
+Or ping me on twitter [@tuchk4](https://twitter.com/tuchk4).
 
 🎉
 
