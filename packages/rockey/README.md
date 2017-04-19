@@ -2,6 +2,7 @@
 
 Stressless styles for components using js. Write CSS with functional mixins according to the component structure using components names.
 
+<img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [Medium: CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
 
 ![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.5-alpha.32af5f74/rockey.min.js?compression=gzip&label=rockey%20gzip)
 

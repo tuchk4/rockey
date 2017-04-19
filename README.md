@@ -2,6 +2,8 @@
 
 Stressless styles for components using js. Write CSS with functional mixins according to the component structure using components names.
 
+<img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [Medium: CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
+
 ```bash
 npm install --save rockey
 
@@ -31,7 +33,7 @@ CSS in JS approach — is native JS. You don’t need additional tools to us
 - More cleaner file structure
 - Easier to run tests
 
-More details explanation at Medium Post - *"CSS in JS. Rockey"*
+More details explanation at Medium Post - <img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [Medium: CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
 
 ## Features and Advantages
 
