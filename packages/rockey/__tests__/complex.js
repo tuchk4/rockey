@@ -102,3 +102,18 @@ test('complex selectors #2', () => {
 
   expect(generated.css).toMatchSnapshot();
 });
+
+test('with classes', () => {
+  const parsed = parse(
+    `
+    Tab.active.super {
+      color: gray;
+    }
+  `
+  );
+
+  expect(parsed).toMatchSnapshot();
+  const generated = generateCss(parsed);
+
+  expect(generated.css).toMatchSnapshot();
+});

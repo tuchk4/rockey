@@ -21,19 +21,33 @@ export const getNotYetDefiendComponents = () => {
   return components;
 };
 
+const rexp = /([^\.#]+)((\.|#).+)/;
+
 export const getClassName = (displayName, parent, pre = '') => {
   let className = null;
+  let componentName = null;
+  let rest = '';
 
-  if (!comopnentsClassList.has(displayName)) {
-    if (notYetDefinedAtRootClassList.has(displayName)) {
-      className = notYetDefinedAtRootClassList.get(displayName);
+  let matches = rexp.exec(displayName);
+  if (!matches) {
+    componentName = displayName;
+  } else {
+    componentName = matches[1];
+    rest = matches[2];
+  }
+
+  if (!comopnentsClassList.has(componentName)) {
+    if (notYetDefinedAtRootClassList.has(componentName)) {
+      className = notYetDefinedAtRootClassList.get(componentName);
     } else {
-      className = generateClassName(displayName, false);
-      notYetDefinedAtRootClassList.set(displayName, className);
+      className = generateClassName(componentName, false);
+      notYetDefinedAtRootClassList.set(componentName, className);
     }
   } else {
-    className = comopnentsClassList.get(displayName);
+    className = comopnentsClassList.get(componentName);
   }
+
+  className += rest;
 
   return parent ? `${parent} ${pre}.${className}` : `${pre}.${className}`;
 };

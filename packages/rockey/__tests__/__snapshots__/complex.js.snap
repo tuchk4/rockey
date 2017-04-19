@@ -114,3 +114,31 @@ Object {
   },
 }
 `;
+
+exports[`with classes 1`] = `
+Object {
+  "combinedComponents": Array [],
+  "components": Object {
+    "Tab.active.super": Object {
+      "combinedComponents": Array [],
+      "components": Object {},
+      "mixins": Array [],
+      "modificators": Object {},
+      "styles": Object {
+        "color": "gray",
+      },
+    },
+  },
+  "mixins": Array [],
+  "modificators": Object {},
+  "styles": Object {},
+}
+`;
+
+exports[`with classes 2`] = `
+Object {
+  ".Tab-{{ hash }}.active.super": Object {
+    "color": "gray",
+  },
+}
+`;
