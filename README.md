@@ -19,22 +19,54 @@ npm install --save rockey-react
 - [rockey-react](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react)
 
 
-## Advantages
+### Why do we need CSS in JS?
+
+Firstly, CSS in JS approach is the vanilla JS. 
+
+CSS in JS approach — is native JS. You don’t need additional tools to use or build it.
+
+- For components libraries. Or when going to share components between applications.
+- More simpler application configuration
+- There is no custom loaders
+- More cleaner file structure
+- Easier to run tests
+
+More details explanation at Medium Post - *"CSS in JS. Rockey"*
+
+## Features and Advantages
+
+### Framework Agnostic
+
+Rockey could be used in any application.
+
+### Small Size
+
+- `rockey` ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.5-alpha.32af5f74/rockey.min.js?compression=gzip&label=gzip%20size)
+- `rockey-react` ![rockey-react gzip size](http://img.badgesize.io/https://unpkg.com/rockey-react@0.0.8-alpha.32af5f74/rockey-react.min.js?compression=gzip&label=gzip%20size)
+
+`npm run minify` output:
+
+![rockey and rockey-react size](https://monosnap.com/file/1vgaMkwKiYrFjproYTXr1mT3RgkHhT.png)
+
+
+### Uniq Class Names
+
+Each time generate uniq class names with randomly generated hash. Same as [css-modules](https://github.com/css-modules/css-modules).
 
 ### Component based selectors
 
 Write CSS according your components structure. Use real components names for CSS rules instead of classes.
+Means that if you have component Card  — use its name as CSS selector. If you have component PrimaryCard — use its name as CSS selector. Use nested selectors according to components structure.
 
-### Readable resulted CSS Class Names
+Live demo: [Card example](https://www.webpackbin.com/bins/-KfkcTYPzpyglHKfmuKh)
 
-Each generated classname is readable and comprehensible. The same components renders with same class names - it is very useful and сompatible with browser dev tools.
+### Readable CSS Class Names
 
-### ~100% CSS Syntax
+Each generated classname is clear and readable. The same components renders with same class names. It is very useful and сompatible with browser dev tools — change styles for one component will always apply changes for the rest of the same components.
 
-There is no needs to import specific function to render *@media*, *keyframes*, *font-faces*
-or pseudo classes like *:hover* or *::after*.
+![Generated class names](https://cdn-images-1.medium.com/max/1600/1*Q0qkkBt0xYt0LXjBy-2fzg.png)
 
-Support nested and multiple selectors.
+### ~100% CSS Syntax
 
 ```css
 Card {
@@ -60,128 +92,112 @@ Card {
 }
 ```
 
-### Framework Agnostic
+There is no needs to import specific function to render *@media*, *keyframes*, *font-faces* or pseudo classes like *:hover* or *::after*. Support nested and multiple selectors.
 
-`rockey` could be used in any application.
+Live demo with complex selectors: [Material TextField](https://www.webpackbin.com/bins/-Ki-KJQAQOJEmTECJUoE)
 
-```js
-import rockey from 'rockey';
+### Fast. And Will be More Faster!
 
-const rule = rockey`
-  Button {
-    color: black;
+Rendering CSS string, generating CSS rules and inserting them into DOM is really fast. There is example React application with implemented different approaches: fela / jss / glamor / styled-components / rockey.
 
-    ${when(props => props.primary)`
-      color: blue;
-    `}
+- Live: [tuchk4.github.io/css-in-js-app](https://tuchk4.github.io/css-in-js-app/#/)
+- Github repo: [github.com/tuchk4/css-in-js-app](https://github.com/tuchk4/css-in-js-app)
 
-    Icon {
-      margin: 5px;
-    }
-  }
-`;
+Benchmarks from parsing 10000 generated CSS classes:
 
-const classList = rule.getClassList({
-  primary: true
-});
-
-const className = classList.Button;
+```bash
+npm run best-results -- --size 10000
 ```
 
-- [`rockey-react`](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react) - example of integration with React. Provide a lot of additional features like - Split Component into different looks and Handlers mixins (mixins that depends on events like *onChange*, *onMouseMove* etc).
+- Rockey Parse Optimized — 3.325sec
+- Rockey Parse — 3.841sec
+- [Postcss](https://github.com/postcss/postcss) with [Nested Plugin](https://github.com/postcss/postcss-nested) 14.204sec
+- [Postcss Safe Parser](https://github.com/postcss/postcss-safe-parser) with [Nested Plugin](https://github.com/postcss/postcss-nested) — 16.404sec
 
-### Fast. And Will be More Faster!
+> Note that rockey and postcss were developed for different tasks. Rockey parser configured for specific syntax and will never be able to replace postcss
 
-Rendering CSS string, generating CSS rules and inserting them into DOM is really fast.
-
-#### [tuchk4.github.io/css-in-js-app](https://tuchk4.github.io/css-in-js-app)
-
-There is React application with implemented different css-in-js approaches:
-
-- [rockey](https://github.com/tuchk4/rockey)
-- [Glamor](https://github.com/threepointone/glamor)
-- [Fela](https://github.com/rofrischmann/fela)
-- [Aphrodite](https://github.com/Khan/aphrodite)
-- [JSS](https://github.com/cssinjs/jss)
-- [styled-components](https://github.com/styled-components/styled-components)
-
-Each bundle is lazy initializing (so for better results update page before test to keep initialized only current bundle). Also
-there are:
-
-- Timers for rendering 1000 same components and 1000 different components with styles defined in JS.
-- Checkbox to switch `primary` property
-- Input to change text
-- Links to source code of each bundle
 
 ### Class Name Extending
 
-Each rule is composed of current styles and all parents. But all CSS rules does not merged into one
-class. Instead used multiple classes. Thats why extending works correctly - when change CSS values of parent class via devtools - it will be applied for all children.
+Each rule is composed of current styles and all parents. But all CSS rules are not merged into one class. Instead used multiple classes. Thats why extending works correctly — when change CSS values of parent class via devtools — it will be applied for all children.
 
-### Write CSS that Depends on Props
+- Live demo: [Buttons example](https://www.webpackbin.com/bins/-KflMmHbcVU01PD6h43F)
+- Demo with anonymous components: [Anonymous Buttons example](https://www.webpackbin.com/bins/-Ki-Jk6OoMnFSFshKib6)
 
-Wrap CSS code with functions that takes props as arguments and return CSS. Support nested selectors, pseudo classes and all other features expect - other mixins.
+![git how extends works](https://cdn-images-1.medium.com/max/1600/1*cOu2wXkCq6_m6RPQSkNtsA.gif)
 
-To keep syntax much better use *when* function.
+### Dynamic CSS
 
-Rockey example:
-```js
-import rockey, { when } from 'rockey';
+```css
+Button {
+  color: black;
 
-const rule = rockey`
-  Button {
-    color: red;
-    ${when(props => props.primary)`
-      color: blue;
-    `}
-  }
-`;
-
-rule.getClassList({
-  primary: true
-});
-```
-
-Rockey React example:
-```js
-import rockey from 'rockey-react';
-
-const Button = rockey.button`
-  color: red;
-  ${rockey.when(props => props.primary)`
+  ${rockey.when('isPrimary', props => props.primary)`
     color: blue;
   `}
-`;
 
-<Button primary={true}>Yo</Button>
+  Icon {
+    margin: 5px;
+  }
+}
 ```
 
-### Uniq Class Names
+Inserted CSS:
 
-Each time generate uniq class names with randomly generated hash. Same as [css-modules](https://github.com/css-modules/css-modules).
+```css
+.Button-{{ hash }} {
+  color: black;
+}
 
-### Nested Selectors
+.isPrimary-{{ hash }}.Button-{{ hash }} {
+  color: blue;
+}
 
-### Small Size
+.Button-{{ hash }} .Icon-{{ hash }} {
+  font-size: 12px;
+}
+```
 
-- `rockey` ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.5-alpha.32af5f74/rockey.min.js?compression=gzip&label=gzip%20size)
-- `rockey-react` ![rockey-react gzip size](http://img.badgesize.io/https://unpkg.com/rockey-react@0.0.8-alpha.32af5f74/rockey-react.min.js?compression=gzip&label=gzip%20size)
+### Rockey React
 
-`npm run minify` output:
+Rockey was integrated with React. There are much more feature and advanteags.
 
-![rockey and rockey-react size](https://monosnap.com/file/1vgaMkwKiYrFjproYTXr1mT3RgkHhT.png)
+- Api documentation - [rockey-react](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react)
+- Features:
+  - [Flexible Rockey Higher Order Component](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react#flexible-rockey-higher-order-component)
+  - [Shortcuts](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react#shortcuts)
+  - [Dynamic CSS — props](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react#dynamic-css—props)
+  - [Dynamic CSS — Event Handlers](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react#dynamic-css—event-handlers)
+  - [Looks](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react#looks)
+  - [Recompose shortcut](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react#recompose-shortcut)
 
+---
 
 ## Current Disadvantages
 
 This is a very new and young library and not all features are implemented yet.
 But with each new release this list will be much and much shorter until there are no disadvantages :)
 
+- Does not support Server Rendering. Will be added in nearest release.
 - There is no auto-prefixer. Will be added in nearest release. Because styles are generating in realtime
 prefixes will be added only for current browser.
 - There is no CSS validation. Will be added in nearest release. Will work only if `process.NODE_ENV === 'development'`
 - There is not way to remove inserted rules. Will be added a bit later.
-- Does not support hot-reload.  Will be added a bit later.
+- Does not support hot-reload. Will be added a bit later.
+- Does not delete unused styles from DOM. Will be added a bit later.
+
+# Examples
+
+- [Card example](https://www.webpackbin.com/bins/-KfkcTYPzpyglHKfmuKh)
+- [Warning Card example](https://www.webpackbin.com/bins/-Ki-AMdS7Q0bzkSyZ81f)
+- [Buttons example](https://www.webpackbin.com/bins/-KflMmHbcVU01PD6h43F)
+- [Button / PrimaryButton / SuccessButton with raised mixin](https://www.webpackbin.com/bins/-Ki2_Te-1y_OiIbQB5bO)
+- [Anonymous Extending: raised Button / PrimaryButton / SuccessButton](https://www.webpackbin.com/bins/-Ki0oy6hS3vdQZluouKZ)
+- [Anonymous Buttons example](https://www.webpackbin.com/bins/-Ki-Jk6OoMnFSFshKib6)
+- [Material TextField](https://www.webpackbin.com/bins/-Ki-KJQAQOJEmTECJUoE)
+- [Primary and Raised Blocks](https://www.webpackbin.com/bins/-KflpZuJTEet-ECpPpWE)
+- [Input styles for specific value](https://www.webpackbin.com/bins/-Ki22k9ewZ6gh3Rw87d-)
+- [Div background depends on mouse X and Y](https://www.webpackbin.com/bins/-Ki1G10UY-sXlden2XSS)
 
 ## Contribute
 
@@ -200,3 +216,18 @@ If you want to run rockey inside another applicaiton via *npm link* - run `npm r
 - `lerna run prepublish` - to transpile all packages.
 
 There is precommit hook (via [husky](http://npmjs.com/package/husky)) to run [prettier](prettier) for all staged files.
+
+
+## Feedback wanted
+
+This is a very new approach and library and not all features are implemented yet. Feel free to [file issue or suggest feature](https://github.com/tuchk4/rockey/issues/new) to help me to make rockey better.
+Or ping me on twitter @tuchk4.
+
+🎉
+
+Upcoming plans:
+
+- Make disadvantages list as shorter as possible
+- Medium post *"Rockey Under the Hood"*. Topic about how rockey works — how to make batch CSS rules insert, how to parse and auto optimize parser, how dynamic CSS works
+- Medium post *"Rockey — tips and tricks"*. There are too lot of tips and tricks that I want to share with you
+- *"Components kit"* — library with easiest way to develop React components using rockey and [recompose](https://github.com/acdlite/recompose)

@@ -2,20 +2,52 @@
 
 Stressless styles for components using js. Write CSS with functional mixins according to the component structure using components names.
 
+
+![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.5-alpha.32af5f74/rockey.min.js?compression=gzip&label=rockey%20gzip)
+
 ```bash
 npm install --save rockey
 ```
 
-![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.5-alpha.32af5f74/rockey.min.js?compression=gzip&label=rockey%20gzip)
-
 ## Api
+
+- [rule](#rule)
+  - [rule.getClassList](#rule.getClassList)
+  - [rule.addParent](#rule.addParent)
+  - [rule.wrapWith](#rule.wrapWith)
+  - [rule.addMixins](#rule.addMixins)
+  - [rule.transform](#rule.transform)
+- [when](#when)
+- [condition](#condition)
+- [insert](#insert)
+
 
 ### rule
 
 ```js
-import rockey from 'rockey';
+import rule from 'rockey';
 
-const rule = rockey`
+const css = rule`
+  Button {
+    color: black;
+
+    Icon {
+      margin: 5px;
+    }
+  }
+`;
+```
+
+> NOTE: that in most cases developers uses only *getClassList* and *addParent* methods.
+Other methods are mostly used in internal rockey infrastructure, for integrations with
+other libraries and for new features.
+
+#### rule.getClassList
+
+```js
+import rule from 'rockey';
+
+const css = rule`
   Button {
     color: black;
 
@@ -25,73 +57,138 @@ const rule = rockey`
   }
 `;
 
-const classList = rule.getClassList();
+const classList = css.getClassList();
 const className = classList.Button;
 ```
 
-### rule methods.
+Inserted CSS:
 
-> NOTE: that in most cases developers uses only *getClassList* and *addParent* methods.
-Other methods are mostly used in internal rockey infrastructure, for integrations with
-other libraries and for new features.
+```css
+.Button-{{ hash }}
+  color: black;
+}
 
-- **getClassList(props)** - returns class list for all defined components
-- **addParent(rule)** - add parent rule. Class list will be merged with parent classes
+.Button-{{ hash }} .Icon-{{ hash }} {
+  margin: 5px;
+}
+```
+
+#### rule.addParent
+
+Add parent rule. Child rule classnames will be merged with parent rule classnames.
+It is possible to add only one parent.
 
 ```js
-const baseButtonRule = rockey`
+import rule from 'rockey';
+
+const baseButtonCss = rule`
   Button {
     color: black;
     background: white;
 
-    ${when(props => props.small)`
-      font-size: 12px;
-    `}
+    ${props => props.small ? `font-size: 12px;` : null}
   }
 `;
 
-const primaryButtonRule = rockey`
+const primaryButtonCss = rule`
   PrimaryButton {
     color: blue;
   }
 `;
 
-primaryButtonRule.addParent(baseButtonRule);
+primaryButtonCss.addParent(baseButtonCss);
 
-primaryButtonRule.getClassList({
+primaryButtonCss.getClassList({
   small: true
 });
+
+primaryButtonCss.PrimaryButton // ['PrimaryButton-{{ hash }}', 'Button-{{ hash }}', 'AnonMixin1-{{ hash }}']
 ```
 
-- **wrapWith(selector)** - wrap rules CSS with selector.
+Inserted CSS:
+
+```css
+.Button-{{ hash }{
+  color: black;
+  background: white;
+}
+
+.PrimaryButton-{{ hash }} {
+  color: black;
+  background: white;
+}
+
+.AnonMixin1-{{ hash }}.Button-{{ hash }} {
+  font-size: 12px;
+}
+```
+
+#### rule.wrapWith
+
+Wrap current rule with another selector.
 
 ```js
-const rule = rockey`
+import rule from 'rockey';
+
+const css = rule`
   Button {
     color: black;
   }
 `;
 
-rule.wrapWith('Layer');
+css.wrapWith('Layer');
+
+const classList = css.getClassList();
+classList.Layer // ['Layer-{{ hash }}']
 ```
 
-Rules CSS will be:
+Inserted CSS:
 
 ```css
-Layer {
-   Button {
-    color: black;
-  }
+.Layer-{{ hash }} .Button-{{ hash }} {
+  color: black;
 }
 ```
 
-- **addMixins(mixins)** - add mixins to rule
-- **transform(callback)** - helps to split rule into multiple lesser rules and defined relations between them
+#### rule.addMixins
 
-For example: split rule into multiple rules and make each component to be child of previous component.
+Api to add mixins. After this *addMixins()* rule should be wrapped with *wrapWith()*
+
+> NOTE: this method is mostly used in internal rockey infrastructure and for integrations with
+other libraries. Try not to use it in applications.
 
 ```js
-const rule = rockey`
+import rule from 'rockey';
+
+const css = rule`
+  color: black;
+`;
+
+css.addMixins([
+  props => props.small ? `font-size: 12px;` : null
+]);
+
+css.wrapWith('Button');
+
+css.getClassList({
+  small: true
+});
+```
+
+#### rule.transform
+
+Transform current css tree and setup relations between defined components
+
+> NOTE: this method is mostly used in internal rockey infrastructure and for integrations with
+other libraries. Try not to use it in applications.
+
+For example: split rule into multiple rules and make each component to be child of previous component.
+This is how [rockey-react](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react) *look* feature works.
+
+```js
+import rule from 'rockey';
+
+const css = rule`
   Base {
     background: none;
   }
@@ -105,7 +202,7 @@ const rule = rockey`
   }
 `;
 
-const components = rule.transform((tree, create) => {
+const components = css.transform((tree, create) => {
   const rules = {};
   const components = Object.keys(tree.components);
   for (let i = 0; i < components.length; i++) {
@@ -139,11 +236,13 @@ Helps to to keep syntax much better and cleaner when use mixins.
 Fulfilled each time when *getClassList()* is called.
 
 ```js
-const rule = rockey`
+import rule from 'rockey';
+
+const css = rule`
   Button {
     color: black;
 
-    ${when(props => props.primary)`
+    ${rockey.when(props => props.primary)`
       color: blue;
     `}
 
@@ -153,41 +252,83 @@ const rule = rockey`
   }
 `;
 
-const classList = rule.getClassList({
+const classList = css.getClassList({
   primary: true
 });
-const className = classList.Button;
+
+classList.Button; // ['Button-{{ hash }}', 'AnonMixin1-{{ hash }}']
+```
+
+Inserted CSS:
+
+```css
+.Button-{{ hash }} {
+  color: black;
+}
+
+.AnonMixin1-{{ hash }}.Button-{{ hash }} {
+  color: blue;
+}
+
+.Button-{{ hash }} .Icon-{{ hash }} {
+  font-size: 12px;
+}
+```
+
+To provide more readable mixin class name - define mixin name at first argument.
+
+```js
+import rule from 'rockey';
+
+const css = rule`
+  Button {
+    color: black;
+
+    ${rockey.when('isPrimary', props => props.primary)`
+      color: blue;
+    `}
+
+    Icon {
+      margin: 5px;
+    }
+  }
+`;
+
+const classList = css.getClassList({
+  primary: true
+});
+
+classList.Button; // ['Button-{{ hash }}', 'isPrimary-{{ hash }}']
+```
+
+Inserted CSS:
+
+```css
+.Button-{{ hash }} {
+  color: black;
+}
+
+.isPrimary-{{ hash }}.Button-{{ hash }} {
+  color: blue;
+}
+
+.Button-{{ hash }} .Icon-{{ hash }} {
+  font-size: 12px;
+}
 ```
 
 Access to props inside CSS rules:
 
 ```js
-const rule = rockey`
+import rule from 'rockey';
+
+const css = rule`
   Button {
     color: black;
 
-    ${when(props => props.color)(props => `
+    ${rockey.when(props => props.color)(props => `
       color: ${props.color};
     `)}
-
-    Icon {
-      margin: 5px;
-    }
-  }
-`;
-```
-
-To provide more readable mixin class name - define mixin name at first argument.
-Resulted class name will be appended with hash.
-
-```js
-const rule = rockey`
-  Button {
-    color: black;
-
-    ${when('isPrimary', props => props.primary)`
-      color: blue;
-    `}
 
     Icon {
       margin: 5px;
@@ -199,14 +340,16 @@ const rule = rockey`
 ### condition
 
 ```js
-import rockey, { condition } from 'rockey';
 import condition from 'rockey/condition';
+import { condition } from 'rockey';
 ```
 
 Same as *when* but it is called only when CSS string is parsing.
 
 ```js
-const rule = rockey`
+import rule from 'rockey';
+
+const css = rule`
   Button {
     color: black;
 
@@ -223,52 +366,41 @@ const rule = rockey`
 
 ### insert
 
-Insert CSS rules to the DOM as is. Without any processing.
-
 ```js
 import { insert } from 'rockey';
 import insert from 'rockey/insert';
-
-insert({
-  'div': {
-    'color': 'blue'
-  },
-  '.my-div': {
-    'border': '1px solid #000'
-  }
-})
 ```
 
-## Examples
+Insert CSS rules to the DOM as is. Without any processing.
 
 ```js
-const buttonRule = rule`
-  Button {
-    padding: 5px;
-    border: none;
-    background: white;
-    color: black;
+import rule from 'rockey';
+
+rule.insert`
+  body {
+    overflow: hidden;
+  }
+
+  #hardcode {
+    color: red;
+  }
+
+  span.my {
+    color: green;
   }
 `;
-
-const primaryButtonRule = rule`
-  PrimaryButton {
-    color: blue;  
-  }
-`;
-
-primaryButtonRule.addParent(buttonRule);
-
-primaryButtonRule.getClassList({});
-
-{
-  "PrimaryButton": ["PrimaryButton", "Button"]
-}
 ```
 
-Will render components (hash will be generated each time randomly):
+## Feedback wanted
 
-```html
-<Button class="Button-1fcd">
-<Button class="PrimaryButton-ab4c Button-1fcd">
-```
+This is a very new approach and library and not all features are implemented yet. Feel free to [file issue or suggest feature](https://github.com/tuchk4/rockey/issues/new) to help me to make rockey better.
+Or ping me on twitter @tuchk4.
+
+🎉
+
+Upcoming plans:
+
+- Make disadvantages list as shorter as possible
+- Medium post *"Rockey Under the Hood"*. Topic about how rockey works — how to make batch CSS rules insert, how to parse and auto optimize parser, how dynamic CSS works
+- Medium post *"Rockey — tips and tricks"*. There are too lot of tips and tricks that I want to share with you
+- *"Components kit"* — library with easiest way to develop React components using rockey and [recompose](https://github.com/acdlite/recompose)
