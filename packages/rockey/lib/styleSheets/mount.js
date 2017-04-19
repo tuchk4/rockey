@@ -17,7 +17,13 @@ const createStyleSheet = type => {
 
     mountNode.type = 'text/css';
 
-    document.head.appendChild(mountNode);
+    const link = document.querySelector('link[rel="stylesheet"]');
+    if (link) {
+      document.head.insertBefore(mountNode, link);
+    } else {
+      document.head.appendChild(mountNode);
+    }
+
     mountNode.textContent = '';
 
     return mountNode;
