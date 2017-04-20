@@ -124,7 +124,6 @@ npm run best-results -- --size 10000
 
 > Note that rockey and postcss were developed for different tasks. Rockey parser configured for specific syntax and will never be able to replace postcss
 
-
 ### Class Name Extending
 
 rockey uses separated CSS classes for each rule and for each mixin. That is why it is very сompatible with devtools. When change CSS values of parent component via devtools — it will be applied for all children.
@@ -151,7 +150,7 @@ const SuperButton = PrimaryButton('SuperButton')`
 `;
 ```
 
-Insted CSS (after component is rendered):
+Inserted CSS (after component is rendered):
 
 ```css
 .Button-{{ hash }} {
@@ -171,7 +170,7 @@ Insted CSS (after component is rendered):
 }
 ```
 
-And for `<PrimaryButton large/>` className prop will equal `.PrimaryButton-{{ hash }} .Button-{{ hash }} .Mixin-LargeButton-{{ hash }}`.
+And for `<PrimaryButton large={true}/>` className prop will equal `.PrimaryButton-{{ hash }} .Button-{{ hash }} .Mixin-LargeButton-{{ hash }}`.
 
 That is why it is very сompatible with devtools. When change CSS values of parent component via devtools — it will be applied for all children.
 
@@ -255,6 +254,7 @@ prefixes will be added only for current browser.
 - [Input styles for specific value](https://www.webpackbin.com/bins/-Ki22k9ewZ6gh3Rw87d-)
 - [Div background depends on mouse X and Y](https://www.webpackbin.com/bins/-Ki1G10UY-sXlden2XSS)
 - [Animated divs](https://www.webpackbin.com/bins/-KflkDbSVrccxSkAAFZq)
+- [Themed Buttons](https://www.webpackbin.com/bins/-Kflsy2FIkQy4n27qeLc)
 
 ## Contribute
 
