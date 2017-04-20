@@ -254,6 +254,7 @@ prefixes will be added only for current browser.
 - [Primary and Raised Blocks](https://www.webpackbin.com/bins/-KflpZuJTEet-ECpPpWE)
 - [Input styles for specific value](https://www.webpackbin.com/bins/-Ki22k9ewZ6gh3Rw87d-)
 - [Div background depends on mouse X and Y](https://www.webpackbin.com/bins/-Ki1G10UY-sXlden2XSS)
+- [Animated divs](https://www.webpackbin.com/bins/-KflkDbSVrccxSkAAFZq)
 
 ## Contribute
 
