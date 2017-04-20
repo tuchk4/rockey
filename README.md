@@ -127,7 +127,55 @@ npm run best-results -- --size 10000
 
 ### Class Name Extending
 
-Each rule is composed of current styles and all parents. But all CSS rules are not merged into one class. Instead used multiple classes. Thats why extending works correctly — when change CSS values of parent class via devtools — it will be applied for all children.
+rockey uses separated CSS classes for each rule and for each mixin. That is why it is very сompatible with devtools. When change CSS values of parent component via devtools — it will be applied for all children.
+
+rockey-react example (works same as [rockey.addParent](https://github.com/tuchk4/rockey/tree/master/packages/rockey#ruleaddparent)):
+
+```js
+import rockey from 'rockey-react';
+
+const Button = rockey.button('Button')`
+  color: black;
+
+  ${rockey.when('LargeButton', props => props.large)`
+    font-size: 20px;
+  `}
+`;
+
+const PrimaryButton = Button('PrimaryButton')`
+  color: blue;
+`;
+
+const SuperButton = PrimaryButton('SuperButton')`
+  color: red;
+`;
+```
+
+Insted CSS (after component is rendered):
+
+```css
+.Button-{{ hash }} {
+  color: black;
+}
+
+.PrimaryButton-{{ hash }} {
+  color: blue;
+}
+
+.SuperButton-{{ hash }} {
+  color: red;
+}
+
+.Mixin-LargeButton-{{ hash }}.Button-{{ hash }} {
+  font-size: 20px;
+}
+```
+
+And for `<PrimaryButton large/>` className prop will equal `.PrimaryButton-{{ hash }} .Button-{{ hash }} .Mixin-LargeButton-{{ hash }}`.
+
+That is why it is very сompatible with devtools. When change CSS values of parent component via devtools — it will be applied for all children.
+
+If prop *large* is changed to *false* - only mixin class will be removed instead of all styles re-calculating. This is another reason why rockey is fast.
 
 - Live demo: [Buttons example](https://www.webpackbin.com/bins/-KflMmHbcVU01PD6h43F)
 - Demo with anonymous components: [Anonymous Buttons example](https://www.webpackbin.com/bins/-Ki-Jk6OoMnFSFshKib6)

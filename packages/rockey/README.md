@@ -88,7 +88,7 @@ const baseButtonCss = rule`
     color: black;
     background: white;
 
-    ${props => props.small ? `font-size: 12px;` : null}
+    ${props => props.small && `font-size: 12px;`}
   }
 `;
 
@@ -169,7 +169,7 @@ const css = rule`
 `;
 
 css.addMixins([
-  props => props.small ? `font-size: 12px;` : null
+  props => props.small && `font-size: 12px;`
 ]);
 
 css.wrapWith('Button');
