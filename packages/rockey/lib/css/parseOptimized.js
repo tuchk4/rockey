@@ -195,11 +195,31 @@ const parse = (raw, parent) => {
       }
       if (!!component) {
         if (openedBrackets === 0) {
-          components[component] = parse(current, {
+          const parsed = parse(current, {
             parentType: 'component',
             name: component,
             combinedComponents,
           });
+          if (components[component]) {
+            components[component] = {
+              mixins: [...components[component].mixins, ...parsed.mixins],
+              components: {
+                ...components[component].components,
+                ...parsed.components,
+              },
+              modificators: {
+                ...components[component].modificators,
+                ...parsed.modificators,
+              },
+              combinedComponents: [
+                ...components[component].combinedComponents,
+                ...parsed.combinedComponents,
+              ],
+              styles: { ...components[component].styles, ...parsed.styles },
+            };
+          } else {
+            components[component] = parsed;
+          }
           combinedComponents = [];
           component = null;
           current = '';
