@@ -2,7 +2,7 @@
 
 Stressless CSS for components using JS. Write Component Based CSS with functional mixins.
 
-<img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
+<img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@tuchk4/css-in-js-rockey-890ebbbd16e7)
 
 ```bash
 npm install --save rockey
@@ -124,7 +124,7 @@ npm run best-results -- --size 10000
 
 > Note that rockey and postcss were developed for different tasks. Rockey parser configured for specific syntax and will never be able to replace postcss
 
-### Class Name Extending
+### Class Names
 
 rockey uses separated CSS classes for each rule and for each mixin. That is why it is very сompatible with devtools. When change CSS values of parent component via devtools — it will be applied for all children.
 

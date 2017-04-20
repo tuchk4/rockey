@@ -1,6 +1,6 @@
 # Rockey React
 
-<img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
+<img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@tuchk4/css-in-js-rockey-890ebbbd16e7)
 
 ```bash
 npm i --save rockey-react
@@ -81,7 +81,7 @@ const Block = rockey.div('Block')`
 import when from 'rockey/when';
 ```
 
-Same as [rockey.when](https://github.com/tuchk4/rockey/tree/master/packages/rockey#when)
+Write CSS that depends on components props. Same as [rockey.when](https://github.com/tuchk4/rockey/tree/master/packages/rockey#when)
 
 ```js
 const Button = rockey.div`
@@ -97,6 +97,8 @@ const Button = rockey.div`
 ```js
 import handler from 'rockey-react/handler';
 ```
+
+Write CSS mixins that are triggered along with events handlers.
 
 - Live demo: [Input styles for specific value](https://www.webpackbin.com/bins/-Ki22k9ewZ6gh3Rw87d-)
 - Live demo: [Div background depends on mouse X and Y](https://www.webpackbin.com/bins/-Ki1G10UY-sXlden2XSS)
@@ -256,6 +258,7 @@ const Line = rockempose.span(
 - [Warning Card example](https://www.webpackbin.com/bins/-Ki-AMdS7Q0bzkSyZ81f)
 - [Buttons example](https://www.webpackbin.com/bins/-KflMmHbcVU01PD6h43F)
 - [Button / PrimaryButton / SuccessButton with raised mixin](https://www.webpackbin.com/bins/-Ki2_Te-1y_OiIbQB5bO)
+- [Buttons look](https://www.webpackbin.com/bins/-Ki4mYd1WoxNaYl5pH1I)
 - [Anonymous Extending: raised Button / PrimaryButton / SuccessButton](https://www.webpackbin.com/bins/-Ki0oy6hS3vdQZluouKZ)
 - [Anonymous Buttons example](https://www.webpackbin.com/bins/-Ki-Jk6OoMnFSFshKib6)
 - [Material TextField](https://www.webpackbin.com/bins/-Ki-KJQAQOJEmTECJUoE)
