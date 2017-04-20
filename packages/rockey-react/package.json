@@ -1,6 +1,6 @@
 {
   "name": "rockey-react",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Stressless styles for components using js. Write CSS with functional mixins according to the component structure using components names",
   "main": "index.js",
   "keywords": [
@@ -36,7 +36,7 @@
     "classnames": "^2.2.5",
     "lodash": "^4.17.4",
     "react": "^15.4.2",
-    "rockey": "^0.0.5-alpha.cf98745a"
+    "rockey": "^0.0.6"
   },
   "scripts": {
     "prepublish": "node tasks/prepublish.js",

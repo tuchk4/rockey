@@ -1,6 +1,6 @@
 {
   "name": "rockey",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Stressless styles for components using js. Write CSS with functional mixins according to the component structure using components names",
   "main": "index.js",
   "keywords": [
