@@ -27,13 +27,16 @@
     "handler.js",
     "RockeyHoc.js",
     "utils/RockeyHocWithHandlers.js",
+    "utils/filterProps.js",
     "rockey-react.min.js"
   ],
   "peerDependencies": {
-    "recompose": "^0.22.0"
+    "recompose": "^0.22.0",
+    "react-dom": "^15.5.4"
   },
   "dependencies": {
     "classnames": "^2.2.5",
+    "is-react-prop": "^0.1.1",
     "lodash": "^4.17.4",
     "react": "^15.4.2",
     "rockey": "^0.0.7"

@@ -8,6 +8,8 @@ import rule from 'rockey/rule';
 import look from './look';
 
 import RockeyHocWithHandlers from './utils/RockeyHocWithHandlers';
+import filterProps from './utils/filterProps';
+
 import { ROCKEY_MIXIN_HANDLER_KEY } from './handler';
 
 const COMPONENT_EXTENDS = 'COMPONENT_EXTENDS';
@@ -138,7 +140,7 @@ export const getRockeyHoc = () => {
             const className = classnames(classList[name], props.className);
 
             return React.createElement(BaseComponent, {
-              ...props,
+              ...filterProps(props),
               className,
             });
           }
