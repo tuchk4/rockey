@@ -2,7 +2,9 @@
 
 Stressless CSS for components using JS. Write Component Based CSS with functional mixins.
 
-<img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@tuchk4/css-in-js-rockey-890ebbbd16e7)
+- <img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@tuchk4/css-in-js-rockey-890ebbbd16e7)
+- [SUMMARY.md](https://github.com/tuchk4/rockey/blob/master/SUMMARY.md) - here I tried to collect all features and differences with other libs.
+
 
 ```bash
 npm install --save rockey
@@ -33,7 +35,7 @@ CSS in JS approach — is native JS. You don’t need additional tools to us
 - More cleaner file structure
 - Easier to run tests
 
-More details explanation at Medium Post - <img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
+More details explained at Medium Post - <img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
 
 ## Features and Advantages
 

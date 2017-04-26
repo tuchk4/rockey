@@ -100,8 +100,9 @@ import handler from 'rockey-react/handler';
 
 Write CSS mixins that are triggered along with events handlers.
 
-- Live demo: [Input styles for specific value](https://www.webpackbin.com/bins/-Ki22k9ewZ6gh3Rw87d-)
-- Live demo: [Div background depends on mouse X and Y](https://www.webpackbin.com/bins/-Ki1G10UY-sXlden2XSS)
+Demos:
+- [Input styles for specific value](https://www.webpackbin.com/bins/-Ki22k9ewZ6gh3Rw87d-)
+- [Div background depends on mouse X and Y](https://www.webpackbin.com/bins/-Ki1G10UY-sXlden2XSS)
 
 ```js
 import rockey from 'rockey-react';
@@ -134,7 +135,7 @@ Most component features could be implemented as component’s prop or as Higher 
 <PrimaryButton>I'm PrimaryButton</PrimaryButton>
 ```
 
-There is the approach that helps to make more correct decision:
+There is the approach that helps to make more correct decision what approach use
 
 | Button   | raised | disabled  | success | warning | primary | ripple |
 | ---------|--------|-----------|---------|---------|---------|--------|   
@@ -147,7 +148,8 @@ There is the approach that helps to make more correct decision:
 
 - *ripple* - could be used in any state. So it should be used as prop.
 - *disabled* - could be used in any state. So it should be used as prop.
-- *success* - could not be used along with *warning* and *primary*. So it should be implemented as Higher Order Component.
+- *success* - could **NOT*** be used along with *warning* and *primary*. So it should be implemented as Higher Order Component.
+- and so on.
 
 If there is no ❌ — feature should be implemented as props. If there is a least one ❌ — feature should be implemented as Higher Order Component.
 
@@ -222,9 +224,6 @@ const { PrimaryButton, SuccessButton } = Button.look`
 // or
 <Button.PrimaryButton />
 ```
-
-Dome: [Look: raised Button / PrimaryButton / SuccessButton](https://www.webpackbin.com/bins/-Ki0oy6hS3vdQZluouKZ)
-
 
 ### Recompose shortcut
 
