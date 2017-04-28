@@ -23,6 +23,7 @@
     "index.js",
     "htmlTags.js",
     "look.js",
+    "speedy.js",
     "recompose.js",
     "handler.js",
     "RockeyHoc.js",

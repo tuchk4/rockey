@@ -1,11 +1,9 @@
 import isFunction from 'lodash/isFunction';
-
-let mixinCounter = 0;
+import camelCase from 'lodash/camelCase';
 
 const MIXIN_PREFIX = '_MIXIN_';
 
-const getMixinName = mixin =>
-  `${mixin.displayName || mixin.name || `${++mixinCounter}`}`;
+const getMixinName = mixin => `${mixin.displayName || mixin.name}`;
 
 const interpolateWithMixins = (strings, ...values) => {
   const mixinsFunctions = {};
@@ -14,17 +12,58 @@ const interpolateWithMixins = (strings, ...values) => {
   const raw = strings.reduce(
     (rule, part, i) => {
       let value = values[i] === undefined ? '' : values[i];
+      let raw = part; //.trim();
 
+      let append = value;
       if (isFunction(value)) {
-        const name = getMixinName(value);
+        let i = raw.length;
+        let composedRule = '';
+        let found = false;
+
+        while (true) {
+          i--;
+
+          if (raw[i] === ':') {
+            found = true;
+          } else if (raw[i] !== ' ') {
+            break;
+          }
+
+          if (found) {
+            if (raw[i] === ' ' || raw[i] === ';' || raw[i] === '{') {
+              break;
+            }
+
+            composedRule += raw[i];
+          }
+        }
+
+        raw = raw.slice(0, i);
+        composedRule = Array.from(composedRule).reverse().join('');
+
+        let name = null;
+        if (composedRule) {
+          name = camelCase(composedRule);
+        } else {
+          name = getMixinName(value);
+        }
 
         let placeholder = `${MIXIN_PREFIX}${name}${++counter}`;
-        mixinsFunctions[placeholder] = value;
 
-        value = placeholder;
+        if (composedRule) {
+          mixinsFunctions[placeholder] = (...args) => {
+            return `${composedRule}: ${value(...args)}`;
+          };
+
+          mixinsFunctions[placeholder].displayName = name;
+        } else {
+          mixinsFunctions[placeholder] = value;
+        }
+
+        append = `${placeholder};`;
       }
 
-      return rule + part + value;
+      return rule + raw + append;
     },
     ''
   );

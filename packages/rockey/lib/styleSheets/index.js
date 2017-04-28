@@ -9,4 +9,6 @@ export const getRules = css => sheet.getRules();
 export const getMixins = css => sheet.getMixins();
 export const clearStyles = css => sheet.clear();
 
+export const speedy = () => sheet.enableSpeedy();
+
 export default insertRules;

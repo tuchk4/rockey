@@ -1,6 +1,6 @@
 import hash from '../utils/hash';
 
-let comopnentsClassList = new Map();
+let componentsClassList = new Map();
 
 // For correct styling - this Map should be empty when App is loaded.
 // If not - styles are wrong
@@ -9,7 +9,7 @@ let notYetDefinedAtRootClassList = new Map();
 const generateClassName = displayName => `${displayName}-${hash()}`;
 
 export const clearCachedClassNames = () => {
-  comopnentsClassList = new Map();
+  componentsClassList = new Map();
   notYetDefinedAtRootClassList = new Map();
 };
 
@@ -21,13 +21,19 @@ export const getNotYetDefiendComponents = () => {
   return components;
 };
 
-const rexp = /([^\.#]+)((\.|#).+)/;
+const rexp = /([^\.#\[]+)((\.|#|\[).+)/;
 
 export const getClassName = (displayName, parent, pre = '') => {
   let className = null;
+
+  // pre calc cache check
+  // if (componentsClassList.has(displayName)) {
+  //   className = componentsClassList.get(displayName);
+  //   return parent ? `${parent} ${pre}.${className}` : `${pre}.${className}`;
+  // }
+
   let componentName = null;
   let rest = '';
-
   let matches = rexp.exec(displayName);
   if (!matches) {
     componentName = displayName;
@@ -36,7 +42,7 @@ export const getClassName = (displayName, parent, pre = '') => {
     rest = matches[2];
   }
 
-  if (!comopnentsClassList.has(componentName)) {
+  if (!componentsClassList.has(componentName)) {
     if (notYetDefinedAtRootClassList.has(componentName)) {
       className = notYetDefinedAtRootClassList.get(componentName);
     } else {
@@ -44,7 +50,7 @@ export const getClassName = (displayName, parent, pre = '') => {
       notYetDefinedAtRootClassList.set(componentName, className);
     }
   } else {
-    className = comopnentsClassList.get(componentName);
+    className = componentsClassList.get(componentName);
   }
 
   className += rest;
@@ -62,7 +68,7 @@ export const getRootClassNameMap = (tree, { isRoot }) => {
   // - at getRootClassNameMap function
   // - at getClassName if Comopnent is described as child at another root component
   for (const displayName of Object.keys(tree.components)) {
-    if (!comopnentsClassList.has(displayName)) {
+    if (!componentsClassList.has(displayName)) {
       let className = null;
       if (notYetDefinedAtRootClassList.has(displayName)) {
         className = notYetDefinedAtRootClassList.get(displayName);
@@ -72,7 +78,7 @@ export const getRootClassNameMap = (tree, { isRoot }) => {
       }
 
       classNameMap[displayName] = className;
-      comopnentsClassList.set(displayName, className);
+      componentsClassList.set(displayName, className);
     } else {
       if (isRoot) {
         console.warn(
@@ -80,7 +86,7 @@ export const getRootClassNameMap = (tree, { isRoot }) => {
         );
       }
 
-      classNameMap[displayName] = comopnentsClassList.get(displayName);
+      classNameMap[displayName] = componentsClassList.get(displayName);
     }
   }
 

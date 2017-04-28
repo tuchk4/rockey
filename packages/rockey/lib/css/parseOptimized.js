@@ -48,6 +48,7 @@ const parseCss = styles => {
 const isStartsWithModificator = raw => {
   return 0 === raw.indexOf('@media') ||
     0 === raw.indexOf('@keyframes') ||
+    0 === raw.indexOf('::placeholder') ||
     0 === raw.indexOf('::after') ||
     0 === raw.indexOf('::before') ||
     0 === raw.indexOf('::first-letter') ||
@@ -107,12 +108,14 @@ const parse = (raw, parent) => {
         possibleMixin = true;
       }
       if (possibleMixin) {
-        mixin += symbol;
-        if (symbol === ' ') {
+        if (symbol === ' ' || symbol === ';') {
           possibleMixin = false;
-          mixins.push(mixin.trim());
-          current = current.replace(mixin.trim(), '');
+          mixins.push(mixin);
+          current = current.replace(mixin, '');
           mixin = '';
+          continue;
+        } else {
+          mixin += symbol;
         }
       }
     }

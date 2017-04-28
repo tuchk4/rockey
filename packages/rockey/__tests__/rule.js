@@ -652,7 +652,7 @@ describe('rule', () => {
     `;
 
     expect(() => css.getClassList()).toThrow(
-      'Mixin restuls should not contain other mixins'
+      'Mixin results should not contain other mixins'
     );
   });
 });

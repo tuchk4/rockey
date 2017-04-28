@@ -68,6 +68,7 @@ const isModificatorEndSymbol = symbol => {
 const isStartsWithModificator = raw => {
   return 0 === raw.indexOf('@media') ||
     0 === raw.indexOf('@keyframes') ||
+    0 === raw.indexOf('::placeholder') ||
     0 === raw.indexOf('::after') ||
     0 === raw.indexOf('::before') ||
     0 === raw.indexOf('::first-letter') ||
@@ -370,7 +371,7 @@ const parse = (raw, parent) => {
 
   // @replace-start
   const isMixinEndSymbol = symbol => {
-    return symbol === ' ';
+    return symbol === ' ' || symbol === ';';
   };
   // @replace-end
 
@@ -406,23 +407,15 @@ const parse = (raw, parent) => {
 
   // @replace-start
   const removeMixinFromStyles = () => {
-    current = current.replace(mixin.trim(), '');
+    current = current.replace(mixin, '');
   };
   // @replace-end
 
   // @replace-start
   const saveMixin = () => {
-    mixins.push(mixin.trim());
+    mixins.push(mixin);
   };
   // @replace-end
-
-  // @remove-start
-  const isInValidMixinPosition = () => {
-    return !parent ||
-      (currentBackup.trim().length &&
-        !new RegExp(`(;|{)\\s+?${mixin.trim()}`).test(`${current}`.trim()));
-  };
-  // @remove-end
 
   // ----
 
@@ -433,30 +426,15 @@ const parse = (raw, parent) => {
       }
 
       if (isPossibleMixin()) {
-        saveMixinString(symbol);
         if (isMixinEndSymbol(symbol)) {
           possibleMixinEnd();
-          // @remove-start
-          if (isInValidMixinPosition()) {
-            if (parent) {
-              const nearestCode = `${currentBackup}${current}`
-                .replace(/\s+/g, ' ')
-                // .replace(mixin.trim(), '{{ MIXIN }}' + mixin)
-                .trim();
-
-              console.warn(
-                'seems wrong mixin position',
-                `${parent.name} - ${nearestCode}`
-              );
-            } else {
-              console.warn('mixin should not be at root');
-            }
-          }
-          // @remove-end
-
           saveMixin();
           removeMixinFromStyles();
           clearMixin();
+
+          continue;
+        } else {
+          saveMixinString(symbol);
         }
       }
     }

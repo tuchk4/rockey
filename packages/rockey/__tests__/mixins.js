@@ -49,94 +49,94 @@ describe('mixins', () => {
   //   expect(generated.components.Button.mixins.length).toEqual(2);
   // });
 
-  it('wrong mixin position #1 (named mixin)', () => {
-    const { raw } = interpolateWithMixins`
-      Button {
-        color: red;
-        background: ${isRaised}
-      }
-    `;
-
-    parse(raw);
-
-    expect(console.warn.mock.calls.length).toEqual(1);
-    expect(console.warn.mock.calls[0][1]).toEqual(
-      'Button - color: red; background: _MIXIN_isRaised1'
-    );
-  });
-
-  it('wrong mixin position #2', () => {
-    const { raw } = interpolateWithMixins`
-      Button {
-        color: red;
-
-        Icon {
-          background: ${primary}
-        }
-      }
-    `;
-
-    parse(raw);
-
-    expect(console.warn.mock.calls.length).toEqual(1);
-    expect(console.warn.mock.calls[0][1]).toEqual(
-      'Icon - background: _MIXIN_primary1'
-    );
-  });
-
-  it('wrong mixin position #3', () => {
-    const { raw } = interpolateWithMixins`
-      Button {
-        color: red;
-
-        :hover {
-          background: ${primary}
-        }
-      }
-    `;
-
-    parse(raw);
-
-    expect(console.warn.mock.calls.length).toEqual(1);
-    expect(console.warn.mock.calls[0][1]).toEqual(
-      ':hover - background: _MIXIN_primary1'
-    );
-  });
-
-  it('wrong mixin position #4', () => {
-    const { raw } = interpolateWithMixins`
-      ${primary}
-
-      Button {
-        color: red;
-      }
-    `;
-
-    parse(raw);
-
-    expect(console.warn.mock.calls.length).toEqual(1);
-    expect(console.warn.mock.calls[0][0]).toEqual(
-      'mixin should not be at root'
-    );
-  });
-
-  it('wrong mixin position #5', () => {
-    const { raw } = interpolateWithMixins`
-
-      Button {
-        color: red;
-      }
-
-      ${primary}
-    `;
-
-    parse(raw);
-
-    expect(console.warn.mock.calls.length).toEqual(1);
-    expect(console.warn.mock.calls[0][0]).toEqual(
-      'mixin should not be at root'
-    );
-  });
+  // it('wrong mixin position #1 (named mixin)', () => {
+  //   const { raw } = interpolateWithMixins`
+  //     Button {
+  //       color: red;
+  //       background: ${isRaised}
+  //     }
+  //   `;
+  //
+  //   parse(raw);
+  //
+  //   expect(console.warn.mock.calls.length).toEqual(1);
+  //   expect(console.warn.mock.calls[0][1]).toEqual(
+  //     'Button - color: red; background: _MIXIN_isRaised1'
+  //   );
+  // });
+  //
+  // it('wrong mixin position #2', () => {
+  //   const { raw } = interpolateWithMixins`
+  //     Button {
+  //       color: red;
+  //
+  //       Icon {
+  //         background: ${primary}
+  //       }
+  //     }
+  //   `;
+  //
+  //   parse(raw);
+  //
+  //   expect(console.warn.mock.calls.length).toEqual(1);
+  //   expect(console.warn.mock.calls[0][1]).toEqual(
+  //     'Icon - background: _MIXIN_primary1'
+  //   );
+  // });
+  //
+  // it('wrong mixin position #3', () => {
+  //   const { raw } = interpolateWithMixins`
+  //     Button {
+  //       color: red;
+  //
+  //       :hover {
+  //         background: ${primary}
+  //       }
+  //     }
+  //   `;
+  //
+  //   parse(raw);
+  //
+  //   expect(console.warn.mock.calls.length).toEqual(1);
+  //   expect(console.warn.mock.calls[0][1]).toEqual(
+  //     ':hover - background: _MIXIN_primary1'
+  //   );
+  // });
+  //
+  // it('wrong mixin position #4', () => {
+  //   const { raw } = interpolateWithMixins`
+  //     ${primary}
+  //
+  //     Button {
+  //       color: red;
+  //     }
+  //   `;
+  //
+  //   parse(raw);
+  //
+  //   expect(console.warn.mock.calls.length).toEqual(1);
+  //   expect(console.warn.mock.calls[0][0]).toEqual(
+  //     'mixin should not be at root'
+  //   );
+  // });
+  //
+  // it('wrong mixin position #5', () => {
+  //   const { raw } = interpolateWithMixins`
+  //
+  //     Button {
+  //       color: red;
+  //     }
+  //
+  //     ${primary}
+  //   `;
+  //
+  //   parse(raw);
+  //
+  //   expect(console.warn.mock.calls.length).toEqual(1);
+  //   expect(console.warn.mock.calls[0][0]).toEqual(
+  //     'mixin should not be at root'
+  //   );
+  // });
 
   it('correct mixin position #1', () => {
     const { raw } = interpolateWithMixins`

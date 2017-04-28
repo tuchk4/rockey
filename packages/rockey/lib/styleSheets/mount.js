@@ -4,14 +4,7 @@ const isBrowser = typeof document !== 'undefined';
 
 const createStyleSheet = type => {
   if (!isBrowser) {
-    // TODO: add support to server rendering
-    return {
-      children: [],
-      type,
-      innerHtml: '',
-      textContent: '',
-      appendChild: node => {},
-    };
+    return {};
   } else {
     const mountNode = document.createElement('style');
 
@@ -35,6 +28,10 @@ const mount = () => {
     rules: createStyleSheet('rules'),
     mixins: createStyleSheet('mixins'),
   });
+};
+
+export const mountMixinsNode = () => {
+  return createStyleSheet('mixins');
 };
 
 export default mount;

@@ -1,20 +1,16 @@
 import isArray from 'lodash/isArray';
+import { mountMixinsNode } from './mount';
+
+const isNode = typeof process === 'object';
+
+// fix this shit
+const raf = !isNode ? window.requestAnimationFrame : setTimeout;
+const cancelRaf = !isNode ? window.cancelAnimationFrame : clearTimeout;
 
 const isContainer = key => key.indexOf('@media') === 0;
 const isKeyFrames = key => key.indexOf('@keyframes') === 0;
 
-// const cache = new Map();
-// TODO: add className + description cache
 const stringifyRule = (className, description) => {
-  // const cacheKey = JSON.stringify(description);
-  // if (cache.has(cacheKey)) {
-  //
-  //   return `
-  //     ${className} {
-  //       ${cache.get(cacheKey)
-  //     }
-  //   `;
-  // }
   return `
     ${className} {
         ${Object.keys(description)
@@ -28,14 +24,6 @@ const stringifyRule = (className, description) => {
     .join('')}
   }
   `;
-
-  // cache.set(cacheKey, rule);
-
-  // return `
-  //   ${className} {
-  //     ${rule}
-  //   }
-  // `;
 };
 
 export const stringifyRules = tree => {
@@ -89,19 +77,34 @@ const getSheetForTag = tag => {
 };
 
 const INSERT_DELTA_TIME_THRESHOLD = 5;
+const MAX_QUEUE_SIZE = 100;
+const ELEMENT_STYLES_SIZE_THRESHOLD = 500;
 
 const insert = (node, tree) => {
-  const rules = tree.map(decl => toArray(decl).join(''));
-  node.appendChild(document.createTextNode(rules.join('')));
+  const fragment = document.createDocumentFragment();
 
-  return rules;
+  let size = 0;
+  tree.map(decl => toArray(decl)).forEach(rule => {
+    // fragment.appendChild(document.createTextNode(rule.join(' ')));
+    // size += rule.length;
+    rule.forEach(css => {
+      size++;
+      fragment.appendChild(document.createTextNode(css));
+    });
+  });
+
+  node.appendChild(fragment);
+
+  return size;
 };
 
 export default class StyleSheet {
-  rules = [];
-  mixins = [];
+  sizes = {
+    rules: 0,
+    mixins: 0,
+  };
 
-  timeouts = {
+  rafIds = {
     insert: null,
     mixins: null,
   };
@@ -128,6 +131,10 @@ export default class StyleSheet {
     };
   }
 
+  enableSpeedy() {
+    this.speedy = true;
+  }
+
   getRules() {
     return this.rules;
   }
@@ -137,66 +144,69 @@ export default class StyleSheet {
   }
 
   clear() {
-    this.mixins = [];
-    this.rules = [];
+    this.mixins = 0;
+    this.rules = 0;
 
-    if (this.timeouts.mixins) {
-      clearTimeout(this.timeouts.mixins);
+    if (this.rafIds.mixins) {
+      cancelRaf(this.rafIds.mixins);
     }
 
-    if (this.timeouts.rules) {
-      clearTimeout(this.timeouts.rules);
+    if (this.rafIds.rules) {
+      cancelRaf(this.rafIds.rules);
     }
+
+    this.queue.rules.length = 0;
+    this.queue.mixins.length = 0;
 
     this.nodes.rules.textContent = '';
     this.nodes.mixins.textContent = '';
   }
 
   insert(tree, type) {
-    if (this.speedy) {
-      const rules = toArray(tree);
-      this.queue[type] = this.queue[type].concat(rules);
-
-      const sheet = getSheetForTag(this.nodes[type]);
-
-      rules.forEach(rule => {
-        sheet.insertRule(rule, this[type].length);
-        this[type].push(rule);
-      });
-
-      return;
+    if (this.rafIds[type]) {
+      cancelRaf(this.insertTimeout);
     }
 
     const delta = Date.now() - this.prevInsertTime;
     this.prevInsertTime = Date.now();
 
-    // const rules = toArray(tree);
-    this.queue[type] = this.queue[type].concat(tree);
-
-    const pop = () => {
-      if (this.queue.rules.length) {
-        const insertedRules = insert(this.nodes.rules, this.queue.rules);
-
-        this.rules = this.rules.concat(insertedRules);
-        this.queue.rules.length = 0;
-      }
-
-      if (this.queue.mixins.length) {
-        const insertedMixins = insert(this.nodes.mixins, this.queue.mixins);
-
-        this.mixins = this.rules.concat(insertedMixins);
-        this.queue.mixins.length = 0;
-      }
-    };
+    this.queue[type].push(tree);
 
     if (delta <= INSERT_DELTA_TIME_THRESHOLD) {
-      if (this.insertTimeout) {
-        clearTimeout(this.insertTimeout);
+      if (this.queue[type].length > MAX_QUEUE_SIZE) {
+        this.flush(type);
+      } else {
+        this.rafIds[type] = raf(() => {
+          this.flush(type);
+        });
+      }
+    } else {
+      this.flush(type);
+    }
+  }
+
+  flush(type) {
+    if (this.queue[type].length) {
+      if (this.sizes[type] >= ELEMENT_STYLES_SIZE_THRESHOLD) {
+        this.nodes[type] = mountMixinsNode();
+        this.sizes[type] = 0;
       }
 
-      this.insertTimeout = setTimeout(pop);
-    } else {
-      pop();
+      if (this.speedy) {
+        const sheet = getSheetForTag(this.nodes[type]);
+
+        for (let i = 0, size = this.queue[type].length; i < size; i++) {
+          const rule = toArray(this.queue[type][i]);
+          rule.forEach(r => {
+            sheet.insertRule(r, this.sizes[type]);
+            this.sizes[type]++;
+          });
+        }
+      } else {
+        this.sizes[type] += insert(this.nodes[type], this.queue[type]);
+      }
+
+      this.queue[type].length = 0;
     }
   }
 

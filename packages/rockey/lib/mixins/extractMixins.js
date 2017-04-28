@@ -12,19 +12,6 @@ export const insertQueuedMixins = () => {
   }
 };
 
-// function combineSelector(selector, parentClassName, parents) {
-//   let key = `${selector}`;
-//
-//   if (parents.length && parentClassName) {
-//     const regexp = new RegExp(parentClassName, 'g');
-//     parents.forEach(p => {
-//       key += `, ${selector.replace(regexp, getSelector(p))}`;
-//     });
-//   }
-//
-//   return key;
-// }
-
 const createMixin = (
   { className, name, componentSequence, parents, mixinFunc }
 ) => {
@@ -42,7 +29,7 @@ const createMixin = (
       raw.indexOf('=>') !== -1 ||
       raw.indexOf('function') !== -1
     ) {
-      throw new Error('Mixin restuls should not contain other mixins');
+      throw new Error('Mixin results should not contain other mixins');
     }
 
     let variateClassName = variations.get(raw);

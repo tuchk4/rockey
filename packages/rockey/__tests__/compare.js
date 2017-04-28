@@ -15,7 +15,7 @@ const generateRawCss = () => {
     const { raw } = interpolateWithMixins`
       Button${i} {
         color: red;
-
+        background: ${props => 'yellow'}
         Icon {
           color green;
 
@@ -51,6 +51,7 @@ const generateRawCss = () => {
 describe('compare', () => {
   it('original and optimized', () => {
     const css = generateRawCss();
+
     expect(generateCss(parse(css))).toEqual(generateCss(parseOptimized(css)));
   });
 });
