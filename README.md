@@ -223,8 +223,8 @@ Rockey was integrated with React. There are much more feature and advanteags.
 - Features:
   - [Flexible Rockey Higher Order Component](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react#flexible-rockey-higher-order-component)
   - [Shortcuts](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react#shortcuts)
-  - [Dynamic CSS — props](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react#dynamic-css—props)
-  - [Dynamic CSS — Event Handlers](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react#dynamic-css—event-handlers)
+  - [Dynamic CSS — props](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react#dynamic-cssprops)
+  - [Dynamic CSS — Event Handlers](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react#dynamic-csseventhandlers)
   - [Looks](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react#looks)
   - [Recompose shortcut](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react#recompose-shortcut)
 

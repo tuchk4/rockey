@@ -57,7 +57,7 @@ Main goal - keep code as clean as possible.
 Write nested CSS according your components structure. Use real components names for CSS rules instead of classes.
 Means that if you have component `<Card/>`  — use its name as CSS selector. If you have component `<PrimaryCard/>` — use its name as CSS selector. Use nested selectors according to components structure.
 
-> With [Dynamic CSS](#) (or even with *rockey-react* - [Dynamic CSS - Event Handlers](#)) You will forgot about large and sometimes very unreadable `classnames` conditions. Just set className at Comopnent's root element.
+> With [Dynamic CSS](#https://github.com/tuchk4/rockey#dynamic-css) (or even with *rockey-react* - [Dynamic CSS - Event Handlers](#)) You will forgot about large and sometimes very unreadable `classnames` conditions. Just set className at Comopnent's root element.
 
 ```html
 <Card>

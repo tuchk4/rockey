@@ -269,6 +269,8 @@ const css = rule`
 
     Icon {
       margin: 5px;
+
+      font-size: ${props => `${0.9 * props.scale}em`};
     }
   }
 `;

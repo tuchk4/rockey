@@ -12,8 +12,8 @@ npm i --save rockey-react
 
 - [Flexible Rockey Higher Order Component](#flexible-rockey-higher-order-component)
 - [Shortcuts](#shortcuts)
-- [Dynamic CSS — props](#dynamic-css—props)
-- [Dynamic CSS — Event Handlers](#dynamic-css—event-handlers)
+- [Dynamic CSS — props](#dynamic-cssprops)
+- [Dynamic CSS — Event Handlers](#dynamic-csseventhandlers)
 - [Looks](#looks)
 - [Recompose shortcut](#recompose-shortcut)
 - [Examples](#examples)
@@ -83,12 +83,16 @@ import when from 'rockey/when';
 
 Write CSS that depends on components props. Same as [rockey.when](https://github.com/tuchk4/rockey/tree/master/packages/rockey#when)
 
+Demo: [Buttons look with mixins](https://www.webpackbin.com/bins/-Kiu3e_2HuGQx3vtnf0m)
+
 ```js
 const Button = rockey.div`
    color: black;
    ${when('isPrimary', props => props.primary)`
      color: green;
    `}
+
+   font-size: ${props => `${0.9 * props.scale}em`};
 `;
 ```
 
@@ -131,8 +135,8 @@ Demos:
 Most component features could be implemented as component’s prop or as Higher Order Component.
 
 ```js
-<Button primary={true}>I'm Button</Button>
-<PrimaryButton>I'm PrimaryButton</PrimaryButton>
+<Button primary={true}>I am m Button</Button>
+<PrimaryButton>I am PrimaryButton</PrimaryButton>
 ```
 
 There is the approach that helps to make more correct decision what approach use
@@ -255,6 +259,7 @@ const Line = rockempose.span(
 
 - [Card example](https://www.webpackbin.com/bins/-KfkcTYPzpyglHKfmuKh)
 - [Warning Card example](https://www.webpackbin.com/bins/-Ki-AMdS7Q0bzkSyZ81f)
+- [Buttons look with mixins](https://www.webpackbin.com/bins/-Kiu3e_2HuGQx3vtnf0m)
 - [Buttons example](https://www.webpackbin.com/bins/-KflMmHbcVU01PD6h43F)
 - [Button / PrimaryButton / SuccessButton with raised mixin](https://www.webpackbin.com/bins/-Ki2_Te-1y_OiIbQB5bO)
 - [Buttons look](https://www.webpackbin.com/bins/-Ki4mYd1WoxNaYl5pH1I)
