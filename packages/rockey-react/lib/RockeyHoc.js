@@ -8,7 +8,6 @@ import rule from 'rockey/rule';
 import look from './look';
 
 import RockeyHocWithHandlers from './utils/RockeyHocWithHandlers';
-import filterProps from './utils/filterProps';
 
 import { ROCKEY_MIXIN_HANDLER_KEY } from './handler';
 
@@ -38,12 +37,7 @@ const createEmtpyCss = name => {
 export const getRockeyHoc = () => {
   const RockeyHoc = (
     BaseComponent,
-    {
-      displayName,
-      parentName,
-      css,
-      at,
-    } = {}
+    { displayName, parentName, css, at } = {}
   ) => {
     const name = displayName || `AnonymysRockey${++anonymysRockeyCounter}`;
     let queuedMixins = null;
@@ -140,7 +134,7 @@ export const getRockeyHoc = () => {
             const className = classnames(classList[name], props.className);
 
             return React.createElement(BaseComponent, {
-              ...filterProps(props),
+              ...props,
               className,
             });
           }

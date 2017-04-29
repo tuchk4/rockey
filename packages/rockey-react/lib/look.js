@@ -5,6 +5,7 @@ import insert from 'rockey/insert';
 import condition from 'rockey/condition';
 
 import htmlTags from './htmlTags';
+import filterProps from './utils/filterProps';
 
 import rockey from './';
 
@@ -16,71 +17,65 @@ const createRockeyHoc = (BaseComponent, displayName, css) => {
   }
 };
 
-const look = (
-  BaseComponent,
-  {
-    extendBase = true,
-  } = {}
-) =>
-  (...args) => {
-    const css = rule(...args);
+const look = (BaseComponent, { extendBase = true } = {}) => (...args) => {
+  const css = rule(...args);
 
-    return css.transform((tree, create) => {
-      const components = Object.keys(tree.components);
-      const size = components.length;
+  return css.transform((tree, create) => {
+    const components = Object.keys(tree.components);
+    const size = components.length;
 
-      if (!size) {
-        throw new Error(
-          'Rockey look should containt at least one root component'
-        );
-      }
+    if (!size) {
+      throw new Error(
+        'Rockey look should containt at least one root component'
+      );
+    }
 
-      const parentDisplayName = components[0];
-      const baseCss = create({
+    const parentDisplayName = components[0];
+    const baseCss = create({
+      components: {
+        [parentDisplayName]: tree.components[parentDisplayName],
+      },
+    });
+
+    const children = {};
+
+    for (let i = 1; i < size; i++) {
+      const displayName = components[i];
+
+      const comopnentCss = create({
         components: {
-          [parentDisplayName]: tree.components[parentDisplayName],
+          [displayName]: tree.components[displayName],
         },
       });
 
-      const children = {};
-
-      for (let i = 1; i < size; i++) {
-        const displayName = components[i];
-
-        const comopnentCss = create({
-          components: {
-            [displayName]: tree.components[displayName],
-          },
-        });
-
-        if (extendBase) {
-          comopnentCss.addParent(baseCss);
-        }
-
-        const ChildRockeyHoc = createRockeyHoc(
-          BaseComponent,
-          displayName,
-          comopnentCss
-        );
-
-        children[displayName] = ChildRockeyHoc;
-        BaseComponent[displayName] = ChildRockeyHoc;
+      if (extendBase) {
+        comopnentCss.addParent(baseCss);
       }
 
-      const ParentRockeyHoc = createRockeyHoc(
+      const ChildRockeyHoc = createRockeyHoc(
         BaseComponent,
-        parentDisplayName,
-        baseCss
+        displayName,
+        comopnentCss
       );
 
-      BaseComponent[parentDisplayName] = ParentRockeyHoc;
+      children[displayName] = ChildRockeyHoc;
+      BaseComponent[displayName] = ChildRockeyHoc;
+    }
 
-      return {
-        ...children,
-        [parentDisplayName]: ParentRockeyHoc,
-      };
-    });
-  };
+    const ParentRockeyHoc = createRockeyHoc(
+      BaseComponent,
+      parentDisplayName,
+      baseCss
+    );
+
+    BaseComponent[parentDisplayName] = ParentRockeyHoc;
+
+    return {
+      ...children,
+      [parentDisplayName]: ParentRockeyHoc,
+    };
+  });
+};
 
 look.when = when;
 look.condition = condition;
@@ -89,14 +84,13 @@ look.insert = insert;
 for (const tag of htmlTags) {
   // ---- tag hoc lazy creation
   Object.defineProperty(look, tag, {
-    get: () =>
-      (...args) => {
-        const TagComponent = props => {
-          return React.createElement(tag, props);
-        };
+    get: () => (...args) => {
+      const TagComponent = props => {
+        return React.createElement(tag, filterProps(props));
+      };
 
-        return look(TagComponent)(...args);
-      },
+      return look(TagComponent)(...args);
+    },
   });
 }
 

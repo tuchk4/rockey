@@ -12,11 +12,15 @@ export const insertQueuedMixins = () => {
   }
 };
 
-const createMixin = (
-  { className, name, componentSequence, parents, mixinFunc }
-) => {
+const createMixin = ({
+  className,
+  name,
+  componentSequence,
+  parents,
+  mixinFunc,
+}) => {
   let counter = 0;
-  const variations = new Map();
+  const variations = {}; //new Map();
 
   return (props, { withQueue = false, context } = {}) => {
     const raw = mixinFunc(props);
@@ -24,19 +28,19 @@ const createMixin = (
       return null;
     }
 
-    if (
-      raw.indexOf('return') !== -1 ||
-      raw.indexOf('=>') !== -1 ||
-      raw.indexOf('function') !== -1
-    ) {
-      throw new Error('Mixin results should not contain other mixins');
-    }
+    // if (
+    //   raw.indexOf('return') !== -1 ||
+    //   raw.indexOf('=>') !== -1 ||
+    //   raw.indexOf('function') !== -1
+    // ) {
+    //   throw new Error('Mixin results should not contain other mixins');
+    // }
 
-    let variateClassName = variations.get(raw);
+    let variateClassName = variations[raw];
 
     if (!variateClassName) {
       variateClassName = `${className}-${++counter}`;
-      variations.set(raw, variateClassName);
+      variations[raw] = variateClassName;
     } else {
       return variateClassName;
     }
@@ -48,7 +52,7 @@ const createMixin = (
     }
 
     const parsed = parse(nesetdRaw);
-
+    //
     const { css } = generateCss(parsed, {
       isRoot: false,
       mixin: '.' + variateClassName,
@@ -86,12 +90,7 @@ const createMixin = (
 
 const extractMixins = (
   mixinsFunctions,
-  {
-    displayName,
-    tree,
-    componentSequence = [],
-    parents = {},
-  }
+  { displayName, tree, componentSequence = [], parents = {} }
 ) => {
   let mixins = {};
 
@@ -128,17 +127,14 @@ const extractMixins = (
         // parents: parents.concat(componentTree.combinedComponents),
         parents: {
           ...parents,
-          ...componentTree.combinedComponents.reduce(
-            (parents, parent) => {
-              if (!parents[displayName]) {
-                parents[displayName] = [];
-              }
+          ...componentTree.combinedComponents.reduce((parents, parent) => {
+            if (!parents[displayName]) {
+              parents[displayName] = [];
+            }
 
-              parents[displayName].push(parent);
-              return parents;
-            },
-            {}
-          ),
+            parents[displayName].push(parent);
+            return parents;
+          }, {}),
         },
         componentSequence: componentSequence.concat(displayName),
       }),
@@ -156,17 +152,14 @@ const extractMixins = (
         tree: modificatorTree,
         parents: {
           ...parents,
-          ...modificatorTree.combinedComponents.reduce(
-            (parents, parent) => {
-              if (!parents[displayName]) {
-                parents[displayName] = [];
-              }
+          ...modificatorTree.combinedComponents.reduce((parents, parent) => {
+            if (!parents[displayName]) {
+              parents[displayName] = [];
+            }
 
-              parents[displayName].push(parent);
-              return parents;
-            },
-            {}
-          ),
+            parents[displayName].push(parent);
+            return parents;
+          }, {}),
         },
         componentSequence: componentSequence.concat(displayName),
       }),

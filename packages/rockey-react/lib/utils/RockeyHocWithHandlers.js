@@ -1,6 +1,5 @@
 import React from 'react';
 import classnames from 'classnames';
-import filterProps from './filterProps';
 
 const HANDLERS_SHOULD_BE_RESETED_ON_OUT = ['onMouseMove', 'onMouseOver'];
 const HANDLERS_SHOULD_BE_RESETED_ON_OVER = ['onMouseOut'];
@@ -35,13 +34,7 @@ export default class RockeyHocWithHandlers extends React.Component {
   }
 
   render() {
-    const {
-      handlers,
-      proxy,
-      css,
-      selector,
-      BaseComponent,
-    } = this.props;
+    const { handlers, proxy, css, selector, BaseComponent } = this.props;
 
     const componentHandlers = {};
     const groupedHandlers = {};
@@ -124,11 +117,7 @@ export default class RockeyHocWithHandlers extends React.Component {
     }
 
     return (
-      <BaseComponent
-        {...filterProps(proxy)}
-        {...componentHandlers}
-        className={className}
-      />
+      <BaseComponent {...proxy} {...componentHandlers} className={className} />
     );
   }
 }
