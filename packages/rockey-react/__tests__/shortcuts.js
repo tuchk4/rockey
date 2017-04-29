@@ -1,3 +1,4 @@
+import 'react-dom';
 import isFunction from 'lodash/isFunction';
 import RockeyHoc from '../lib';
 import htmlTags from '../lib/htmlTags';

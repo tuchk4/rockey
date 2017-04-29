@@ -14,7 +14,7 @@ styleSheetsModule.insertMixins = insertMixins;
 
 console.warn = jest.fn();
 
-const primary = props => props.isPrimary ? `color: blue` : null;
+const primary = props => (props.isPrimary ? `color: blue` : null);
 
 describe('rule', () => {
   beforeEach(() => {
@@ -181,7 +181,7 @@ describe('rule', () => {
 
         ${primary}
         ${primary}
-        ${props => props.isRaised ? `color: green` : null}
+        ${props => (props.isRaised ? `color: green` : null)}
       }
 
       Layer {
@@ -189,7 +189,7 @@ describe('rule', () => {
 
         ${primary}
         ${primary}
-        ${props => props.isRaised ? `color: green` : null}
+        ${props => (props.isRaised ? `color: green` : null)}
       }
     `;
 
@@ -218,7 +218,7 @@ describe('rule', () => {
 
         ${primary}
         ${primary}
-        ${props => props.isRaised ? `color: green` : null}
+        ${props => (props.isRaised ? `color: green` : null)}
       }
 
       Layer {
@@ -226,7 +226,7 @@ describe('rule', () => {
 
         ${primary}
         ${primary}
-        ${props => props.isRaised ? `color: green` : null}
+        ${props => (props.isRaised ? `color: green` : null)}
       }
     `;
 
@@ -635,24 +635,24 @@ describe('rule', () => {
     });
   });
 
-  it('mixin inside mixin', () => {
-    const css = rule`
-      Button {
-        color: red;
-
-        ${props => {
-      return `
-            color: green;
-            ${function(props) {
-        return 'color: red';
-      }}
-          `;
-    }}
-      }
-    `;
-
-    expect(() => css.getClassList()).toThrow(
-      'Mixin results should not contain other mixins'
-    );
-  });
+  // it('mixin inside mixin', () => {
+  //   const css = rule`
+  //     Button {
+  //       color: red;
+  //
+  //       ${props => {
+  //     return `
+  //           color: green;
+  //           ${function(props) {
+  //       return 'color: red';
+  //     }}
+  //         `;
+  //   }}
+  //     }
+  //   `;
+  //
+  //   expect(() => css.getClassList()).toThrow(
+  //     'Mixin results should not contain other mixins'
+  //   );
+  // });
 });

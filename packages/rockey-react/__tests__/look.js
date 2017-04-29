@@ -1,4 +1,5 @@
 import React from 'react';
+import 'react-dom';
 import isFunction from 'lodash/isFunction';
 import renderer from 'react-test-renderer';
 

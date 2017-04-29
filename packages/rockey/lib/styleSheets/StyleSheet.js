@@ -1,11 +1,7 @@
 import isArray from 'lodash/isArray';
+import raf from 'raf';
+
 import { mountMixinsNode } from './mount';
-
-const isNode = typeof process === 'object';
-
-// fix this shit
-const raf = !isNode ? window.requestAnimationFrame : setTimeout;
-const cancelRaf = !isNode ? window.cancelAnimationFrame : clearTimeout;
 
 const isContainer = key => key.indexOf('@media') === 0;
 const isKeyFrames = key => key.indexOf('@keyframes') === 0;
@@ -148,11 +144,11 @@ export default class StyleSheet {
     this.rules = 0;
 
     if (this.rafIds.mixins) {
-      cancelRaf(this.rafIds.mixins);
+      raf.cancel(this.rafIds.mixins);
     }
 
     if (this.rafIds.rules) {
-      cancelRaf(this.rafIds.rules);
+      raf.cancel(this.rafIds.rules);
     }
 
     this.queue.rules.length = 0;
@@ -164,7 +160,7 @@ export default class StyleSheet {
 
   insert(tree, type) {
     if (this.rafIds[type]) {
-      cancelRaf(this.insertTimeout);
+      raf.cancel(this.insertTimeout);
     }
 
     const delta = Date.now() - this.prevInsertTime;

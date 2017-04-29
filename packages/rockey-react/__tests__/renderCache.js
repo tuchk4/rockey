@@ -1,4 +1,5 @@
 import React from 'react';
+import 'react-dom';
 import renderer from 'react-test-renderer';
 import rockey from '../lib';
 
