@@ -15,10 +15,11 @@ Documenation:
 - [Why do we need CSS in JS?](#why-do-we-need-css-injs)
 - [Must see examples](#must-see-examples)
 - [What "Component Based" means?](#what-component-based-means)
+- [Readable Class Names](#readable-class-names)
+- [Small and Fast](#small-and-fast)
 - [Flexibility](#flexibility)
 - [Dynamic CSS](#dynamic-css)
 - [Dynamic CSS - Event Handlers](#dynamic-css---event-handlers)
-- [Readable Class Names](#readable-class-names)
 - [Look](#looks)
 - [Recompose Shortcut](#recompose-shortcut)
 - [Experimental - Render Cache with Service Workers](#experimental---render-cache-with-service-workers)
@@ -148,6 +149,12 @@ const StyledCard = rockey(Card)`
 `;
 ```
 
+### Readable Class Names
+
+According to example above:
+
+![Generated class names](https://cdn-images-1.medium.com/max/1600/1*Q0qkkBt0xYt0LXjBy-2fzg.png)
+
 ### Inserted CSS
 
 Inserted CSS in example above will be
@@ -173,6 +180,30 @@ Inserted CSS in example above will be
   float: right;
 }
 ```
+
+## Small and Fast
+
+- [rockey](https://github.com/tuchk4/rockey/tree/master/packages/rockey) - *7kb gziped*
+- [rockey-react](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react) *10kb gziped*
+
+Rendering CSS string, generating CSS rules and inserting them into DOM is really fast.
+
+#### Benchmark: parsing and generating CSS
+
+```bash
+npm run best-results -- --size 10000
+```
+
+- Rockey Parse Optimized — 3.325sec
+- Rockey Parse — 3.841sec
+- [Postcss](https://github.com/postcss/postcss) with [Nested Plugin](https://github.com/postcss/postcss-nested) 14.204sec
+- [Postcss Safe Parser](https://github.com/postcss/postcss-safe-parser) with [Nested Plugin](https://github.com/postcss/postcss-nested) — 16.404sec
+
+> Note that rockey and postcss were developed for different tasks. Rockey parser configured for specific syntax and will never be able to replace postcss
+
+#### Benchmark: [A-gambit/CSS-IN-JS-Benchmarks](https://github.com/A-gambit/CSS-IN-JS-Benchmarks)
+
+Results could be found [here](https://github.com/A-gambit/CSS-IN-JS-Benchmarks/blob/master/RESULT.md).
 
 ## Flexibility
 
@@ -306,11 +337,6 @@ const Input = rockey.input`
   `}
 `;
 ```
-
-
-### Readable Class Names
-
-![Generated class names](https://cdn-images-1.medium.com/max/1600/1*Q0qkkBt0xYt0LXjBy-2fzg.png)
 
 ### Compitable with Browser DevTools
 

@@ -3,7 +3,8 @@
 Stressless CSS for components using JS. Write Component Based CSS with functional mixins.
 
 - <img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@tuchk4/css-in-js-rockey-890ebbbd16e7)
-- [SUMMARY.md](https://github.com/tuchk4/rockey/blob/master/SUMMARY.md) - here I tried to collect all features and differences with other libs.
+- [SUMMARY](https://github.com/tuchk4/rockey/blob/master/SUMMARY.md) - here I tried to collect all features and differences with other libs.
+- [MOTIVATION](https://github.com/tuchk4/rockey/blob/master/MOTIVATION.md)
 
 
 ```bash
@@ -113,7 +114,7 @@ Rendering CSS string, generating CSS rules and inserting them into DOM is really
 - Live: [tuchk4.github.io/css-in-js-app](https://tuchk4.github.io/css-in-js-app/#/)
 - Github repo: [github.com/tuchk4/css-in-js-app](https://github.com/tuchk4/css-in-js-app)
 
-Benchmarks from parsing 10000 generated CSS classes:
+#### Benchmark: parsing and generating CSS
 
 ```bash
 npm run best-results -- --size 10000
@@ -125,6 +126,10 @@ npm run best-results -- --size 10000
 - [Postcss Safe Parser](https://github.com/postcss/postcss-safe-parser) with [Nested Plugin](https://github.com/postcss/postcss-nested) — 16.404sec
 
 > Note that rockey and postcss were developed for different tasks. Rockey parser configured for specific syntax and will never be able to replace postcss
+
+#### Benchmark: [A-gambit/CSS-IN-JS-Benchmarks](https://github.com/A-gambit/CSS-IN-JS-Benchmarks)
+
+Results could be found [here](https://github.com/A-gambit/CSS-IN-JS-Benchmarks/blob/master/RESULT.md).
 
 ### Class Names
 
