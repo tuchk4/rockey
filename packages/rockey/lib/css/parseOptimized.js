@@ -5,14 +5,30 @@
  * --------------------------------------------------------------
  * --------------------------------------------------------------
  */
+import getClassName, {
+  getSelector,
+  getComponentName,
+  generateAnimationName,
+} from './getClassName';
 // const validateRule = (rule, value) => {};
 // const autoprefixRule = (rule, value) => {};
 const cache = new Map();
+const isMedia = key => key.indexOf('@media') === 0;
+const isKeyFrames = key => key.indexOf('@keyframes') === 0;
+const isNot = key => key.indexOf(':not') === 0;
+const NOT_REGEX = /\(([^\)]+)\)(.*)/;
+let PARSE_RUNTIME_CONTEXT = {};
+const resetContext = () => {
+  PARSE_RUNTIME_CONTEXT = {
+    animations: {},
+  };
+};
+resetContext();
 const parseCss = styles => {
   const stylesParts = styles
     .trim()
     .split(';')
-    .map(s => s ? s.split(':') : null)
+    .map(s => (s ? s.split(':') : null))
     .filter(s => !!s);
   const key = stylesParts.toString();
   if (!key.trim()) {
@@ -21,32 +37,50 @@ const parseCss = styles => {
   if (cache.has(key)) {
     return cache.get(key);
   }
-  const stylesJson = stylesParts.reduce(
-    (json, value) => {
-      if (value) {
-        const key = value[0].trim();
-        if (json[key]) {
-          // css fallback values
-          let prev = Array.isArray(json[key]) ? json[key] : [json[key]];
-          json[value[0].trim()] = prev.concat([
-            value.slice(1).join(':').trim(),
-          ]);
-        } else {
-          json[value[0].trim()] = value.slice(1).join(':').trim();
+  const stylesJson = stylesParts.reduce((json, raw) => {
+    if (raw) {
+      let rule = raw[0].trim();
+      let value = raw[1].trim();
+      if (
+        PARSE_RUNTIME_CONTEXT.hasAnimations &&
+        (rule === 'animation' || rule === 'animationName')
+      ) {
+        let animationName = null;
+        if (rule === 'animation') {
+          animationName = value.split(' ')[0];
+        } else if (rule === 'animation-name') {
+          animationName = value;
         }
-        // validateRule(value[0], json[value[0]]);
-        // json[value[0].trim()] = autoprefixRule(value.slice(1).join(':').trim());
+        if (animationName !== 'none') {
+          const uniqAnimationName =
+            PARSE_RUNTIME_CONTEXT.animations[animationName];
+          value = value.replace(animationName, uniqAnimationName);
+        }
+        // TODO: log warning if not uniq animation name
       }
-      return json;
-    },
-    {}
-  );
+      if (rule && value) {
+        if (json[rule]) {
+          // css fallback values
+          let prev = Array.isArray(json[rule]) ? json[rule] : [json[rule]];
+          json[rule] = prev.concat(value);
+        } else {
+          json[rule] = value;
+        }
+      }
+      // TODO: log warning if there are no rule on value
+      // validateRule(value[0], json[value[0]]);
+      // json[value[0].trim()] = autoprefixRule(value.slice(1).join(':').trim());
+    }
+    return json;
+  }, {});
   cache.set(key, stylesJson);
   return stylesJson;
 };
 // TODO: make this func beauty :)
 const isStartsWithModificator = raw => {
-  return 0 === raw.indexOf('@media') ||
+  return (
+    0 === raw.indexOf('@media') ||
+    0 === raw.indexOf('[') ||
     0 === raw.indexOf('@keyframes') ||
     0 === raw.indexOf('::placeholder') ||
     0 === raw.indexOf('::after') ||
@@ -83,17 +117,17 @@ const isStartsWithModificator = raw => {
     0 === raw.indexOf(':root') ||
     0 === raw.indexOf(':target') ||
     0 === raw.indexOf(':valid') ||
-    0 === raw.indexOf(':visited');
+    0 === raw.indexOf(':visited')
+  );
 };
-const parse = (raw, parent) => {
+const shouldGenerateSelectors = parent => parent.type !== 'keyframes';
+const parse = (raw, json, parent) => {
   let openedBrackets = 0;
   let openedModificatorBrackets = 0;
   let styles = '';
-  let component = null;
-  let combinedComponents = [];
-  let components = {};
+  let rootComponents = [];
+  let components = [];
   let possibleModificator = 0;
-  let modificators = {};
   let modificator = '';
   let current = '';
   let currentBackup = '';
@@ -102,15 +136,17 @@ const parse = (raw, parent) => {
   let possibleMixin = false;
   let mixin = '';
   // ----
-  for (let symbol of raw) {
-    if (!!!component && !!!modificator) {
+  let size = raw.length;
+  for (let i = 0; i < size; i++) {
+    const symbol = raw[i];
+    if (!!!components.length && !!!modificator) {
       if (symbol === '_') {
         possibleMixin = true;
       }
       if (possibleMixin) {
         if (symbol === ' ' || symbol === ';') {
           possibleMixin = false;
-          mixins.push(mixin);
+          mixins.push({ id: mixin, forComponents: parent.root });
           current = current.replace(mixin, '');
           mixin = '';
           continue;
@@ -119,7 +155,7 @@ const parse = (raw, parent) => {
         }
       }
     }
-    if (!!!component && !!!modificator) {
+    if (!!!components.length && !!!modificator) {
       if (
         !possibleModificator &&
         (symbol === '@' || symbol === ':' || symbol === '[')
@@ -147,31 +183,27 @@ const parse = (raw, parent) => {
       openedBrackets++;
       let parts = current.trim().split(' ');
       if (parts.length === 1) {
-        component = parts[0];
+        components.push(parts[0]);
       } else {
-        combinedComponents = [];
         let i = 0;
         for (i = parts.length - 1; i >= 0; i--) {
           const part = parts[i];
           const charCode = part.charCodeAt(0);
           /* All chars starts with uppercase or xxx% for animations  */ if (
-            (charCode >= 65 && charCode <= 90) || part[part.length - 1] === '%'
+            (charCode >= 65 && charCode <= 90) ||
+            part[part.length - 1] === '%'
           ) {
-            combinedComponents.push(part.replace(',', '').trim());
+            components.push(part.replace(',', '').trim());
           } else if (part[0] === '~' || part[0] === '+') {
-            let size = combinedComponents.length;
-            combinedComponents[size - 1] = part[0] +
-              combinedComponents[size - 1];
+            let size = components.length;
+            components[size - 1] = part[0] + components[size - 1];
           } else {
             break;
           }
         }
-        if (combinedComponents.length) {
-          component = combinedComponents[0];
-          combinedComponents = combinedComponents.slice(1);
+        if (components.length) {
           parts = parts.slice(0, i + 1);
         } else {
-          component = parts[parts.length - 1];
           parts = parts.slice(0, -1);
         }
         styles += parts.join(' ');
@@ -179,7 +211,7 @@ const parse = (raw, parent) => {
       current = '';
       // continue;
     } else if (symbol === '{') {
-      if (!!component) {
+      if (!!components.length) {
         openedBrackets++;
         if (openedBrackets !== 1) {
           current += symbol;
@@ -191,40 +223,33 @@ const parse = (raw, parent) => {
         }
       }
     } else if (symbol === '}') {
-      if (!!component) {
+      if (!!components.length) {
         openedBrackets--;
       } else if (!!modificator) {
         openedModificatorBrackets--;
       }
-      if (!!component) {
+      if (!!components.length) {
         if (openedBrackets === 0) {
-          const parsed = parse(current, {
-            parentType: 'component',
-            name: component,
-            combinedComponents,
-          });
-          if (components[component]) {
-            components[component] = {
-              mixins: [...components[component].mixins, ...parsed.mixins],
-              components: {
-                ...components[component].components,
-                ...parsed.components,
-              },
-              modificators: {
-                ...components[component].modificators,
-                ...parsed.modificators,
-              },
-              combinedComponents: [
-                ...components[component].combinedComponents,
-                ...parsed.combinedComponents,
-              ],
-              styles: { ...components[component].styles, ...parsed.styles },
-            };
-          } else {
-            components[component] = parsed;
+          const selector = [];
+          if (shouldGenerateSelectors(parent)) {
+            components.forEach(c => {
+              if (parent.selector.length) {
+                const className = getSelector(c);
+                selector.push(parent.selector[0] + ' ' + className);
+              } else {
+                const className = getSelector(c);
+                selector.push(className);
+              }
+            });
           }
-          combinedComponents = [];
-          component = null;
+          parse(current, json, {
+            type: 'component',
+            media: parent.media,
+            root: parent.root ? parent.root : components,
+            selector: parent.type === 'keyframes' ? components : selector,
+          });
+          rootComponents = rootComponents.concat(components);
+          components = [];
           current = '';
         } else {
           current += symbol;
@@ -232,10 +257,45 @@ const parse = (raw, parent) => {
       } else if (!!modificator) {
         if (openedModificatorBrackets === 0) {
           modificator = modificator.trim();
-          modificators[modificator] = parse(current, {
-            parentType: 'modificator',
-            name: modificator,
-          });
+          let selector = [];
+          const media = isMedia(modificator);
+          const keyframes = isKeyFrames(modificator);
+          if (shouldGenerateSelectors(parent)) {
+            if (media || keyframes) {
+              selector = [...parent.selector];
+            } else {
+              modificator.split(',').forEach(m => {
+                m = m.trim();
+                if (isNot(m)) {
+                  const matches = m.match(NOT_REGEX);
+                  m = `:not(${getSelector(matches[1])})${matches[2]}`;
+                }
+                parent.selector.forEach(s => {
+                  selector.push(s + m);
+                });
+              });
+            }
+          }
+          if (keyframes) {
+            const frames = [];
+            let animationName = modificator.split(' ')[1];
+            let uniqAnimationName = generateAnimationName(animationName);
+            PARSE_RUNTIME_CONTEXT.hasAnimations = true;
+            PARSE_RUNTIME_CONTEXT.animations[animationName] = uniqAnimationName;
+            parse(current, frames, { type: 'keyframes' });
+            json.push({
+              media: media ? modificator : parent.media,
+              selector: modificator.replace(animationName, uniqAnimationName),
+              frames,
+            });
+          } else {
+            parse(current, json, {
+              type: 'modificator',
+              media: media ? modificator : parent.media,
+              selector,
+              root: parent.root,
+            });
+          }
           modificator = '';
           current = currentBackup;
           currentBackup = '';
@@ -252,14 +312,35 @@ const parse = (raw, parent) => {
   if (current) {
     styles += current;
   }
-  return {
-    mixins,
-    components,
-    combinedComponents: (parent && parent.combinedComponents) || [],
-    styles: parseCss(styles),
-    modificators,
-  };
+  styles = styles.trim();
+  if (styles) {
+    json.push({
+      selector: parent.selector,
+      media: parent.media,
+      styles: parseCss(styles),
+      nodes: parent.nodes,
+      root: parent.root,
+      mixins,
+    });
+  }
+  return rootComponents;
 };
 export default inline => {
-  return parse(inline.replace(/\r|\n/g, '').replace(/\s+/g, ' '));
+  const precss = [];
+  const root = parse(
+    inline.replace(/\r|\n/g, '').replace(/\s+/g, ' '),
+    precss,
+    {
+      type: 'root',
+      selector: [],
+    }
+  );
+  resetContext();
+  return {
+    classList: root.reduce((components, c) => {
+      components[getComponentName(c)] = getClassName(c).slice(1); // remove dot "."
+      return components;
+    }, {}),
+    precss,
+  };
 };

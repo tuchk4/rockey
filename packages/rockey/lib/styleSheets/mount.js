@@ -2,7 +2,7 @@ import StyleSheet from './StyleSheet';
 
 const isBrowser = typeof document !== 'undefined';
 
-const createStyleSheet = type => {
+const createStyleNode = name => {
   if (!isBrowser) {
     return {};
   } else {
@@ -25,13 +25,13 @@ const createStyleSheet = type => {
 
 const mount = () => {
   return new StyleSheet({
-    rules: createStyleSheet('rules'),
-    mixins: createStyleSheet('mixins'),
+    rules: createStyleNode('rules'),
+    mixins: createStyleNode('mixins'),
   });
 };
 
-export const mountMixinsNode = () => {
-  return createStyleSheet('mixins');
+export const mountStyleNode = name => {
+  return createStyleNode(name);
 };
 
 export default mount;

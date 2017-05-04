@@ -1,11 +1,9 @@
-import isPlainObject from 'lodash/isPlainObject';
-
 import parse from './css/parse';
-import generateCss from './css/generateCss';
 import interpolateWithMixins, {
   addMixins,
 } from './mixins/interpolateWithMixins';
 import extractMixins, { insertQueuedMixins } from './mixins/extractMixins';
+import { getClassName } from './css/getClassName';
 import interpolateString from './utils/interpolateString';
 
 import { insertRules } from './styleSheets';
@@ -14,8 +12,8 @@ export const clearStylesCache = () => {};
 
 const css = (raw, mixinsFunctions) => {
   let parent = null;
-  let isRoot = true;
   let cached = null;
+  let lastInserted = null;
 
   return {
     get raw() {
@@ -27,12 +25,17 @@ const css = (raw, mixinsFunctions) => {
     },
 
     wrapWith(displayName) {
-      // NOTE: cannot wrap if raw is already tree
-      raw = `${displayName}{ ${raw} }`;
-    },
+      if (Array.isArray(raw)) {
+        // NOTE: test this case
+        const className = getClassName(displayName);
 
-    isRoot() {
-      isRoot = false;
+        raw.forEach(part => {
+          part.selector = `.${className} ${part.selector}`;
+          part.root = displayName;
+        });
+      } else {
+        raw = `${displayName}{ ${raw} }`;
+      }
     },
 
     addParent(rule) {
@@ -44,129 +47,108 @@ const css = (raw, mixinsFunctions) => {
     },
 
     transform(transformFunc) {
-      const parsed = parse(raw);
-      return transformFunc(parsed, transformed =>
-        css(
-          {
-            components: {},
-            mixins: [],
-            styles: {},
-            modificators: {},
-            ...transformed,
-          },
-          mixinsFunctions
-        ));
+      const { precss } = parse(raw);
+      const tree = {};
+
+      precss.forEach(part => {
+        part.root.forEach(key => {
+          if (!tree[key]) {
+            tree[key] = [];
+          }
+          tree[key].push(part);
+        });
+      });
+
+      return transformFunc(tree, transformed =>
+        css(transformed, mixinsFunctions)
+      );
     },
 
     getClassList(props = {}) {
-      let parentClassList = {};
+      let parentClasses = [];
 
       if (parent) {
-        parentClassList = parent.getClassList(props);
+        const parentClassList = parent.getClassList(props);
+        Object.keys(parentClassList).forEach(name => {
+          parentClasses.push(parentClassList[name]);
+        });
       }
 
-      const parentFlatClassList = Object.keys(parentClassList).reduce(
-        (classList, displayName) => {
-          return classList.concat(parentClassList[displayName]);
-        },
-        []
-      );
-
       let mixins = null;
-      let css = null;
+      let precss = null;
       let classList = null;
       let context = null;
 
       if (!cached) {
-        const parsed = isPlainObject(raw) ? raw : parse(raw);
-        mixins = extractMixins(mixinsFunctions, {
-          tree: parsed,
-        });
+        if (Array.isArray(raw)) {
+          precss = raw;
+          classList = {};
 
-        const generated = generateCss(parsed, { isRoot });
-        classList = {};
-
-        context = generated.context;
-
-        for (let displayName of Object.keys(generated.classNameMap)) {
-          const className = generated.classNameMap[displayName];
-
-          if (!classList[displayName]) {
-            classList[displayName] = [];
-            // classList[displayName] = [...parentFlatClassList];
-          }
-
-          classList[displayName].push(className);
+          raw.forEach(part => {
+            part.root.forEach(c => {
+              if (!classList[c]) {
+                classList[c] = getClassName(c).slice(1);
+              }
+            });
+          });
+        } else {
+          const parsed = parse(raw);
+          precss = parsed.precss;
+          classList = parsed.classList;
         }
 
-        if (Object.keys(generated.css).length) {
-          insertRules(generated.css);
+        mixins = extractMixins(mixinsFunctions, precss);
+
+        if (Object.keys(precss).length) {
+          insertRules(precss);
         }
 
         cached = {
           mixins,
-          css,
+          precss,
           classList,
           context,
         };
       } else {
         mixins = cached.mixins;
-        css = cached.css;
+        precss = cached.precss;
         classList = cached.classList;
         context = cached.context;
       }
 
-      // rewrite object link to prevent original classList changing
-      // when collecting mixins
-      const resultClassList = Object.keys(classList).reduce(
-        (mergedClassList, displayName) => {
-          mergedClassList[displayName] = [
-            ...classList[displayName],
-            ...parentFlatClassList,
-          ];
+      let resultClassList = {};
 
-          return mergedClassList;
-        },
-        {}
-      );
+      if (parent) {
+        resultClassList = {};
 
-      for (let mixinComponent of Object.keys(mixins)) {
-        const mixinClassNames = mixins[mixinComponent].mixins.reduce(
-          (mixinClassNames, mixin) => {
-            const mixinClassName = mixin(props, {
-              withQueue: true,
-              context,
-            });
-
-            if (mixinClassName) {
-              mixinClassNames.push(mixinClassName);
-            }
-
-            return mixinClassNames;
-          },
-          []
-        );
-
-        // NOTE: check this
-        const rootParent = mixins[mixinComponent].rootParent;
-        if (resultClassList[mixinComponent]) {
-          resultClassList[mixinComponent] = resultClassList[
-            mixinComponent
-          ].concat(mixinClassNames);
-        } else if (resultClassList[rootParent]) {
-          resultClassList[rootParent] = resultClassList[rootParent].concat(
-            mixinClassNames
-          );
-        } else {
-          throw new Error(
-            'TODO: This case should be unreachable. Worng mixin position.'
-          );
-        }
+        Object.keys(classList).forEach(name => {
+          resultClassList[name] = [classList[name], ...parentClasses];
+        });
+      } else {
+        resultClassList = Object.assign({}, classList);
       }
+
+      mixins.forEach(mixin => {
+        const { className, forComponents } = mixin(props, {
+          withQueue: true,
+          context,
+        });
+
+        if (className) {
+          forComponents.forEach(c => {
+            resultClassList[c] += ` ${className}`;
+          });
+        }
+      });
 
       insertQueuedMixins();
 
+      lastInserted = resultClassList;
       return resultClassList;
+    },
+
+    getLastInserted() {
+      return lastInserted;
     },
   };
 };

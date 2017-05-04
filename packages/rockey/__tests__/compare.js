@@ -19,9 +19,9 @@ const generateRawCss = () => {
         Icon {
           color green;
 
-          ${props => props.primary ? `
+          ${props => (props.primary ? `
             color: yellow;
-          ` : null}
+          ` : null)}
 
           :hover {
             color: purple;
@@ -32,13 +32,13 @@ const generateRawCss = () => {
           }
         }
 
-        ${props => props.primary ? `
+        ${props => (props.primary ? `
           color: purple;
-        ` : null}
+        ` : null)}
 
-        ${props => props.primary ? `
+        ${props => (props.primary ? `
           background: yellow;
-        ` : null}
+        ` : null)}
       }
     `;
 

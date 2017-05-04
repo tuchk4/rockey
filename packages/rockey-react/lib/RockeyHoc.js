@@ -132,7 +132,6 @@ export const getRockeyHoc = () => {
           } else {
             const classList = finshCssRule.getClassList(props);
             const className = classnames(classList[name], props.className);
-
             return React.createElement(BaseComponent, {
               ...props,
               className,

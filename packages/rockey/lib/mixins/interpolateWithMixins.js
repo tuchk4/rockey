@@ -17,7 +17,6 @@ const interpolateWithMixins = (strings, ...values) => {
 
     if (isFunction(value)) {
       let i = raw.length;
-      let composedRule = '';
       let found = false;
 
       while (true) {
@@ -35,28 +34,28 @@ const interpolateWithMixins = (strings, ...values) => {
           if (raw[i] === ' ' || raw[i] === ';' || raw[i] === '{') {
             break;
           }
-
-          composedRule += raw[i];
         }
       }
 
-      if (composedRule) {
+      let rule = null;
+
+      if (i) {
+        rule = raw.slice(i);
         raw = raw.slice(0, i);
-        composedRule = Array.from(composedRule).reverse().join('');
       }
 
       let name = null;
-      if (composedRule) {
-        name = camelCase(composedRule);
+      if (rule) {
+        name = camelCase(rule);
       } else {
         name = getMixinName(value);
       }
 
       let placeholder = `${MIXIN_PREFIX}${name}${++counter}`;
 
-      if (composedRule) {
+      if (rule) {
         mixinsFunctions[placeholder] = (...args) => {
-          return `${composedRule} ${value(...args)}`;
+          return `${rule} ${value(...args)}`;
         };
 
         mixinsFunctions[placeholder].displayName = name;
@@ -64,7 +63,8 @@ const interpolateWithMixins = (strings, ...values) => {
         mixinsFunctions[placeholder] = value;
       }
 
-      append = `${placeholder};`;
+      // append = `${placeholder};`;
+      append = placeholder;
     }
 
     return rule + raw + append;

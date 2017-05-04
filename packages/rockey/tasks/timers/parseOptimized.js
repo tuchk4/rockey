@@ -5,7 +5,6 @@ import getCss from './utils/getCss';
 import timer from './utils/timer';
 import output from './utils/output';
 
-import generateCss from '../../lib/css/generateCss';
 import parseOptimized from '../../lib/css/parseOptimized';
 import { stringifyRules } from '../../lib/styleSheets/StyleSheet';
 
@@ -19,7 +18,7 @@ console.log(
 console.log('');
 
 timer(() => {
-  stringifyRules(generateCss(parseOptimized(css)));
+  stringifyRules(parseOptimized(css).precss);
 }).then(time => {
   output('parseOptimized', size, time);
 });

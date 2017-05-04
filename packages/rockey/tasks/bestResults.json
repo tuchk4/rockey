@@ -1,0 +1,20 @@
+{
+  "1000": {
+    "parse": 0.297,
+    "parseOptimized": 0.28,
+    "postcssNested": 0.471,
+    "postcssNestedSafeParser": 0.47
+  },
+  "10000": {
+    "postcssNested": 4.647,
+    "postcssNestedSafeParser": 4.655,
+    "parse": 1.327,
+    "parseOptimized": 1.313
+  },
+  "50000": {
+    "parse": 13.821,
+    "parseOptimized": 11.63,
+    "postcssNested": 59.084,
+    "postcssNestedSafeParser": 59.659
+  }
+}

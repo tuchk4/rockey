@@ -10,6 +10,6 @@ const [node, path, ...args] = process.argv;
 spawn.sync('../../node_modules/.bin/babel', ['-d', './', './lib', ...args], {
   stdio: 'inherit',
   env: Object.assign({}, process.env, {
-    NODE_ENV: 'production'
-  })
+    NODE_ENV: 'production',
+  }),
 });

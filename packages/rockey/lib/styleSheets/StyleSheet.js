@@ -1,10 +1,26 @@
 import isArray from 'lodash/isArray';
 import raf from 'raf';
 
-import { mountMixinsNode } from './mount';
+import { mountStyleNode } from './mount';
 
-const isContainer = key => key.indexOf('@media') === 0;
-const isKeyFrames = key => key.indexOf('@keyframes') === 0;
+const INSERT_DELTA_TIME_THRESHOLD = 20;
+const MAX_QUEUE_SIZE = 2000;
+const ELEMENT_STYLES_SIZE_THRESHOLD = 600;
+
+// const isContainer = key => key.indexOf('@media') === 0;
+// const isKeyFrames = key => key.indexOf('@keyframes') === 0;
+
+const getSheetForTag = tag => {
+  if (tag.sheet) {
+    return tag.sheet;
+  }
+
+  for (let i = 0; i < document.styleSheets.length; i++) {
+    if (document.styleSheets[i].ownerNode === tag) {
+      return document.styleSheets[i];
+    }
+  }
+};
 
 const stringifyRule = (className, description) => {
   return `
@@ -22,76 +38,53 @@ const stringifyRule = (className, description) => {
   `;
 };
 
-export const stringifyRules = tree => {
+export const stringify = ({ selector, styles, frames, media }) => {
   let css = '';
 
-  for (const className of Object.keys(tree)) {
-    css += stringifyRule(className, tree[className]);
+  if (styles) {
+    if (media) {
+      css = `
+        ${media} {
+          ${stringifyRule(selector, styles)}
+        }
+      `;
+    } else {
+      css = stringifyRule(selector, styles);
+    }
+  } else if (frames) {
+    if (media) {
+      css = `
+        ${media} {
+          ${stringifyRule(selector, styles)}
+        }
+      `;
+    } else {
+      css = `${selector} {
+        ${frames.map(stringify).join(' ')}
+      }`;
+    }
   }
 
   return css;
 };
 
-const toArray = tree => {
-  let rules = [];
+export const stringifyRules = precss => {
+  let css = '';
 
-  for (const selector of Object.keys(tree)) {
-    let css = null;
-
-    if (isContainer(selector)) {
-      css = `
-        ${selector} {
-          ${stringifyRules(tree[selector])}
-        }
-      `;
-    } else if (isKeyFrames(selector)) {
-      css = `
-        ${selector} {
-          ${stringifyRules(tree[selector])}
-        }
-      `;
-    } else {
-      css = stringifyRule(selector, tree[selector]);
-    }
-
-    rules.push(css);
-  }
-
-  return rules;
-};
-
-const getSheetForTag = tag => {
-  if (tag.sheet) {
-    return tag.sheet;
-  }
-
-  for (let i = 0; i < document.styleSheets.length; i++) {
-    if (document.styleSheets[i].ownerNode === tag) {
-      return document.styleSheets[i];
-    }
-  }
-};
-
-const INSERT_DELTA_TIME_THRESHOLD = 5;
-const MAX_QUEUE_SIZE = 100;
-const ELEMENT_STYLES_SIZE_THRESHOLD = 500;
-
-const insert = (node, tree) => {
-  const fragment = document.createDocumentFragment();
-
-  let size = 0;
-  tree.map(decl => toArray(decl)).forEach(rule => {
-    // fragment.appendChild(document.createTextNode(rule.join(' ')));
-    // size += rule.length;
-    rule.forEach(css => {
-      size++;
-      fragment.appendChild(document.createTextNode(css));
-    });
+  precss.forEach(p => {
+    css += stringify(p);
   });
+
+  return css;
+};
+
+const insert = (node, precss) => {
+  const css = stringifyRules(precss);
+  const fragment = document.createTextNode(css);
 
   node.appendChild(fragment);
 
-  return size;
+  return precss.length;
 };
 
 export default class StyleSheet {
@@ -116,6 +109,8 @@ export default class StyleSheet {
     rueles: 0,
     mixins: 0,
   };
+
+  rules = {};
 
   prevInsertTime = 0;
 
@@ -158,15 +153,15 @@ export default class StyleSheet {
     this.nodes.mixins.textContent = '';
   }
 
-  insert(tree, type) {
+  insert(precss, type) {
     if (this.rafIds[type]) {
-      raf.cancel(this.insertTimeout);
+      raf.cancel(this.rafIds[type]);
     }
 
     const delta = Date.now() - this.prevInsertTime;
     this.prevInsertTime = Date.now();
 
-    this.queue[type].push(tree);
+    this.queue[type] = this.queue[type].concat(precss);
 
     if (delta <= INSERT_DELTA_TIME_THRESHOLD) {
       if (this.queue[type].length > MAX_QUEUE_SIZE) {
@@ -184,33 +179,32 @@ export default class StyleSheet {
   flush(type) {
     if (this.queue[type].length) {
       if (this.sizes[type] >= ELEMENT_STYLES_SIZE_THRESHOLD) {
-        this.nodes[type] = mountMixinsNode();
+        this.nodes[type] = mountStyleNode();
         this.sizes[type] = 0;
       }
 
       if (this.speedy) {
         const sheet = getSheetForTag(this.nodes[type]);
 
-        for (let i = 0, size = this.queue[type].length; i < size; i++) {
-          const rule = toArray(this.queue[type][i]);
-          rule.forEach(r => {
-            sheet.insertRule(r, this.sizes[type]);
-            this.sizes[type]++;
-          });
-        }
+        this.queue[type].forEach(precss => {
+          const css = stringify(precss);
+          sheet.insertRule(css, this.sizes[type]);
+          // this.rules[s] = sheet.rules[this.sizes[type]++];
+          this.sizes[type]++;
+        });
       } else {
         this.sizes[type] += insert(this.nodes[type], this.queue[type]);
       }
 
-      this.queue[type].length = 0;
+      this.queue[type] = [];
     }
   }
 
-  insertRules(tree) {
-    this.insert(tree, 'rules');
+  insertRules(precss) {
+    this.insert(precss, 'rules');
   }
 
-  insertMixins(tree) {
-    this.insert(tree, 'mixins');
+  insertMixins(precss) {
+    this.insert(precss, 'mixins');
   }
 }

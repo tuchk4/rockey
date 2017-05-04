@@ -190,7 +190,8 @@ describe('generate css', () => {
   it('withKeyframes', () => {
     let animationCounter = 0;
 
-    const originalGenerateAnimationName = getClassNameModule.generateAnimationName;
+    const originalGenerateAnimationName =
+      getClassNameModule.generateAnimationName;
     getClassNameModule.generateAnimationName = animationName => {
       return `${animationName}-a${++animationCounter}`;
     };

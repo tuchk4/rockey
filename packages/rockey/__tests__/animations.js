@@ -166,14 +166,14 @@ describe('animation', () => {
   it('animation as proced mixin', () => {
     const css = rule`
       Button {
-        ${props => props.isPrimary ? `
+        ${props => (props.isPrimary ? `
           @keyframes example {
             0% { color: red };
             100% { color: green };
           }
 
           animation: example 1s;
-        ` : null}
+        ` : null)}
 
         color: black;
       }
@@ -209,14 +209,14 @@ describe('animation', () => {
   it('animation as mixin', () => {
     const css = rule`
       Button {
-        ${props => props.isPrimary ? `
+        ${props => (props.isPrimary ? `
           @keyframes example {
             0% { color: red };
             100% { color: green };
           }
 
           animation: example 1s;
-        ` : null}
+        ` : null)}
 
         color: black;
       }

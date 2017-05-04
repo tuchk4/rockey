@@ -1,26 +1,25 @@
 import parse from '../css/parse';
-import generateCss, { combineSelector, getSelector } from '../css/generateCss';
-import { generateMixinClassName } from '../css/getClassName';
+import { generateMixinClassName, getClassName } from '../css/getClassName';
 import { insertMixins } from '../styleSheets';
 
-let queue = {};
+let queue = [];
 
 export const insertQueuedMixins = () => {
-  if (Object.keys(queue).length) {
+  if (queue.length) {
     insertMixins(queue);
-    queue = {};
+    queue = [];
   }
 };
 
 const createMixin = ({
-  className,
-  name,
-  componentSequence,
-  parents,
+  mixinClassName,
+  selector,
   mixinFunc,
+  root,
+  forComponents,
 }) => {
   let counter = 0;
-  const variations = {}; //new Map();
+  const variations = {};
 
   return (props, { withQueue = false, context } = {}) => {
     const raw = mixinFunc(props);
@@ -28,142 +27,68 @@ const createMixin = ({
       return null;
     }
 
-    // if (
-    //   raw.indexOf('return') !== -1 ||
-    //   raw.indexOf('=>') !== -1 ||
-    //   raw.indexOf('function') !== -1
-    // ) {
-    //   throw new Error('Mixin results should not contain other mixins');
-    // }
-
     let variateClassName = variations[raw];
 
     if (!variateClassName) {
-      variateClassName = `${className}-${++counter}`;
+      variateClassName = `${mixinClassName}-${++counter}`;
       variations[raw] = variateClassName;
     } else {
-      return variateClassName;
-    }
-
-    let nesetdRaw = raw;
-
-    for (const displayName of componentSequence.reverse()) {
-      nesetdRaw = `${displayName} {${nesetdRaw}}`;
-    }
-
-    const parsed = parse(nesetdRaw);
-    //
-    const { css } = generateCss(parsed, {
-      isRoot: false,
-      mixin: '.' + variateClassName,
-      context,
-    });
-
-    let combinedCss = {};
-
-    if (Object.keys(parents).length) {
-      Object.keys(css).forEach(key => {
-        let combined = key;
-        Object.keys(parents).forEach(parentKey => {
-          combined = combineSelector(
-            key,
-            getSelector(parentKey),
-            parents[parentKey]
-          );
-        });
-
-        combinedCss[combined] = css[key];
-      });
-    } else {
-      combinedCss = css;
-    }
-
-    if (withQueue) {
-      Object.assign(queue, combinedCss);
-    } else {
-      insertMixins(combinedCss);
-    }
-
-    return variateClassName;
-  };
-};
-
-const extractMixins = (
-  mixinsFunctions,
-  { displayName, tree, componentSequence = [], parents = {} }
-) => {
-  let mixins = {};
-
-  for (const mixin of tree.mixins) {
-    const mixinFunc = mixinsFunctions[mixin];
-
-    if (!mixins[displayName]) {
-      mixins[displayName] = {
-        rootParent: componentSequence[0],
-        mixins: [],
+      return {
+        className: variateClassName,
+        forComponents,
       };
     }
 
-    mixins[displayName].mixins.push(
-      createMixin({
-        componentSequence,
-        className: generateMixinClassName(mixinFunc),
-        name: mixin,
-        parents,
-        mixinFunc,
-      })
-    );
-  }
+    const mixinSelector = [];
+    root.forEach(n => {
+      const rootComponentClassName = getClassName(n);
 
-  // collect nested mixins
-  for (const displayName of Object.keys(tree.components)) {
-    const componentTree = tree.components[displayName];
+      selector.forEach(s => {
+        mixinSelector.push(
+          s.replace(
+            rootComponentClassName,
+            `.${variateClassName}${rootComponentClassName}`
+          )
+        );
+      });
+    });
 
-    mixins = {
-      ...mixins,
-      ...extractMixins(mixinsFunctions, {
-        displayName,
-        tree: componentTree,
-        // parents: parents.concat(componentTree.combinedComponents),
-        parents: {
-          ...parents,
-          ...componentTree.combinedComponents.reduce((parents, parent) => {
-            if (!parents[displayName]) {
-              parents[displayName] = [];
-            }
+    const { precss } = parse(raw);
+    precss.forEach(p => (p.selector = mixinSelector));
 
-            parents[displayName].push(parent);
-            return parents;
-          }, {}),
-        },
-        componentSequence: componentSequence.concat(displayName),
-      }),
+    // let precss = [];
+    if (withQueue) {
+      queue = queue.concat(precss);
+    } else {
+      insertMixins(precss);
+    }
+
+    return {
+      className: variateClassName,
+      forComponents,
     };
-  }
+  };
+};
 
-  // collect nested mixins
-  for (const displayName of Object.keys(tree.modificators)) {
-    const modificatorTree = tree.modificators[displayName];
+const extractMixins = (mixinsFunctions, precss) => {
+  let mixins = [];
 
-    mixins = {
-      ...mixins,
-      ...extractMixins(mixinsFunctions, {
-        displayName,
-        tree: modificatorTree,
-        parents: {
-          ...parents,
-          ...modificatorTree.combinedComponents.reduce((parents, parent) => {
-            if (!parents[displayName]) {
-              parents[displayName] = [];
-            }
+  for (let i = 0, size = precss.length; i < size; i++) {
+    const part = precss[i];
 
-            parents[displayName].push(parent);
-            return parents;
-          }, {}),
-        },
-        componentSequence: componentSequence.concat(displayName),
-      }),
-    };
+    for (let j = 0, mixinsSize = part.mixins.length; j < mixinsSize; j++) {
+      const mixin = part.mixins[j];
+      const mixinFunc = mixinsFunctions[mixin.id];
+      mixins.push(
+        createMixin({
+          selector: part.selector,
+          root: part.root,
+          forComponents: mixin.forComponents,
+          mixinClassName: generateMixinClassName(mixinFunc),
+          mixinFunc,
+        })
+      );
+    }
   }
 
   return mixins;
