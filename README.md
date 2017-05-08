@@ -36,7 +36,7 @@ CSS in JS approach — is native JS. You don’t need additional tools to us
 - More cleaner file structure
 - Easier to run tests
 
-More details explained at Medium Post - <img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@valeriy.sorokobatko/)
+More details explained at Medium Post - <img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@tuchk4/css-in-js-rockey-890ebbbd16e7)
 
 ## Features and Advantages
 
