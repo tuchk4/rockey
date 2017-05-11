@@ -11,10 +11,21 @@ import {
 import insert from './styleSheets';
 import wrapTemplateStrings from './utils/wrapTemplateStrings';
 
+import vendorPrefix from './plugins/vendorPrefix';
+import validateCSSRule from './plugins/validateCSSRule';
+
+const plugins = [];
+
+if (process.env.NODE_ENV !== 'production') {
+  plugins.push(vendorPrefix);
+  plugins.push(validateCSSRule);
+}
+
 const parse = createParser({
   getClassName,
   getMixinClassName,
   getAnimationName,
+  plugins,
 });
 
 const getSelector = classnames.getSelector(getClassName);
