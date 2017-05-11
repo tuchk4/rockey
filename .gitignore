@@ -1,6 +1,8 @@
 # dependencies
 node_modules
 
+.changelog
+
 # testing
 /coverage
 
@@ -11,6 +13,9 @@ build
 .DS_Store
 npm-debug.log*
 lerna-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
 # IDE
 .idea/*
+.vscode/
