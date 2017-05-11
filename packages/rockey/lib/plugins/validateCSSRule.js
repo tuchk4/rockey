@@ -1,11 +1,18 @@
 export default function validateCSSrules(styles) {
   const experimental = document.createElement('div');
 
-  Object.keys(styles).forEach(key => {
-    experimental.style.setProperty(key, styles[key]);
+  Object.keys(styles).forEach(prop => {
+    let value = styles[prop];
+    const isImportant = value.indexOf('!important') !== -1;
 
-    if (experimental.style[key] !== styles[key]) {
-      console.warn(`Wrong rule: "${key}:${styles[key]}"`);
+    value = isImportant ? value.replace('!important', '').trim() : value;
+
+    experimental.style.setProperty(prop, value);
+
+    if (experimental.style[prop] !== value) {
+      console.warn(
+        `rockey (validateCSSRule) wrong rule "${prop}:${styles[prop]}"`
+      );
     }
   });
 
