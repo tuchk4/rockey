@@ -1,216 +1,91 @@
-import isArray from 'lodash/isArray';
-import raf from 'raf';
+import asap from 'asap';
+import { stringify } from 'rockey-css-parse/stringify';
+import initFragments from './utils/initFragments';
 
-import { mountMixinsNode } from './mount';
-
-const isContainer = key => key.indexOf('@media') === 0;
-const isKeyFrames = key => key.indexOf('@keyframes') === 0;
-
-const stringifyRule = (className, description) => {
-  return `
-    ${className} {
-        ${Object.keys(description)
-    .map(key => {
-      if (isArray(description[key])) {
-        return description[key].map(value => `${key}:${value};`).join('');
-      } else {
-        return `${key}:${description[key]};`;
-      }
-    })
-    .join('')}
-  }
-  `;
-};
-
-export const stringifyRules = tree => {
-  let css = '';
-
-  for (const className of Object.keys(tree)) {
-    css += stringifyRule(className, tree[className]);
-  }
-
-  return css;
-};
-
-const toArray = tree => {
-  let rules = [];
-
-  for (const selector of Object.keys(tree)) {
-    let css = null;
-
-    if (isContainer(selector)) {
-      css = `
-        ${selector} {
-          ${stringifyRules(tree[selector])}
-        }
-      `;
-    } else if (isKeyFrames(selector)) {
-      css = `
-        ${selector} {
-          ${stringifyRules(tree[selector])}
-        }
-      `;
-    } else {
-      css = stringifyRule(selector, tree[selector]);
-    }
-
-    rules.push(css);
-  }
-
-  return rules;
-};
-
-const getSheetForTag = tag => {
-  if (tag.sheet) {
-    return tag.sheet;
-  }
-
-  for (let i = 0; i < document.styleSheets.length; i++) {
-    if (document.styleSheets[i].ownerNode === tag) {
-      return document.styleSheets[i];
-    }
-  }
-};
-
-const INSERT_DELTA_TIME_THRESHOLD = 5;
-const MAX_QUEUE_SIZE = 100;
-const ELEMENT_STYLES_SIZE_THRESHOLD = 500;
-
-const insert = (node, tree) => {
-  const fragment = document.createDocumentFragment();
-
-  let size = 0;
-  tree.map(decl => toArray(decl)).forEach(rule => {
-    // fragment.appendChild(document.createTextNode(rule.join(' ')));
-    // size += rule.length;
-    rule.forEach(css => {
-      size++;
-      fragment.appendChild(document.createTextNode(css));
-    });
-  });
-
-  node.appendChild(fragment);
-
-  return size;
-};
+const INSERT_DELTA_TIME_THRESHOLD = 50;
+const MAX_QUEUE_SIZE = 20000;
 
 export default class StyleSheet {
-  sizes = {
-    rules: 0,
-    mixins: 0,
-  };
-
-  rafIds = {
-    insert: null,
-    mixins: null,
-  };
-
-  queue = {
-    rules: [],
-    mixins: [],
-  };
-
-  queueSize = 0;
-
-  counter = {
-    rueles: 0,
-    mixins: 0,
-  };
-
+  queue = [];
   prevInsertTime = 0;
 
   constructor(sheets, speedy = false) {
     this.speedy = speedy;
-    this.nodes = {
-      rules: sheets.rules,
-      mixins: sheets.mixins,
-    };
+    this.fragments = initFragments(speedy);
+    this.fragments.createFragments();
   }
 
   enableSpeedy() {
     this.speedy = true;
   }
 
-  getRules() {
-    return this.rules;
+  disabledSpeedy() {
+    this.speedy = false;
   }
 
-  getMixins() {
-    return this.mixins;
+  getRules() {
+    return {};
   }
 
   clear() {
-    this.mixins = 0;
-    this.rules = 0;
-
-    if (this.rafIds.mixins) {
-      raf.cancel(this.rafIds.mixins);
-    }
-
-    if (this.rafIds.rules) {
-      raf.cancel(this.rafIds.rules);
-    }
-
-    this.queue.rules.length = 0;
-    this.queue.mixins.length = 0;
-
-    this.nodes.rules.textContent = '';
-    this.nodes.mixins.textContent = '';
+    this.queue.length = 0;
   }
 
-  insert(tree, type) {
-    if (this.rafIds[type]) {
-      raf.cancel(this.insertTimeout);
-    }
-
+  insertWithQueue(precss) {
     const delta = Date.now() - this.prevInsertTime;
     this.prevInsertTime = Date.now();
 
-    this.queue[type].push(tree);
+    precss.forEach(p => {
+      this.queue.push(p);
+    });
+
+    // this.queue = this.queue.concat(precss);
 
     if (delta <= INSERT_DELTA_TIME_THRESHOLD) {
-      if (this.queue[type].length > MAX_QUEUE_SIZE) {
-        this.flush(type);
+      if (this.queue.length > MAX_QUEUE_SIZE) {
+        this.flush();
       } else {
-        this.rafIds[type] = raf(() => {
-          this.flush(type);
+        asap(() => {
+          this.flush();
         });
       }
     } else {
-      this.flush(type);
+      this.flush();
+    }
+  }
+
+  insert(precss) {
+    if (this.speedy) {
+      precss.forEach(pre => {
+        const f = this.fragments.requestFragment();
+        f.selectorText = pre.selector.join(' ');
+
+        Object.keys(pre.styles).forEach(key => {
+          /**
+           * Note: value must not contain "!important" -- that should be set using the priority parameter.
+           * https://developer.mozilla.org/en-US/docs/Web/API/CSSStyleDeclaration/setProperty
+           */
+          f.style.setProperty(
+            key,
+            pre.styles[key].replace('!important', ''),
+            pre.styles[key].indexOf('!important') !== -1 ? 'important' : null
+          );
+        });
+      });
+    } else {
+      precss.forEach(pre => {
+        const css = stringify(pre);
+
+        const f = this.fragments.requestFragment();
+        f.textContent = css;
+      });
     }
   }
 
   flush(type) {
-    if (this.queue[type].length) {
-      if (this.sizes[type] >= ELEMENT_STYLES_SIZE_THRESHOLD) {
-        this.nodes[type] = mountMixinsNode();
-        this.sizes[type] = 0;
-      }
-
-      if (this.speedy) {
-        const sheet = getSheetForTag(this.nodes[type]);
-
-        for (let i = 0, size = this.queue[type].length; i < size; i++) {
-          const rule = toArray(this.queue[type][i]);
-          rule.forEach(r => {
-            sheet.insertRule(r, this.sizes[type]);
-            this.sizes[type]++;
-          });
-        }
-      } else {
-        this.sizes[type] += insert(this.nodes[type], this.queue[type]);
-      }
-
-      this.queue[type].length = 0;
+    if (this.queue.length) {
+      this.insert(this.queue);
+      this.queue = [];
     }
-  }
-
-  insertRules(tree) {
-    this.insert(tree, 'rules');
-  }
-
-  insertMixins(tree) {
-    this.insert(tree, 'mixins');
   }
 }

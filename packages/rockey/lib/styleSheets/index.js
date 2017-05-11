@@ -1,14 +1,23 @@
-import mount from './mount';
+import StyleSheet from './StyleSheet';
 
-const sheet = mount();
+const sheet = new StyleSheet();
 
-export const insertRules = css => sheet.insertRules(css);
-export const insertMixins = css => sheet.insertMixins(css);
+let insertWithQueue = false;
+
+export const insert = precss => {
+  if (insertWithQueue) {
+    sheet.insertWithQueue(precss);
+  } else {
+    sheet.insert(precss);
+  }
+};
 
 export const getRules = css => sheet.getRules();
-export const getMixins = css => sheet.getMixins();
 export const clearStyles = css => sheet.clear();
 
 export const speedy = () => sheet.enableSpeedy();
+export const useQueue = () => {
+  insertWithQueue = true;
+};
 
-export default insertRules;
+export default insert;

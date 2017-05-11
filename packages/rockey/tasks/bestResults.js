@@ -50,6 +50,19 @@ spawn.sync(
 spawn.sync(
   'node_modules/.bin/babel-node',
   [
+    './packages/rockey/tasks/timers/stylis.js',
+    '--size',
+    argv.size || 1000,
+    '--skip-summary',
+  ],
+  {
+    stdio: 'inherit',
+  }
+);
+
+spawn.sync(
+  'node_modules/.bin/babel-node',
+  [
     './packages/rockey/tasks/timers/postcssNested.js',
     '--size',
     argv.size || 1000,

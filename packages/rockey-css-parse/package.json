@@ -1,0 +1,43 @@
+{
+  "name": "rockey-css-parse",
+  "version": "0.0.1",
+  "description": "Dynamic CSS string parser",
+  "main": "parse.js",
+  "keywords": [
+    "react",
+    "css",
+    "css-in-js",
+    "rockey"
+  ],
+  "author": "Valerii Sorokobatko <valeriy.sorokobatko@gmail.com> (https://github.com/tuchk4)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/tuchk4/rockey/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tuchk4/rockey.git"
+  },
+  "devDependencies": {
+    "css": "^2.2.1",
+    "postcss": "^5.2.16",
+    "postcss-nested": "^1.0.0",
+    "postcss-safe-parser": "^2.0.0",
+    "stylis": "^2.0.4"
+  },
+  "dependencies": {
+    "lodash": "^4.17.4"
+  },
+  "files": [
+    "mixins",
+    "utils",
+    "cssToJSON.js",
+    "index.js",
+    "parse.js",
+    "parseOptimized.js",
+    "stringify.js"
+  ],
+  "scripts": {
+    "dev": "node tasks/prepublish.js --watch"
+  }
+}

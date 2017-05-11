@@ -1,13 +1,12 @@
 import isReactProp from 'is-react-prop';
 
 const filterProps = props =>
-  Object.keys(props).filter(prop => isReactProp(prop)).reduce((
-    filtered,
-    prop
-  ) => {
-    filtered[prop] = props[prop];
+  Object.keys(props)
+    .filter(prop => isReactProp(prop))
+    .reduce((filtered, prop) => {
+      filtered[prop] = props[prop];
 
-    return filtered;
-  }, {});
+      return filtered;
+    }, {});
 
 export default filterProps;

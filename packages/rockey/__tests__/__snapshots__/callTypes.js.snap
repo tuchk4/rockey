@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`callTypes 1`] = `
+Object {
+  "Button": "Button-hash",
+}
+`;
+
+exports[`callTypes 2`] = `
+Object {
+  "Button": "Button-hash",
+}
+`;
+
+exports[`callTypes 3`] = `
+Object {
+  "Button": "Button-hash",
+}
+`;
+
+exports[`callTypes 4`] = `
+Object {
+  "Button": "Button-hash",
+}
+`;

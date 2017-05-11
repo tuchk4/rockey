@@ -9,7 +9,7 @@ const gzipSize = require('gzip-size');
 const { argv } = require('yargs');
 
 const packageName = argv.package;
-const allowed = ['rockey', 'rockey-react'];
+const allowed = ['rockey', 'rockey-react', 'rockey-css-parse'];
 
 if (allowed.indexOf(packageName) === -1) {
   throw new Error(`package "${packageName}" is not allowed`);
@@ -36,6 +36,18 @@ const compiler = webpack({
       commonjs: 'react',
       amd: 'react',
     },
+    'react-dom': {
+      root: 'react-dom',
+      commonjs2: 'react-dom',
+      commonjs: 'react-dom',
+      amd: 'react-dom',
+    },
+    recompose: {
+      root: 'recompose',
+      commonjs2: 'recompose',
+      commonjs: 'recompose',
+      amd: 'recompose',
+    },
   },
 
   plugins: [
@@ -48,6 +60,7 @@ const compiler = webpack({
     }),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"production"',
+      'process.NODE_ENV': '"production"',
     }),
   ],
 });
@@ -58,7 +71,7 @@ console.log('');
 
 compiler.run((err, stats) => {
   if (err || stats.hasErrors()) {
-    console.log(err);
+    console.log(stats);
   } else {
     const size = gzipSize.sync(
       fs.readFileSync(

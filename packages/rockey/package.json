@@ -1,7 +1,7 @@
 {
   "name": "rockey",
   "version": "0.0.8",
-  "description": "Stressless styles for components using js. Write CSS with functional mixins according to the component structure using components names",
+  "description": "Stressless CSS for components using JS. Write Component Based CSS with functional mixins.",
   "main": "index.js",
   "keywords": [
     "react",
@@ -19,9 +19,11 @@
     "url": "https://github.com/tuchk4/rockey.git"
   },
   "dependencies": {
+    "rockey-css-parse": "=0.0.1",
+    "css-vendor": "^0.3.8",
+    "asap": "^2.0.5",
     "classnames": "^2.2.5",
-    "lodash": "^4.17.4",
-    "raf": "^3.3.0"
+    "lodash": "^4.17.4"
   },
   "files": [
     "index.js",
@@ -34,10 +36,10 @@
     "css",
     "mixins",
     "styleSheets",
-    "utils"
+    "utils",
+    "plugins"
   ],
   "scripts": {
-    "prepublish": "node tasks/prepublish.js",
     "dev": "node tasks/prepublish.js --watch"
   }
 }

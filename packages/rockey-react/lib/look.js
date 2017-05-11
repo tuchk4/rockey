@@ -21,7 +21,7 @@ const look = (BaseComponent, { extendBase = true } = {}) => (...args) => {
   const css = rule(...args);
 
   return css.transform((tree, create) => {
-    const components = Object.keys(tree.components);
+    const components = Object.keys(tree);
     const size = components.length;
 
     if (!size) {
@@ -31,22 +31,14 @@ const look = (BaseComponent, { extendBase = true } = {}) => (...args) => {
     }
 
     const parentDisplayName = components[0];
-    const baseCss = create({
-      components: {
-        [parentDisplayName]: tree.components[parentDisplayName],
-      },
-    });
+    const baseCss = create(tree[parentDisplayName]);
 
     const children = {};
 
     for (let i = 1; i < size; i++) {
       const displayName = components[i];
 
-      const comopnentCss = create({
-        components: {
-          [displayName]: tree.components[displayName],
-        },
-      });
+      const comopnentCss = create(tree[displayName]);
 
       if (extendBase) {
         comopnentCss.addParent(baseCss);

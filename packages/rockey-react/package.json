@@ -1,7 +1,7 @@
 {
   "name": "rockey-react",
   "version": "0.0.12",
-  "description": "Stressless styles for components using js. Write CSS with functional mixins according to the component structure using components names",
+  "description": "Stressless CSS for components using JS. Write Component Based CSS with functional mixins.",
   "main": "index.js",
   "keywords": [
     "react",
@@ -19,16 +19,15 @@
     "url": "https://github.com/tuchk4/rockey.git"
   },
   "files": [
+    "utils",
     "assignShortcuts.js",
-    "index.js",
-    "htmlTags.js",
-    "look.js",
-    "speedy.js",
-    "recompose.js",
     "handler.js",
+    "htmlTags.js",
+    "index.js",
+    "look.js",
+    "recompose.js",
+    "speedy.js",
     "RockeyHoc.js",
-    "utils/RockeyHocWithHandlers.js",
-    "utils/filterProps.js",
     "rockey-react.min.js"
   ],
   "peerDependencies": {
@@ -40,10 +39,9 @@
     "classnames": "^2.2.5",
     "is-react-prop": "^0.1.2",
     "lodash": "^4.17.4",
-    "rockey": "^0.0.8"
+    "rockey": "=0.0.8"
   },
   "scripts": {
-    "prepublish": "node tasks/prepublish.js",
     "dev": "node tasks/prepublish.js --watch"
   },
   "devDependencies": {
