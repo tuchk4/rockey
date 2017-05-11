@@ -1,12 +1,11 @@
+/utils
 /assignShortcuts.js
+/handler.js
+/htmlTags.js
 /index.js
 /look.js
-/RockeyHoc.js
-/handler.js
 /recompose.js
+/RockeyHoc.js
 /speedy.js
-/utils/RockeyHocWithHandlers.js
-/utils/filterProps.js
-/htmlTags.js
 /rockey-react.min.js
 /etc

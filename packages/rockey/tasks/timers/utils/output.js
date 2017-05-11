@@ -85,10 +85,9 @@ const output = (id, size, time) => {
   fs.writeFileSync(
     currentResultsPath,
     JSON.stringify(
-      {
-        ...currentResults,
+      Object.assign({}, currentResults, {
         [id]: time,
-      },
+      }),
       2,
       2
     )
@@ -97,10 +96,9 @@ const output = (id, size, time) => {
   fs.writeFileSync(
     bestResultsPath,
     JSON.stringify(
-      {
-        ...bestResults,
+      Object.assign({}, bestResults, {
         [size]: bestSizeTimings,
-      },
+      }),
       2,
       2
     )

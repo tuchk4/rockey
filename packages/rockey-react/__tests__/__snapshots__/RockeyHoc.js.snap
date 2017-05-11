@@ -22,25 +22,25 @@ exports[`rockey named shortcut and named extend with custom className 1`] = `
 
 exports[`rockey named shortcut and named extend with custom className 2`] = `
 <button
-  className="YourButton-{{ hash }} custom-class-name"
+  className="YourButton-{{ hash }} m-background-{{ hash }}-1 custom-class-name"
 />
 `;
 
 exports[`rockey named shortcut and named extend with custom className 3`] = `
 <button
-  className="PrimaryYourButton-{{ hash }} YourButton-{{ hash }} custom-class-name"
+  className="PrimaryYourButton-{{ hash }} YourButton-{{ hash }} m-background-{{ hash }}-2 custom-class-name"
 />
 `;
 
 exports[`rockey named shortcut and named extend with custom className 4`] = `
 <button
-  className="ChildYourButton-1-{{ hash }} YourButton-{{ hash }} custom-class-name"
+  className="ChildYourButton-1-{{ hash }} YourButton-{{ hash }} m-background-{{ hash }}-3 custom-class-name"
 />
 `;
 
 exports[`rockey named shortcut and named extend with custom className 5`] = `
 <button
-  className="SuperButton-{{ hash }} ChildYourButton-1-{{ hash }} YourButton-{{ hash }} custom-class-name"
+  className="SuperButton-{{ hash }} ChildYourButton-1-{{ hash }} YourButton-{{ hash }} m-background-{{ hash }}-2 custom-class-name"
 />
 `;
 

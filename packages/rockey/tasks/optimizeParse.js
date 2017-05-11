@@ -9,7 +9,7 @@ const PARSE_SOURCE_JS = path.resolve(__dirname, '..', 'lib', 'css', 'parse.js');
 const parseSource = fs.readFileSync(PARSE_SOURCE_JS).toString();
 
 const parse = code => {
-  const regexp = /\/\/ @replace-start([\s\S]*?)\/\/ @replace-end/mg;
+  const regexp = /\/\/ @replace-start([\s\S]*?)\/\/ @replace-end/gm;
 
   let updateSource = code;
   let parts = null;
@@ -41,7 +41,7 @@ const parse = code => {
 };
 
 let updateSource = parseSource.replace(
-  /\/\/ @remove-start([\s\S]*?)\/\/ @remove-end/mg,
+  /\/\/ @remove-start([\s\S]*?)\/\/ @remove-end/gm,
   ''
 );
 updateSource = parse(updateSource);
@@ -50,7 +50,7 @@ updateSource = parse(updateSource);
 updateSource = parse(updateSource);
 
 updateSource = updateSource
-  .replace(/\/\/ @replace-start([\s\S]*?)\/\/ @replace-end/mg, '')
+  .replace(/\/\/ @replace-start([\s\S]*?)\/\/ @replace-end/gm, '')
   .replace(/\s+/, ' ')
   .split(/\n+/)
   .filter(line => !!line.trim())

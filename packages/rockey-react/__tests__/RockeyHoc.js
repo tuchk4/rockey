@@ -112,6 +112,7 @@ test('rockey named shortcut and named extend with custom className', () => {
   const YourButton = BaseButton('YourButton')`
     color; red;
     border: 1px solid #000;
+    background: ${p => p.bg};
   `;
 
   const PrimaryButton = YourButton('PrimaryYourButton')`
@@ -127,27 +128,27 @@ test('rockey named shortcut and named extend with custom className', () => {
   `;
 
   const BaseButtonTree = renderer
-    .create(<BaseButton className="custom-class-name" />)
+    .create(<BaseButton bg="oragne" className="custom-class-name" />)
     .toJSON();
   expect(BaseButtonTree).toMatchSnapshot();
 
   const YourButtonTree = renderer
-    .create(<YourButton className="custom-class-name" />)
+    .create(<YourButton bg="red" className="custom-class-name" />)
     .toJSON();
   expect(YourButtonTree).toMatchSnapshot();
 
   const PrimaryButtonTree = renderer
-    .create(<PrimaryButton className="custom-class-name" />)
+    .create(<PrimaryButton bg="oragne" className="custom-class-name" />)
     .toJSON();
   expect(PrimaryButtonTree).toMatchSnapshot();
 
   const SecondaryButtonTree = renderer
-    .create(<SecondaryButton className="custom-class-name" />)
+    .create(<SecondaryButton bg="blue" className="custom-class-name" />)
     .toJSON();
   expect(SecondaryButtonTree).toMatchSnapshot();
 
   const SuperButtonTree = renderer
-    .create(<SuperButton className="custom-class-name" />)
+    .create(<SuperButton bg="oragne" className="custom-class-name" />)
     .toJSON();
   expect(SuperButtonTree).toMatchSnapshot();
 });

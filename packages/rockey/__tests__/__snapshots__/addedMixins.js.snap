@@ -1,0 +1,122 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`rule 1`] = `
+Object {
+  "Button": "Button-hash m-anon-hash-1",
+}
+`;
+
+exports[`rule 2`] = `
+Array [
+  Array [
+    Array [
+      Object {
+        "media": null,
+        "mixins": Array [],
+        "root": Array [
+          "Button",
+        ],
+        "selector": Array [
+          ".Button-hash",
+        ],
+        "styles": Object {
+          "color": "red",
+        },
+      },
+      Object {
+        "media": null,
+        "mixins": Array [
+          [Function],
+        ],
+        "root": Array [
+          "Button",
+        ],
+        "selector": Array [
+          ".Button-hash",
+        ],
+        "styles": Object {},
+      },
+    ],
+  ],
+  Array [
+    Array [
+      Object {
+        "frames": undefined,
+        "selector": Array [
+          ".m-anon-hash-1.Button-hash",
+        ],
+        "styles": Object {
+          "color": "blue",
+        },
+      },
+    ],
+  ],
+]
+`;
+
+exports[`rule 3`] = `
+Object {
+  "Button": "Button-hash m-anon-hash-2",
+}
+`;
+
+exports[`rule 4`] = `
+Array [
+  Array [
+    Array [
+      Object {
+        "media": null,
+        "mixins": Array [],
+        "root": Array [
+          "Button",
+        ],
+        "selector": Array [
+          ".Button-hash",
+        ],
+        "styles": Object {
+          "color": "red",
+        },
+      },
+      Object {
+        "media": null,
+        "mixins": Array [
+          [Function],
+        ],
+        "root": Array [
+          "Button",
+        ],
+        "selector": Array [
+          ".Button-hash",
+        ],
+        "styles": Object {},
+      },
+    ],
+  ],
+  Array [
+    Array [
+      Object {
+        "frames": undefined,
+        "selector": Array [
+          ".m-anon-hash-1.Button-hash",
+        ],
+        "styles": Object {
+          "color": "blue",
+        },
+      },
+    ],
+  ],
+  Array [
+    Array [
+      Object {
+        "frames": undefined,
+        "selector": Array [
+          ".m-anon-hash-2.Button-hash",
+        ],
+        "styles": Object {
+          "color": "red",
+        },
+      },
+    ],
+  ],
+]
+`;

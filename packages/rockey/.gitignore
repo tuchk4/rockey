@@ -3,14 +3,15 @@
 /tasks/currentResults.json
 
 /css
-/mixins
+/plugins
 /styleSheets
 /utils
 
-/index.js
-/speedy.js
+
 /condition.js
-/rule.js
+/index.js
 /insert.js
+/rule.js
+/speedy.js
 /when.js
 /rockey.min.js
