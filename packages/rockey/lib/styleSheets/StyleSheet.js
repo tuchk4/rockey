@@ -9,7 +9,7 @@ export default class StyleSheet {
   queue = [];
   prevInsertTime = 0;
 
-  constructor(sheets, speedy = false) {
+  constructor(speedy = false) {
     this.speedy = speedy;
     this.fragments = initFragments(speedy);
     this.fragments.createFragments();
