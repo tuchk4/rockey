@@ -17,5 +17,5 @@
     "packages/rockey-react",
     "packages/rockey-css-parse"
   ],
-  "version": "independent"
+  "version": "0.12"
 }

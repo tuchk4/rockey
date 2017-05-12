@@ -1,5 +1,5 @@
 import createParser from '../lib/parse';
-import { stringifyRules } from '../lib/stringify';
+import { stringify } from '../lib/stringify';
 
 const parse = createParser({
   getClassName: component => `c-${component}-hash`,
@@ -29,6 +29,6 @@ test('plugins', () => {
     }
   `);
 
-  const css = stringifyRules(parsed.precss);
+  const css = stringify(parsed.precss);
   expect(css).toMatchSnapshot();
 });

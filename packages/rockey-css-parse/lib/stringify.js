@@ -1,32 +1,32 @@
-export const stringifyRule = (className, description) => {
+export function renderRule(className, description) {
   return `
     ${className} {
-        ${Object.keys(description)
-          .map(key => {
-            // support fallback rules
-            if (Array.isArray(description[key])) {
-              return description[key].map(value => `${key}:${value};`).join('');
-            } else {
-              return `${key}:${description[key]};`;
-            }
-          })
-          .join('')}
-  }
+      ${Object.keys(description)
+        .map(key => {
+          // support fallback rules
+          if (Array.isArray(description[key])) {
+            return description[key].map(value => `${key}:${value};`).join('');
+          } else {
+            return `${key}:${description[key]};`;
+          }
+        })
+        .join('')}
+    }
   `;
-};
+}
 
-export const stringify = ({ selector, styles, frames, media }) => {
+export function render({ selector, styles, frames, media }) {
   let css = '';
 
   if (styles) {
     if (media) {
       css = `
         ${media} {
-          ${stringifyRule(selector, styles)}
+          ${renderRule(selector, styles)}
         }
       `;
     } else {
-      css = stringifyRule(selector, styles);
+      css = renderRule(selector, styles);
     }
   } else if (frames) {
     if (media) {
@@ -45,14 +45,46 @@ export const stringify = ({ selector, styles, frames, media }) => {
   }
 
   return css;
-};
+}
 
-export const stringifyRules = precss => {
+export function renderRules(precss) {
   let css = '';
 
   precss.forEach(p => {
-    css += stringify(p);
+    css += render(p);
   });
 
   return css;
-};
+}
+
+export function stringify(precss, props) {
+  let css = '';
+
+  if (Array.isArray(precss)) {
+    precss.forEach(p => {
+      css += render(p);
+    });
+
+    if (props) {
+      precss.forEach(p => {
+        p.mixins.forEach(mixin => {
+          const { precss } = mixin(props);
+          css += renderRules(precss);
+        });
+      });
+    }
+  } else {
+    css = render(precss);
+
+    if (props) {
+      precss.mixins.forEach(mixin => {
+        const { precss } = mixin(props);
+        css += renderRules(precss);
+      });
+    }
+  }
+
+  return css;
+}
+
+export default stringify;

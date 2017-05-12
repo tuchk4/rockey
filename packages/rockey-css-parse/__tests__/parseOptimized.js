@@ -1,7 +1,7 @@
 import createParser from '../lib/parse';
 import createOptimizedParser from '../lib/parseOptimized';
 
-import { stringifyRules } from '../lib/stringify';
+import { stringify } from '../lib/stringify';
 
 const parse = createParser({
   getClassName: component => `c-${component}-hash`,
@@ -100,7 +100,5 @@ test('should be same results', () => {
   const parsedOptimized = optimizedParse(raw);
 
   expect(parsed).toEqual(parsedOptimized);
-  expect(stringifyRules(parsed.precss)).toEqual(
-    stringifyRules(parsedOptimized.precss)
-  );
+  expect(stringify(parsed.precss)).toEqual(stringify(parsedOptimized.precss));
 });

@@ -1,5 +1,5 @@
 import createParser from '../lib/parse';
-import { stringifyRules } from '../lib/stringify';
+import { stringify } from '../lib/stringify';
 
 const parse = createParser({
   getClassName: component => `c-${component}-hash`,
@@ -91,7 +91,7 @@ test('parse css string correctly (wihtout mixins)', () => {
     }
   `);
 
-  const css = stringifyRules(parsed.precss);
+  const css = stringify(parsed.precss);
   expect(css).toMatchSnapshot();
 });
 
@@ -180,13 +180,13 @@ test('parse css string correctly (with mixins)', () => {
     }
   `;
 
-  const css = stringifyRules(parsed.precss);
+  const css = stringify(parsed.precss);
   expect(css).toMatchSnapshot();
 
   parsed.precss.forEach(p => {
     p.mixins.forEach(mixin => {
       const { precss } = mixin();
-      const mixinCss = stringifyRules(precss);
+      const mixinCss = stringify(precss);
       expect(mixinCss).toMatchSnapshot();
     });
   });
@@ -243,7 +243,7 @@ test('parse css string correctly (with prop mixins)', () => {
     }
   `;
 
-  const css = stringifyRules(parsed.precss);
+  const css = stringify(parsed.precss);
   expect(css).toMatchSnapshot();
 
   parsed.precss.forEach(p => {
@@ -257,7 +257,7 @@ test('parse css string correctly (with prop mixins)', () => {
       });
 
       if (precss) {
-        const mixinCss = stringifyRules(precss);
+        const mixinCss = stringify(precss);
         expect(mixinCss).toMatchSnapshot();
       }
     });
@@ -287,6 +287,6 @@ test('parse css string correctly (nested) + fallback', () => {
     }
   `;
 
-  const css = stringifyRules(parsed.precss);
+  const css = stringify(parsed.precss);
   expect(css).toMatchSnapshot();
 });

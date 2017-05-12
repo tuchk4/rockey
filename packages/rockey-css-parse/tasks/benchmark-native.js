@@ -30,9 +30,13 @@ const modules = [
   'parse',
   'parseOptimized',
   'css',
+  'stylis',
   'postcss',
   'postcssSafeParser',
 ];
+
+console.log('');
+console.log('Benchmark native');
 
 modules.filter(m => !filter || filter.indexOf(m.trim()) !== -1).forEach(m => {
   spawn.sync(
