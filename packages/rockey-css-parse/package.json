@@ -1,6 +1,6 @@
 {
   "name": "rockey-css-parse",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "description": "Dynamic CSS string parser",
   "main": "parse.js",
   "keywords": [
