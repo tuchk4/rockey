@@ -14,7 +14,7 @@ npm install --save rockey
 npm install --save rockey-react
 ```
 
-![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.12/rockey.min.js?compression=gzip&label=rockey%20gzip) ![rockey-react gzip size](http://img.badgesize.io/https://unpkg.com/rockey-react@0.0.12/rockey-react.min.js?compression=gzip&label=rockey%20react%20gzip) ![rockey-css-parse gzip size](http://img.badgesize.io/https://unpkg.com/rockey-css-parse@0.0.12/rockey-react.min.js?compression=gzip&label=rockey%20css%20parse%20gzip)
+![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.13/rockey.min.js?compression=gzip&label=rockey%20gzip) ![rockey-react gzip size](http://img.badgesize.io/https://unpkg.com/rockey-react@0.0.13/rockey-react.min.js?compression=gzip&label=rockey%20react%20gzip) ![rockey-css-parse gzip size](http://img.badgesize.io/https://unpkg.com/rockey-css-parse@0.0.13/rockey-react.min.js?compression=gzip&label=rockey%20css%20parse%20gzip)
 
 ---
 
@@ -47,8 +47,9 @@ Rockey could be used in any application.
 
 ### Small Size
 
-- `rockey` ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.5-alpha.32af5f74/rockey.min.js?compression=gzip&label=gzip%20size)
-- `rockey-react` ![rockey-react gzip size](http://img.badgesize.io/https://unpkg.com/rockey-react@0.0.8-alpha.32af5f74/rockey-react.min.js?compression=gzip&label=gzip%20size)
+- `rockey` ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.13/rockey.min.js?compression=gzip&label=gzip%20size)
+- `rockey-react` ![rockey-react gzip size](http://img.badgesize.io/https://unpkg.com/rockey-react@0.0.13/rockey-react.min.js?compression=gzip&label=gzip%20size)
+- `rockey-css-parse` ![rockey-css-parse gzip size](http://img.badgesize.io/https://unpkg.com/rockey-css-parse@0.0.13/rockey-react.min.js?compression=gzip&label=rockey%20css%20parse%20gzip)
 
 `npm run minify` output:
 
