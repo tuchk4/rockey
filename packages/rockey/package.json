@@ -1,6 +1,6 @@
 {
   "name": "rockey",
-  "version": "0.0.8",
+  "version": "0.0.13",
   "description": "Stressless CSS for components using JS. Write Component Based CSS with functional mixins.",
   "main": "index.js",
   "keywords": [
@@ -19,7 +19,7 @@
     "url": "https://github.com/tuchk4/rockey.git"
   },
   "dependencies": {
-    "rockey-css-parse": "=0.0.1",
+    "rockey-css-parse": "=0.0.13",
     "css-vendor": "^0.3.8",
     "asap": "^2.0.5",
     "classnames": "^2.2.5",
