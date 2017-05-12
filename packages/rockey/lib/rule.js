@@ -16,8 +16,9 @@ import validateCSSRule from './plugins/validateCSSRule';
 
 const plugins = [];
 
+plugins.push(vendorPrefix);
+
 if (process.env.NODE_ENV !== 'production') {
-  plugins.push(vendorPrefix);
   plugins.push(validateCSSRule);
 }
 
