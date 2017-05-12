@@ -42,7 +42,8 @@
     "rockey": "=0.0.13"
   },
   "scripts": {
-    "dev": "node tasks/prepublish.js --watch"
+    "dev": "node tasks/prepublish.js --watch",
+    "transpile": "node tasks/prepublish.js"
   },
   "devDependencies": {
     "react": "^15.5.4",

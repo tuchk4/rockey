@@ -39,6 +39,7 @@
     "plugins"
   ],
   "scripts": {
-    "dev": "node tasks/prepublish.js --watch"
+    "dev": "node tasks/prepublish.js --watch",
+    "transpile": "node tasks/prepublish.js"
   }
 }

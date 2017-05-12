@@ -13,7 +13,8 @@
     "dev": "node ./tasks/dev",
     "clean": "node ./tasks/clean",
     "minify": "node ./tasks/minify",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "transpile": "node ./tasks/transpile"
   },
   "keywords": [
     "react",
