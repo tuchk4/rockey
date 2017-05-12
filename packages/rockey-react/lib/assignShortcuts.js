@@ -1,4 +1,5 @@
 import React from 'react';
+import 'react-dom';
 import isString from 'lodash/isString';
 import isArray from 'lodash/isArray';
 

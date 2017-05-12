@@ -1,5 +1,5 @@
 import React from 'react';
-import isFunction from 'lodash/isFunction';
+import 'react-dom';
 import renderer from 'react-test-renderer';
 
 import rockey from '../lib/';
