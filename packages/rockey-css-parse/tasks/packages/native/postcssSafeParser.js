@@ -13,7 +13,7 @@ const css = getNativeCss(size);
 
 console.log('');
 console.log(
-  `Start ${chalk.green('postcssNestedSafeParser')} measuring with ${chalk.cyan(size)} class length`
+  `Start ${chalk.green('postcssSafeParser')} measuring with ${chalk.cyan(size)} class length`
 );
 console.log('');
 
@@ -24,5 +24,5 @@ timer(() => {
     })
     .then(result => {});
 }).then(time => {
-  output('postcssNestedSafeParser', size, time);
+  output('postcssSafeParser', size, time);
 });

@@ -1,5 +1,5 @@
 import createParser from '../lib/parse';
-import { stringifyRules } from '../lib/stringify';
+import { stringify } from '../lib/stringify';
 
 const parse = createParser({
   getClassName: component => `c-${component}-hash`,
@@ -20,7 +20,7 @@ test('callTypes', () => {
     }
   `);
 
-  const css1 = stringifyRules(parsed1.precss);
+  const css1 = stringify(parsed1.precss);
 
   const parsed2 = parse`
     Button {
@@ -33,7 +33,7 @@ test('callTypes', () => {
       }
     }`;
 
-  const css2 = stringifyRules(parsed2.precss);
+  const css2 = stringify(parsed2.precss);
 
   expect(css1).toEqual(css2);
 });

@@ -6,8 +6,9 @@ Hard to read it and understand [rockey](https://github.com/tuchk4/rockey) and [r
 At this page I will try to collect all distinctive features.
 
 Documenation:
-- [rockey](https://github.com/tuchk4/rockey/tree/master/packages/rockey) (*7kb gziped*)
-- [rockey-react](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react) (*10kb gziped*)
+- [rockey](https://github.com/tuchk4/rockey/tree/master/packages/rockey) (*8kb gziped*)
+- [rockey-react](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react) (*13kb gziped*)
+- [rockey-css-parse](https://github.com/tuchk4/rockey/tree/master/packages/rockey-css-parse) (*5kb gziped*)
 
 # Table of contents:
 

@@ -6,7 +6,7 @@ import timer from './utils/timer';
 import output from './utils/output';
 
 import createParser from '../../../lib/parseOptimized';
-import { stringifyRules } from '../../../lib/stringify';
+import stringify from '../../../lib/stringify';
 
 const size = argv.size || 10;
 const css = getCss(size);
@@ -20,7 +20,7 @@ console.log('');
 const parse = createParser();
 
 timer(() => {
-  stringifyRules(parse(css).precss);
+  stringify(parse(css).precss);
 }).then(time => {
   output('parseOptimized', size, time);
 });

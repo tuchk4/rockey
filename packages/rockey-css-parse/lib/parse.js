@@ -67,25 +67,49 @@ const isStartsWithModificator = raw => {
 const shouldGenerateSelectors = parent => parent.type !== 'keyframes';
 
 export default function createParser(config = {}) {
-  const getClassName = classnames.getClassName(config.getClassName);
+  const plugins = config.plugins || [];
 
-  const getMixinClassName = classnames.getMixinClassName(
-    config.getMixinClassName
-  );
-
-  const getSelector = classnames.getSelector(config.getClassName);
+  const actions = {
+    // getClassName: classnames.getClassName(config.getClassName),
+    getMixinClassName: classnames.getMixinClassName(config.getMixinClassName),
+    // getSelector: classnames.getSelector(config.getClassName),
+    getAnimationName: config.getAnimationName
+      ? config.getAnimationName
+      : name => name,
+  };
 
   const getComponentName = classnames.getComponentName;
-  const getAnimationName = config.getAnimationName
-    ? config.getAnimationName
-    : name => name;
-
-  const plugins = config.plugins;
 
   return function parse(strings, ...values) {
     const context = {
       hasAnimations: false,
       animations: {},
+      classnames: {
+        components: {},
+        selector: {},
+      },
+    };
+
+    const classname = classnames.getClassName(config.getClassName);
+    const getClassName = component => {
+      if (context.classnames.components[component]) {
+        return context.classnames.components[component];
+      }
+      const className = classname(component);
+      context.classnames.components[component] = className;
+
+      return className;
+    };
+
+    const selector = classnames.getSelector(getClassName);
+    const getSelector = component => {
+      if (context.classnames.selector[component]) {
+        return context.classnames.selector[component];
+      }
+      const className = selector(component);
+      context.classnames.selector[component] = className;
+
+      return className;
     };
 
     let precss = [];
@@ -262,7 +286,7 @@ export default function createParser(config = {}) {
         if (keyframes) {
           let animationName = modificator.split(' ')[1];
 
-          let uniqAnimationName = getAnimationName(animationName);
+          let uniqAnimationName = actions.getAnimationName(animationName);
 
           context.hasAnimations = true;
           context.animations[animationName] = uniqAnimationName;
@@ -443,7 +467,7 @@ export default function createParser(config = {}) {
       // @replace-start
       const saveMixin = () => {
         const mixinFunction = createMixin({
-          className: getMixinClassName(mixinsFunctions[mixin]),
+          className: actions.getMixinClassName(mixinsFunctions[mixin]),
           selector: parent.selector,
           root: parent.root,
           func: mixinsFunctions[mixin],

@@ -5,30 +5,19 @@ const parse = createParser({
   getClassName: component => `c-${component}-hash`,
   getMixinClassName: component => `m-${component}-hash`,
   getAnimationName: component => `a-${component}-hash`,
-  plugins: [
-    styles => {
-      return {
-        hacked: 'hacked',
-      };
-    },
-  ],
 });
 
-// let cssWithoutMixins = null;
-
-test('plugins', () => {
-  const parsed = parse(`
+test('stringify with props', () => {
+  const { precss } = parse`
     Button {
-      Icon {
-        background-color: transparent;
-      }
-
-      Close {
-        background-color: black;
-      }
+      color: red;
+      background: ${props => props.bg};
     }
-  `);
+  `;
 
-  const css = stringify(parsed.precss);
+  const css = stringify(precss, {
+    bg: '#ffcc33',
+  });
+
   expect(css).toMatchSnapshot();
 });

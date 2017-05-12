@@ -3,8 +3,8 @@
 exports[`parse css string correctly (nested) 1`] = `
 "
     .m-anon-hash-1.c-A-hash .c-B-hash:active .c-C-hash .c-D-hash .c-E-hash:hover,.m-anon-hash-1.c-A-hash .c-B1-hash .c-C-hash .c-D-hash .c-E-hash:hover,.m-anon-hash-1.c-A-hash .c-B2-hash .c-C-hash .c-D-hash .c-E-hash:hover,.m-anon-hash-1.c-A-hash .c-B3-hash .c-C-hash .c-D-hash .c-E-hash:hover {
-        color:green;
-  }
+      color:green;
+    }
   "
 `;
 
@@ -13,8 +13,8 @@ exports[`parse css string correctly (nested) 2`] = `"m-anon-hash-1"`;
 exports[`parse css string correctly (nested) 3`] = `
 "
     .m-background-hash-1.c-A-hash .c-B-hash:active .c-C-hash .c-D-hash .c-E-hash:hover,.m-background-hash-1.c-A-hash .c-B1-hash .c-C-hash .c-D-hash .c-E-hash:hover,.m-background-hash-1.c-A-hash .c-B2-hash .c-C-hash .c-D-hash .c-E-hash:hover,.m-background-hash-1.c-A-hash .c-B3-hash .c-C-hash .c-D-hash .c-E-hash:hover {
-        background:green;
-  }
+      background:green;
+    }
   "
 `;
 
@@ -23,16 +23,16 @@ exports[`parse css string correctly (nested) 4`] = `"m-background-hash-1"`;
 exports[`parse css string correctly (wihtout mixins) 1`] = `
 "
     .c-Button-hash {
-        color:red;
-  }
+      color:red;
+    }
   "
 `;
 
 exports[`parse css string correctly (wihtout mixins) 2`] = `
 "
     .m-background-hash-1.c-Button-hash {
-        background:yellow;
-  }
+      background:yellow;
+    }
   "
 `;
 

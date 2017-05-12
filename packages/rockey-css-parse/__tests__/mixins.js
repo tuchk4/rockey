@@ -1,5 +1,5 @@
 import createParser from '../lib/parse';
-import { stringifyRules } from '../lib/stringify';
+import { stringify } from '../lib/stringify';
 
 const parse = createParser({
   getClassName: component => `c-${component}-hash`,
@@ -15,7 +15,7 @@ test('parse css string correctly (wihtout mixins)', () => {
     }
   `;
 
-  const css = stringifyRules(parsed.precss);
+  const css = stringify(parsed.precss);
   expect(css).toMatchSnapshot();
 
   parsed.precss.forEach(p => {
@@ -24,7 +24,7 @@ test('parse css string correctly (wihtout mixins)', () => {
         bg: 'yellow',
       });
 
-      const mixinCss = stringifyRules(precss);
+      const mixinCss = stringify(precss);
       expect(mixinCss).toMatchSnapshot();
       expect(className).toMatchSnapshot();
     });
@@ -63,7 +63,7 @@ test('parse css string correctly (nested)', () => {
         primary: true,
       });
 
-      const mixinCss = stringifyRules(precss);
+      const mixinCss = stringify(precss);
       expect(mixinCss).toMatchSnapshot();
       expect(className).toMatchSnapshot();
     });

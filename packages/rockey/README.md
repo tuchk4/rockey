@@ -8,7 +8,7 @@ Stressless styles for components using js. Write CSS with functional mixins acco
 npm install --save rockey
 ```
 
-![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.5-alpha.32af5f74/rockey.min.js?compression=gzip&label=rockey%20gzip)
+![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.12/rockey.min.js?compression=gzip&label=rockey%20gzip) 
 
 ## Api
 

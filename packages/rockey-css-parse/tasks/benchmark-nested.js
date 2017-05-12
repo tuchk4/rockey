@@ -29,10 +29,13 @@ if (prevBestSizeTimings) {
 const modules = [
   'parse',
   'parseOptimized',
-  'stylis',
+  // 'stylis',
   'postcssNested',
   'postcssNestedSafeParser',
 ];
+
+console.log('');
+console.log('Benchmark nested');
 
 modules.filter(m => !filter || filter.indexOf(m.trim()) !== -1).forEach(m => {
   spawn.sync(

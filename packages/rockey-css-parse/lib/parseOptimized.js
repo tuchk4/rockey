@@ -59,20 +59,58 @@ const isStartsWithModificator = raw => {
 };
 const shouldGenerateSelectors = parent => parent.type !== 'keyframes';
 export default function createParser(config = {}) {
-  const getClassName = classnames.getClassName(config.getClassName);
-  const getMixinClassName = classnames.getMixinClassName(
-    config.getMixinClassName
-  );
-  const getSelector = classnames.getSelector(config.getClassName);
+  const plugins = config.plugins || [];
+  const actions = {
+    getClassName: classnames.getClassName(config.getClassName),
+    getMixinClassName: classnames.getMixinClassName(config.getMixinClassName),
+    getSelector: classnames.getSelector(config.getClassName),
+    getAnimationName: config.getAnimationName
+      ? config.getAnimationName
+      : name => name,
+  };
   const getComponentName = classnames.getComponentName;
-  const getAnimationName = config.getAnimationName
-    ? config.getAnimationName
-    : name => name;
-  const plugins = config.plugins;
   return function parse(strings, ...values) {
     const context = {
       hasAnimations: false,
       animations: {},
+      classnames: {
+        components: {},
+        animations: {},
+        mixins: {},
+        selector: {},
+      },
+    };
+    const getSelector = component => {
+      if (context.classnames.selector[component]) {
+        return context.classnames.selector[component];
+      }
+      const className = actions.getSelector(component);
+      context.classnames.selector[component] = className;
+      return className;
+    };
+    const getMixinClassName = component => {
+      if (context.classnames.mixins[component]) {
+        return context.classnames.mixins[component];
+      }
+      const className = actions.getMixinClassName(component);
+      context.classnames.mixins[component] = className;
+      return className;
+    };
+    const getAnimationName = name => {
+      if (context.classnames.animations[name]) {
+        return context.classnames.animations[name];
+      }
+      const className = actions.getAnimationName(name);
+      context.classnames.animations[name] = className;
+      return className;
+    };
+    const getClassName = component => {
+      if (context.classnames.components[component]) {
+        return context.classnames.components[component];
+      }
+      const className = actions.getClassName(component);
+      context.classnames.components[component] = className;
+      return className;
     };
     let precss = [];
     let raw = null;

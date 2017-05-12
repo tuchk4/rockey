@@ -6,7 +6,7 @@
 npm i --save rockey-react
 ```
 
-![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey-react gzip size](http://img.badgesize.io/https://unpkg.com/rockey-react@0.0.8-alpha.32af5f74/rockey-react.min.js?compression=gzip&label=rockey%20react%20gzip)
+![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey-react gzip size](http://img.badgesize.io/https://unpkg.com/rockey-react@0.0.12/rockey-react.min.js?compression=gzip&label=rockey%20react%20gzip)
 
 ## Api
 

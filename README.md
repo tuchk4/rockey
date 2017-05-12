@@ -14,13 +14,14 @@ npm install --save rockey
 npm install --save rockey-react
 ```
 
-![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.5-alpha.32af5f74/rockey.min.js?compression=gzip&label=rockey%20gzip) ![rockey-react gzip size](http://img.badgesize.io/https://unpkg.com/rockey-react@0.0.8-alpha.32af5f74/rockey-react.min.js?compression=gzip&label=rockey%20react%20gzip)
+![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.12/rockey.min.js?compression=gzip&label=rockey%20gzip) ![rockey-react gzip size](http://img.badgesize.io/https://unpkg.com/rockey-react@0.0.12/rockey-react.min.js?compression=gzip&label=rockey%20react%20gzip) ![rockey-css-parse gzip size](http://img.badgesize.io/https://unpkg.com/rockey-css-parse@0.0.12/rockey-react.min.js?compression=gzip&label=rockey%20css%20parse%20gzip)
 
 ---
 
 ## Documentation
 
 - [rockey](https://github.com/tuchk4/rockey/tree/master/packages/rockey)
+- [rockey-parse-css](https://github.com/tuchk4/rockey/tree/master/packages/rockey-parse-css)
 - [rockey-react](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react)
 
 
@@ -272,12 +273,27 @@ After clone:
 If you want to run rockey inside another applicaiton via *npm link* - run `npm run dev` at rockey to start watchers and transpile code.
 
 - `npm run minify` to minify code
-- `npm run optimize-parse` to auto optimize CSS parser *packages/rockey/css/parse.js*
-- `npm run best-results -- --size {{ SIZE }} ` to run performance tests. `{{ SIZE }}` - number of CSS classes to parse (1000 by default). It run same test for `parse`, `parseOptimized`, [`postcss`](https://github.com/postcss/postcss) and [`postcss safe parser`](postcss-safe-parser) with [`postcss nested plugin`](https://github.com/postcss/postcss-nested). There is file `packages/rockey/tasks/bestResults.json` with best parse results.
+- `npm run optimize-parse` to auto optimize CSS parser *packages/rockey-css-parse/parse.js*
 - `npm run clean` - to remove all transpiled files
 - `npm run test` - run tests
 - `npm run test-dev` - run tests with watchers
 - `lerna run prepublish` - to transpile all packages.
+
+benchmarks:
+
+For nested CSS syntax:
+
+```
+npm run bench:nested -- --size {{ SIZE }}
+```
+
+For native CSS syntax:
+
+```
+npm run bench:native -- --size {{ SIZE }}
+```
+
+- *`{{ SIZE }}`* - number of generated CSS classes to parse (1000 by default).
 
 There is precommit hook (via [husky](http://npmjs.com/package/husky)) to run [prettier](prettier) for all staged files.
 

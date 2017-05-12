@@ -66,11 +66,11 @@ const interpolateWithMixins = (strings, ...values) => {
         mixinsFunctions[placeholder] = value;
       }
 
-      append = placeholder + '; ';
+      append = `${placeholder}; `;
       // append = placeholder + '; ';
     }
 
-    return rule + raw + append;
+    return rule + raw + ' ' + append;
   }, '');
 
   return { raw, mixinsFunctions };

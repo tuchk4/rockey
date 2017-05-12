@@ -3,11 +3,11 @@
 exports[`plugins 1`] = `
 "
     .c-Button-hash .c-Icon-hash {
-        hacked:hacked;
-  }
+      hacked:hacked;
+    }
   
     .c-Button-hash .c-Close-hash {
-        hacked:hacked;
-  }
+      hacked:hacked;
+    }
   "
 `;
