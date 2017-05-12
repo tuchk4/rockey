@@ -15,12 +15,9 @@ const interpolateWithMixins = (strings, ...values) => {
     let append = value;
 
     if (isFunction(value)) {
-      let i = raw.length;
       let found = false;
-
-      while (true) {
-        i--;
-
+      let i = 0;
+      for (i = raw.length - 1; i > 0; i--) {
         if (!found) {
           if (raw[i] === ':') {
             found = true;
@@ -40,9 +37,10 @@ const interpolateWithMixins = (strings, ...values) => {
       let name = null;
 
       if (found) {
-        prop = raw.slice(i, -1).trim();
-        raw = raw.slice(0, i);
+        const index = i ? i - 1 : 0;
 
+        prop = raw.slice(index, -1).trim();
+        raw = raw.slice(0, index);
         name = camelCase(prop);
       } else {
         name = getMixinName(value);
@@ -77,13 +75,3 @@ const interpolateWithMixins = (strings, ...values) => {
 };
 
 export default interpolateWithMixins;
-
-// export const addMixins = (raw, mixinsFunctions, mixins) => {
-//   mixins.forEach(mixin => {
-//     const name = `${MIXIN_PREFIX}_ADDED_${getMixinName(mixin)}`;
-//     raw = raw + ' ' + name;
-//     mixinsFunctions[name] = mixin;
-//   });
-//
-//   return raw;
-// };

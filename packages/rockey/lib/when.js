@@ -33,7 +33,7 @@ const when = (...args) => {
     if (displayName) {
       anonWhen.displayName = displayName;
     } else {
-      anonWhen.displayName = `anonWhen`;
+      anonWhen.displayName = `when`;
     }
 
     return anonWhen;

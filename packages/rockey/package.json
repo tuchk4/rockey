@@ -26,17 +26,17 @@
     "lodash": "^4.17.4"
   },
   "files": [
-    "index.js",
     "condition.js",
+    "index.js",
     "rule.js",
     "insert.js",
     "when.js",
     "speedy.js",
-    "rockey.min.js",
     "css",
     "styleSheets",
     "utils",
-    "plugins"
+    "plugins",
+    "rockey.min.js"
   ],
   "scripts": {
     "dev": "node tasks/prepublish.js --watch",

@@ -574,8 +574,8 @@ exports[`parse css string correctly (with prop mixins) 8`] = `
 
 exports[`parse css string correctly (with prop mixins) 9`] = `
 "
-    .m-color-hash-1.c-Bar-hash .c-WarningButton-hash,.m-color-hash-1.c-Foo-hash .c-WarningButton-hash,.m-color-hash-1.c-Bar-hash .c-PrimaryButton-hash,.m-color-hash-1.c-Foo-hash .c-PrimaryButton-hash,.m-color-hash-1.c-Bar-hash .c-SucceessButton-hash,.m-color-hash-1.c-Foo-hash .c-SucceessButton-hash {
-      color:red;
+    .m-backgroundColor-hash-1.c-Bar-hash .c-WarningButton-hash,.m-backgroundColor-hash-1.c-Foo-hash .c-WarningButton-hash,.m-backgroundColor-hash-1.c-Bar-hash .c-PrimaryButton-hash,.m-backgroundColor-hash-1.c-Foo-hash .c-PrimaryButton-hash,.m-backgroundColor-hash-1.c-Bar-hash .c-SucceessButton-hash,.m-backgroundColor-hash-1.c-Foo-hash .c-SucceessButton-hash {
+      background-color:red;
     }
   "
 `;

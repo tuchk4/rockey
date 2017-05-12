@@ -237,7 +237,7 @@ test('parse css string correctly (with prop mixins)', () => {
         }
 
         @media (max-width: 1000px) {
-          background: color: ${props => props.color};
+          background-color: ${props => props.color};
         }
       }
     }
