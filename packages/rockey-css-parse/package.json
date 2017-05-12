@@ -35,7 +35,8 @@
     "index.js",
     "parse.js",
     "parseOptimized.js",
-    "stringify.js"
+    "stringify.js",
+    "rockey-css-parse.min.js"
   ],
   "scripts": {
     "dev": "node tasks/prepublish.js --watch"
