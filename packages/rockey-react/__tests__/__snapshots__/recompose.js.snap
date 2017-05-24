@@ -1,0 +1,27 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Render recompose 1`] = `
+<button
+  className="RecomposeShortcutButton1--hash-"
+>
+  Button
+</button>
+`;
+
+exports[`Render recompose custom component 1`] = `
+<button
+  bg="yellow"
+  c="yellow"
+  className="RockeyRecompose1--hash-"
+>
+  Button
+</button>
+`;
+
+exports[`Render recompose with name 1`] = `
+<button
+  className="MyButtonYo--hash-"
+>
+  Button
+</button>
+`;

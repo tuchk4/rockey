@@ -3,6 +3,7 @@ import 'react-dom';
 import isString from 'lodash/isString';
 import isArray from 'lodash/isArray';
 
+import createElement from './utils/createElement';
 import htmlTags from './htmlTags';
 
 const ucfirst = s => s.charAt(0).toUpperCase() + s.slice(1);
@@ -26,10 +27,7 @@ const assignShortcuts = rockey => {
             ...args
           );
         } else {
-          return React.createElement(tag, filterProps(args[0]));
-          // throw new Error(
-          //   `shortcut.${tag} used as React Component but without defined styles. Use jsx syntax directly for such cases - "<${tag}>...</${tag}>"`
-          // );
+          return createElement(tag, args[0]);
         }
       },
       set: () => {

@@ -4,7 +4,7 @@ import when from 'rockey/when';
 import insert from 'rockey/insert';
 import condition from 'rockey/condition';
 
-import isString from 'lodash/isString';
+// import isString from 'lodash/isString';
 
 import htmlTags from './htmlTags';
 
@@ -20,7 +20,7 @@ const createRockeyHoc = (BaseComponent, displayName, css) => {
 
 const look = (BaseComponent, { extendBase = true } = {}) => (...args) => {
   const css = rule(...args);
-  const isTagComponent = isString(BaseComponent);
+  // const isTagComponent = isString(BaseComponent);
 
   return css.transform((tree, create) => {
     const components = Object.keys(tree);
@@ -54,9 +54,9 @@ const look = (BaseComponent, { extendBase = true } = {}) => (...args) => {
 
       children[displayName] = ChildRockeyHoc;
 
-      if (!isTagComponent) {
-        BaseComponent[displayName] = ChildRockeyHoc;
-      }
+      // if (!isTagComponent) {
+      //   BaseComponent[displayName] = ChildRockeyHoc;
+      // }
     }
 
     const ParentRockeyHoc = createRockeyHoc(
@@ -65,9 +65,9 @@ const look = (BaseComponent, { extendBase = true } = {}) => (...args) => {
       baseCss
     );
 
-    if (!isTagComponent) {
-      BaseComponent[parentDisplayName] = ParentRockeyHoc;
-    }
+    // if (!isTagComponent) {
+    //   BaseComponent[parentDisplayName] = ParentRockeyHoc;
+    // }
 
     return {
       ...children,

@@ -1,5 +1,7 @@
+import React from 'react';
 import 'react-dom';
 import isFunction from 'lodash/isFunction';
+import renderer from 'react-test-renderer';
 import RockeyHoc from '../lib';
 import htmlTags from '../lib/htmlTags';
 
@@ -33,4 +35,11 @@ describe('shortcuts', () => {
     expect(MyButton.name).toEqual('FlexibleRockeyHoc');
     expect(MyButton.displayName).toEqual('MyButton');
   });
+});
+
+test('Render shortcuts', () => {
+  const Button = RockeyHoc.button;
+
+  const ButtonTree = renderer.create(<Button>Button</Button>).toJSON();
+  expect(ButtonTree).toMatchSnapshot();
 });

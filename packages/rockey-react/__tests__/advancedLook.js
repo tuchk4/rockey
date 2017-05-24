@@ -47,15 +47,15 @@ test('Advanced look #1', () => {
     .toJSON();
   expect(SuccessButtonTree).toMatchSnapshot();
 
-  expect(SuccessButtonTree).toEqual(
-    renderer
-      .create(
-        <Button.Primary.SuccessButton>
-          SuccessButton
-        </Button.Primary.SuccessButton>
-      )
-      .toJSON()
-  );
+  // expect(SuccessButtonTree).toEqual(
+  //   renderer
+  //     .create(
+  //       <Button.Primary.SuccessButton>
+  //         SuccessButton
+  //       </Button.Primary.SuccessButton>
+  //     )
+  //     .toJSON()
+  // );
 
   const AlertButtonTree = renderer
     .create(<AlertButton>AlertButton</AlertButton>)
