@@ -8,6 +8,7 @@ import rule from 'rockey/rule';
 import look from './look';
 
 import RockeyHocWithHandlers from './utils/RockeyHocWithHandlers';
+import createElement from './utils/createElement';
 // import { flush } from 'rockey/styleSheets';
 
 import { ROCKEY_MIXIN_HANDLER_KEY } from './handler';
@@ -114,7 +115,8 @@ export const getRockeyHoc = () => {
           });
 
         case WAS_CALLED_AS_REACT_COMPONENT:
-          const props = args[0];
+          let { innerRef, ...props } = args[0];
+          props.ref = innerRef;
 
           if (!css) {
             css = createEmtpyCss(name);
@@ -165,7 +167,7 @@ export const getRockeyHoc = () => {
 
             const classList = finshCssRule.getClassList(props);
             const className = classnames(classList[name], props.className);
-            return React.createElement(BaseComponent, {
+            return createElement(BaseComponent, {
               ...props,
               className,
             });

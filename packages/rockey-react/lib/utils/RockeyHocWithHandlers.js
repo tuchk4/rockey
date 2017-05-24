@@ -1,5 +1,6 @@
 import React from 'react';
 import classnames from 'classnames';
+import createElement from './createElement';
 
 const HANDLERS_SHOULD_BE_RESETED_ON_OUT = ['onMouseMove', 'onMouseOver'];
 const HANDLERS_SHOULD_BE_RESETED_ON_OVER = ['onMouseOut'];
@@ -116,8 +117,10 @@ export default class RockeyHocWithHandlers extends React.Component {
       };
     }
 
-    return (
-      <BaseComponent {...proxy} {...componentHandlers} className={className} />
-    );
+    return createElement(BaseComponent, {
+      ...proxy,
+      ...componentHandlers,
+      className,
+    });
   }
 }
