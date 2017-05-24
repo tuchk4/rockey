@@ -4,8 +4,9 @@ import when from 'rockey/when';
 import insert from 'rockey/insert';
 import condition from 'rockey/condition';
 
+import isString from 'lodash/isString';
+
 import htmlTags from './htmlTags';
-import filterProps from './utils/filterProps';
 
 import rockey from './';
 
@@ -19,6 +20,7 @@ const createRockeyHoc = (BaseComponent, displayName, css) => {
 
 const look = (BaseComponent, { extendBase = true } = {}) => (...args) => {
   const css = rule(...args);
+  const isTagComponent = isString(BaseComponent);
 
   return css.transform((tree, create) => {
     const components = Object.keys(tree);
@@ -51,7 +53,10 @@ const look = (BaseComponent, { extendBase = true } = {}) => (...args) => {
       );
 
       children[displayName] = ChildRockeyHoc;
-      BaseComponent[displayName] = ChildRockeyHoc;
+
+      if (!isTagComponent) {
+        BaseComponent[displayName] = ChildRockeyHoc;
+      }
     }
 
     const ParentRockeyHoc = createRockeyHoc(
@@ -60,7 +65,9 @@ const look = (BaseComponent, { extendBase = true } = {}) => (...args) => {
       baseCss
     );
 
-    BaseComponent[parentDisplayName] = ParentRockeyHoc;
+    if (!isTagComponent) {
+      BaseComponent[parentDisplayName] = ParentRockeyHoc;
+    }
 
     return {
       ...children,
@@ -76,13 +83,7 @@ look.insert = insert;
 for (const tag of htmlTags) {
   // ---- tag hoc lazy creation
   Object.defineProperty(look, tag, {
-    get: () => (...args) => {
-      const TagComponent = props => {
-        return React.createElement(tag, filterProps(props));
-      };
-
-      return look(TagComponent)(...args);
-    },
+    get: () => (...args) => look(tag)(...args),
   });
 }
 

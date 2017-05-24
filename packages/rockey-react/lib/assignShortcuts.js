@@ -3,7 +3,6 @@ import 'react-dom';
 import isString from 'lodash/isString';
 import isArray from 'lodash/isArray';
 
-import filterProps from './utils/filterProps';
 import htmlTags from './htmlTags';
 
 const ucfirst = s => s.charAt(0).toUpperCase() + s.slice(1);
@@ -14,23 +13,18 @@ const assignShortcuts = rockey => {
     // ---- tag hoc lazy creation
     Object.defineProperty(rockey, tag, {
       get: () => (...args) => {
-        const TagComponent = props => {
-          return React.createElement(tag, filterProps(props));
-        };
-
         if (args.length === 1 && isString(args[0])) {
           // ---- use with defined displayName
-          return rockey(ucfirst(args[0]), TagComponent);
+          return rockey(ucfirst(args[0]), tag);
         } else if (isArray(args[0])) {
           // ---- use as anonymys tag shortcut
           if (!counter[tag]) {
             counter[tag] = 0;
           }
 
-          return rockey(
-            `Shortcut${ucfirst(tag)}${++counter[tag]}`,
-            TagComponent
-          )(...args);
+          return rockey(`Shortcut${ucfirst(tag)}${++counter[tag]}`, tag)(
+            ...args
+          );
         } else {
           throw new Error(
             `shortcut.${tag} used as React Component but without defined styles. Use jsx syntax directly for such cases - "<${tag}>...</${tag}>"`
