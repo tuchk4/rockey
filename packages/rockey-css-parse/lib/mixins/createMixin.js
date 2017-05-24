@@ -1,6 +1,14 @@
-const createMixin = ({ className, selector, func, parse }) => {
+const createMixin = ({ className, selector, func, parse, plugins }) => {
   let counter = 0;
   const variations = {};
+
+  const applyPlugins = styles => {
+    if (plugins) {
+      return plugins.reduce((styles, plugin) => plugin(styles), styles);
+    }
+
+    return styles;
+  };
 
   const mixin = props => {
     const raw = func(props);
@@ -32,38 +40,22 @@ const createMixin = ({ className, selector, func, parse }) => {
       mixinSelector = [`.${variateClassName}`];
     }
 
-    // root.forEach(n => {
-    //   const rootComponentClassName = getClassName(n);
-    //
-    //   selector.forEach(s => {
-    //     mixinSelector.push(
-    //       s.replace(
-    //         rootComponentClassName,
-    //         `.${variateClassName}${rootComponentClassName}`
-    //       )
-    //     );
-    //   });
-    // });
-
     let precss = null;
 
     if (func.prop) {
       precss = [
         {
           selector: mixinSelector,
-          styles: raw,
+          styles: applyPlugins(raw),
         },
       ];
     } else {
-      const parsed = parse(raw);
+      const parsed = parse(`${mixinSelector} { ${raw} }`);
 
-      precss = parsed.precss.map(p => {
-        return {
-          selector: p.frames ? p.selector : mixinSelector,
-          styles: p.styles,
-          frames: p.frames,
-        };
-      });
+      precss = parsed.precss.map(p => ({
+        selector: p.selector,
+        styles: p.styles,
+      }));
     }
 
     return {

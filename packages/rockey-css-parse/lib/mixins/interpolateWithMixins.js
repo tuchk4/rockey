@@ -1,7 +1,7 @@
 import isFunction from 'lodash/isFunction';
 import camelCase from 'lodash/camelCase';
 
-const MIXIN_PREFIX = '_MIXIN_';
+const MIXIN_PREFIX = '|MIXIN_';
 const getMixinName = mixinFunc => mixinFunc.displayName || mixinFunc.name;
 
 const interpolateWithMixins = (strings, ...values) => {
@@ -37,7 +37,7 @@ const interpolateWithMixins = (strings, ...values) => {
       let name = null;
 
       if (found) {
-        const index = i ? i - 1 : 0;
+        const index = i ? i : 0;
 
         prop = raw.slice(index, -1).trim();
         raw = raw.slice(0, index);
@@ -64,7 +64,7 @@ const interpolateWithMixins = (strings, ...values) => {
         mixinsFunctions[placeholder] = value;
       }
 
-      append = `${placeholder}; `;
+      append = `${placeholder};`;
       // append = placeholder + '; ';
     }
 

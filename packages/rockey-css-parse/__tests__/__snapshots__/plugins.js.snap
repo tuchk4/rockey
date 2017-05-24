@@ -1,13 +1,9 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`plugins 1`] = `
-"
-    .c-Button-hash .c-Icon-hash {
-      hacked:hacked;
-    }
-  
-    .c-Button-hash .c-Close-hash {
-      hacked:hacked;
-    }
-  "
+".c-Button-hash .c-Icon-hash {
+  hacked:hacked;
+}.c-Button-hash .c-Close-hash {
+  hacked:hacked;
+}"
 `;

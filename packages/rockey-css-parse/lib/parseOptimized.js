@@ -10,15 +10,22 @@ import cssToJSON from './cssToJSON';
 import createMixin from './mixins/createMixin';
 import interpolateWithMixins from './mixins/interpolateWithMixins';
 import * as classnames from './utils/classnames';
+import RockeySyntaxError from './utils/RockeySyntaxError';
 const isMedia = key => key.indexOf('@media') === 0;
 const isKeyFrames = key => key.indexOf('@keyframes') === 0;
 const isNot = key => key.indexOf(':not') === 0;
+const isNotSupported = key =>
+  key.indexOf('@charset') === 0 || key.indexOf('@import') === 0;
 const NOT_REGEX = /\(([^\)]+)\)(.*)/;
+const COMPONENT_SYMBOLS = /^[%+~A-Za-z0-9\-\_\(\)\:\"\'\]\=\^\.\#\[\s]+$/;
 const isStartsWithModificator = raw => {
   return (
     0 === raw.indexOf('@media') ||
     0 === raw.indexOf('[') ||
     0 === raw.indexOf('@keyframes') ||
+    0 === raw.indexOf('@charset') ||
+    0 === raw.indexOf('@import') ||
+    0 === raw.indexOf('@font-face') ||
     0 === raw.indexOf('::placeholder') ||
     0 === raw.indexOf('::after') ||
     0 === raw.indexOf('::before') ||
@@ -61,9 +68,9 @@ const shouldGenerateSelectors = parent => parent.type !== 'keyframes';
 export default function createParser(config = {}) {
   const plugins = config.plugins || [];
   const actions = {
-    getClassName: classnames.getClassName(config.getClassName),
+    // getClassName: classnames.getClassName(config.getClassName),
     getMixinClassName: classnames.getMixinClassName(config.getMixinClassName),
-    getSelector: classnames.getSelector(config.getClassName),
+    // getSelector: classnames.getSelector(config.getClassName),
     getAnimationName: config.getAnimationName
       ? config.getAnimationName
       : name => name,
@@ -75,44 +82,27 @@ export default function createParser(config = {}) {
       animations: {},
       classnames: {
         components: {},
-        animations: {},
-        mixins: {},
         selector: {},
       },
     };
-    const getSelector = component => {
-      if (context.classnames.selector[component]) {
-        return context.classnames.selector[component];
-      }
-      const className = actions.getSelector(component);
-      context.classnames.selector[component] = className;
-      return className;
-    };
-    const getMixinClassName = component => {
-      if (context.classnames.mixins[component]) {
-        return context.classnames.mixins[component];
-      }
-      const className = actions.getMixinClassName(component);
-      context.classnames.mixins[component] = className;
-      return className;
-    };
-    const getAnimationName = name => {
-      if (context.classnames.animations[name]) {
-        return context.classnames.animations[name];
-      }
-      const className = actions.getAnimationName(name);
-      context.classnames.animations[name] = className;
-      return className;
-    };
+    const classname = classnames.getClassName(config.getClassName);
     const getClassName = component => {
       if (context.classnames.components[component]) {
         return context.classnames.components[component];
       }
-      const className = actions.getClassName(component);
+      const className = classname(component);
       context.classnames.components[component] = className;
       return className;
     };
-    let precss = [];
+    const selector = classnames.getSelector(getClassName);
+    const getSelector = component => {
+      if (context.classnames.selector[component]) {
+        return context.classnames.selector[component];
+      }
+      const className = selector(component);
+      context.classnames.selector[component] = className;
+      return className;
+    };
     let raw = null;
     let mixinsFunctions = {};
     if (values.length === 0) {
@@ -123,12 +113,33 @@ export default function createParser(config = {}) {
       mixinsFunctions = interpolated.mixinsFunctions;
     }
     const inline = raw.replace(/\r|\n/g, '').replace(/\s+/g, ' ');
-    const root = toPreCSS(inline, {
-      type: 'root',
-      selector: [],
-      media: null,
-      root: [],
-    });
+    let root = null;
+    let precss = [];
+    try {
+      root = toPreCSS(inline, {
+        type: 'root',
+        selector: [],
+        media: null,
+        root: [],
+      });
+    } catch (e) {
+      if (!e.rockeyError) {
+        throw e;
+      }
+      const [before, after] = context.raw.split(e.rule);
+      const desc =
+        before.split(' ').slice(-5).join('') +
+        e.rule +
+        after.split(' ').slice(0, 10).join('');
+      const index = desc.indexOf(e.rule);
+      const arrows = `${' '.repeat(index)}${'^'.repeat(e.rule.length)}`;
+      throw new Error(
+        `(rockey-css-parse) ${e.message}
+${desc}
+${arrows}
+`
+      );
+    }
     return {
       classList: root.reduce((components, c) => {
         components[getComponentName(c)] = getClassName(c);
@@ -137,6 +148,11 @@ export default function createParser(config = {}) {
       precss,
     };
     function toPreCSS(raw, parent = {}) {
+      let contextBackup = null;
+      if (context.raw) {
+        contextBackup = context.raw;
+      }
+      context.raw = raw;
       let openedBrackets = 0;
       let openedModificatorBrackets = 0;
       let styles = '';
@@ -151,26 +167,43 @@ export default function createParser(config = {}) {
       let possibleMixin = false;
       let mixin = '';
       let size = raw.length;
+      let isComment = false;
       for (let i = 0; i < size; i++) {
         const symbol = raw[i];
+        if (isComment) {
+          if (symbol === '/' && raw[i - 1] === '*') {
+            isComment = false;
+          }
+          continue;
+        }
+        if (symbol === '/' && raw[i + 1] === '*') {
+          isComment = true;
+          continue;
+        }
         if (!!!components.length && !!!modificator) {
-          if (symbol === '_') {
+          if (symbol === '|') {
             possibleMixin = true;
           }
           if (possibleMixin) {
             if (symbol === ';' || symbol === ' ') {
               possibleMixin = false;
+              if (parent.type === 'keyframes') {
+                throw new Error(
+                  '(rockey-css-parse) mixins inside keyframes are temporary disabled'
+                );
+              }
               const mixinFunction = createMixin({
-                className: getMixinClassName(mixinsFunctions[mixin]),
+                className: actions.getMixinClassName(mixinsFunctions[mixin]),
                 selector: parent.selector,
                 root: parent.root,
                 func: mixinsFunctions[mixin],
                 parse,
+                plugins,
               });
               mixins.push(mixinFunction);
               current = current.replace(mixin, '');
               mixin = '';
-              continue;
+              /* continue; */
             } else {
               mixin += symbol;
             }
@@ -190,11 +223,17 @@ export default function createParser(config = {}) {
             if (isStartsWithModificator(current.trim())) {
               modificator = current;
               current = '';
+              if (isNotSupported(modificator)) {
+                throw new Error(
+                  '(rockey) @import and @charset are temporary not supported'
+                );
+              }
             } else {
               current = currentBackup + current;
               currentBackup = '';
             }
             possibleModificator = false;
+            /* continue */
           }
         }
         if (
@@ -240,12 +279,19 @@ export default function createParser(config = {}) {
             openedBrackets--;
           } else if (!!modificator) {
             openedModificatorBrackets--;
+          } else {
+            throw new RockeySyntaxError(`${raw.slice(i - 1, i + 1)}`);
           }
           if (!!components.length) {
             if (openedBrackets === 0) {
               const selector = [];
               if (shouldGenerateSelectors(parent)) {
                 components.forEach(c => {
+                  if (process.env.NODE_ENV !== 'production') {
+                    if (!COMPONENT_SYMBOLS.test(c)) {
+                      throw new RockeySyntaxError(c);
+                    }
+                  }
                   rootComponents.push(c);
                   const className = getSelector(c);
                   if (parent.selector.length) {
@@ -258,7 +304,7 @@ export default function createParser(config = {}) {
                 });
               }
               toPreCSS(current, {
-                type: 'component',
+                type: parent.type === 'keyframes' ? 'keyframes' : 'component',
                 media: parent.media,
                 root: parent.root.length ? parent.root : components,
                 selector: parent.type === 'keyframes' ? components : selector,
@@ -294,16 +340,36 @@ export default function createParser(config = {}) {
                   });
                 }
               }
+              if (media && parent.media) {
+                throw new RockeySyntaxError(
+                  modificator,
+                  `@media should not be inside @media."${modificator}" inside "${parent.media}`
+                );
+              }
               if (keyframes) {
+                if (parent.media) {
+                  throw new RockeySyntaxError(
+                    modificator,
+                    `@keyframes should not be inside @media."${modificator}" inside "${parent.media}`
+                  );
+                }
                 let animationName = modificator.split(' ')[1];
-                let uniqAnimationName = getAnimationName(animationName);
-                context.hasAnimations = true;
+                let uniqAnimationName = actions.getAnimationName(animationName);
+                if (context.animations[animationName]) {
+                  throw new Error(
+                    `(rockey-css-parse) duplicated keyframes "${animationName}"`
+                  );
+                }
                 context.animations[animationName] = uniqAnimationName;
+                context.hasAnimations = true;
                 const backup = precss;
                 precss = [];
-                toPreCSS(current, { type: 'keyframes', root: parent.root });
+                toPreCSS(current, {
+                  selector: [],
+                  type: 'keyframes',
+                  root: parent.root,
+                });
                 backup.push({
-                  media: media ? modificator : parent.media,
                   selector: modificator.replace(
                     animationName,
                     uniqAnimationName
@@ -336,7 +402,16 @@ export default function createParser(config = {}) {
         styles += current;
       }
       styles = styles.trim();
+      if (!!modificator) {
+        throw new RockeySyntaxError(modificator, 'not closed block');
+      }
+      if (!!components.length) {
+        throw new RockeySyntaxError(components[0], 'not closed block');
+      }
       if (styles || mixins.length) {
+        if (parent.type !== 'keyframes' && !parent.selector.length) {
+          throw new RockeySyntaxError(styles);
+        }
         precss.push({
           selector: parent.selector,
           media: parent.media,
@@ -344,6 +419,9 @@ export default function createParser(config = {}) {
           styles: styles ? cssToJSON(styles, context, plugins) : {},
           mixins,
         });
+      }
+      if (contextBackup) {
+        context.raw = contextBackup;
       }
       return rootComponents;
     }

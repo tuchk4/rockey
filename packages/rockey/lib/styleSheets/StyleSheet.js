@@ -75,7 +75,6 @@ export default class StyleSheet {
     } else {
       precss.forEach(pre => {
         const css = stringify(pre);
-
         const f = this.fragments.requestFragment();
         f.textContent = css;
       });

@@ -35,12 +35,12 @@ test('parse css string correctly (wihtout mixins)', () => {
         padding: 10px;
         margin: 10px;
 
-        @keyframes example-first {
+        @keyframes first {
           0% { color: red; }
           100% { color: red; }
         }
 
-        animation: example-first 10s infinity;
+        animation: first 10s infinity;
 
         + Icon {
           padding-right: 15px;
@@ -53,18 +53,18 @@ test('parse css string correctly (wihtout mixins)', () => {
         border: 10px;
 
         ~ Spinner {
-          @media (max-width: 699px) {
+
+          @keyframes second {
+            0% { color: red; }
+            40% { color: #fc3; }
+            50% { color: red; }
+            60% { color: black; width: 100px; }
+            100% { color: red; }
+          }
+
+          @media (max-width: 688px) {
             color: yellow;
-
-            @keyframes example-first {
-              0% { color: red; }
-              40% { color: #fc3; }
-              50% { color: red; }
-              60% { color: black; width: 100px; }
-              100% { color: red; }
-            }
-
-            animation: example-first 1s infinity;
+            animation: second 1s infinity;
           }
         }
 
@@ -76,15 +76,14 @@ test('parse css string correctly (wihtout mixins)', () => {
           }
         }
 
+        @keyframes example-first {
+          0% { color: red; }
+          50% { color: yellow; }
+          100% { color: red; }
+        }
+
         @media (max-width: 1000px) {
           background: green;
-
-          @keyframes example-first {
-            0% { color: red; }
-            50% { color: yellow; }
-            100% { color: red; }
-          }
-
           animation: example-first 1s infinity;
         }
       }

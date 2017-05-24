@@ -57,7 +57,7 @@ test('rockey shortcut', () => {
 
 test('rockey shortcut and extend', () => {
   const Button = rockey.button`
-    color; red;
+    color: red;
     border: 1px solid #000;
   `;
 
@@ -71,7 +71,7 @@ test('rockey shortcut and extend', () => {
 
 test('rockey named shortcut and named extend', () => {
   const Button = rockey.button('MyButton')`
-    color; red;
+    color: red;
     border: 1px solid #000;
   `;
 
@@ -85,7 +85,7 @@ test('rockey named shortcut and named extend', () => {
 
 test('rockey shortcut and named extend', () => {
   const Button = rockey.button`
-    color; red;
+    color: red;
     border: 1px solid #000;
   `;
 
@@ -110,7 +110,7 @@ test('rockey named shortcut and named extend with custom className', () => {
   const BaseButton = rockey.button('BaseButton');
 
   const YourButton = BaseButton('YourButton')`
-    color; red;
+    color: red;
     border: 1px solid #000;
     background: ${p => p.bg};
   `;
@@ -128,7 +128,7 @@ test('rockey named shortcut and named extend with custom className', () => {
   `;
 
   const BaseButtonTree = renderer
-    .create(<BaseButton bg="oragne" className="custom-class-name" />)
+    .create(<BaseButton bg="orange" className="custom-class-name" />)
     .toJSON();
   expect(BaseButtonTree).toMatchSnapshot();
 
@@ -138,7 +138,7 @@ test('rockey named shortcut and named extend with custom className', () => {
   expect(YourButtonTree).toMatchSnapshot();
 
   const PrimaryButtonTree = renderer
-    .create(<PrimaryButton bg="oragne" className="custom-class-name" />)
+    .create(<PrimaryButton bg="orange" className="custom-class-name" />)
     .toJSON();
   expect(PrimaryButtonTree).toMatchSnapshot();
 
@@ -148,7 +148,7 @@ test('rockey named shortcut and named extend with custom className', () => {
   expect(SecondaryButtonTree).toMatchSnapshot();
 
   const SuperButtonTree = renderer
-    .create(<SuperButton bg="oragne" className="custom-class-name" />)
+    .create(<SuperButton bg="orange" className="custom-class-name" />)
     .toJSON();
   expect(SuperButtonTree).toMatchSnapshot();
 });

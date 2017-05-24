@@ -9,7 +9,6 @@ import look from './look';
 
 import RockeyHocWithHandlers from './utils/RockeyHocWithHandlers';
 import createElement from './utils/createElement';
-// import { flush } from 'rockey/styleSheets';
 
 import { ROCKEY_MIXIN_HANDLER_KEY } from './handler';
 
@@ -35,29 +34,6 @@ const createEmtpyCss = name => {
   css.wrapWith(name);
   return css;
 };
-
-// class RockeyF extends React.Component {
-//   classList = null;
-//
-//   componentWillMount() {
-//     const { proxy, css, selector } = this.props;
-//     this.classList = css.getClassList(proxy)[selector];
-//   }
-//
-//   componentWillUpdate() {
-//     const { proxy, css, selector } = this.props;
-//     this.classList = css.getClassList(proxy)[selector];
-//   }
-//
-//   render() {
-//     const { proxy, BaseComponent } = this.props;
-//
-//     // const classList = css.getClassList(proxy);
-//     // const className = classnames(this.classList, proxy.className);
-//
-//     return <BaseComponent {...proxy} className={this.classList} />;
-//   }
-// }
 
 export const getRockeyHoc = () => {
   const RockeyHoc = (
@@ -156,15 +132,6 @@ export const getRockeyHoc = () => {
               />
             );
           } else {
-            // return (
-            //   <RockeyF
-            //     css={finshCssRule}
-            //     selector={name}
-            //     BaseComponent={BaseComponent}
-            //     proxy={props}
-            //   />
-            // );
-
             const classList = finshCssRule.getClassList(props);
             const className = classnames(classList[name], props.className);
             return createElement(BaseComponent, {

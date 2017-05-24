@@ -69,3 +69,17 @@ test('parse css string correctly (nested)', () => {
     });
   });
 });
+
+test('multiple values', () => {
+  const color = 'black';
+  const size = '1px';
+  const type = 'solid';
+
+  const parsed = parse`
+    A {
+      border: ${size} ${type} ${color};
+    }
+  `;
+
+  expect(stringify(parsed.precss)).toMatchSnapshot();
+});

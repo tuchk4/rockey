@@ -1,30 +1,18 @@
-const cache = {};
+import RockeySyntaxError from './utils/RockeySyntaxError';
+const RULE_SYMBOLS = /^[a-z\-]+$/;
+const empty = ['', ''];
 
 const cssTOJSON = (styles, context, plugins) => {
-  const stylesParts = styles
-    .trim()
-    .split(';')
-    .map(s => (s ? s.split(':') : null))
-    .filter(s => !!s);
-
-  const key = stylesParts.toString();
-
-  if (!key.trim()) {
-    return {};
-  }
-
-  if (cache[key]) {
-    return cache[key];
-  }
+  const stylesParts = styles.split(';').map(s => (s ? s.split(':') : empty));
 
   let stylesJson = stylesParts.reduce((json, raw) => {
-    if (raw && raw[0] && raw[1]) {
+    if (raw.length === 2) {
       let rule = raw[0].trim();
       let value = raw[1].trim();
 
       if (
         context.hasAnimations &&
-        (rule === 'animation' || rule === 'animationName')
+        (rule === 'animation' || rule === 'animation-name')
       ) {
         let animationName = null;
 
@@ -41,6 +29,10 @@ const cssTOJSON = (styles, context, plugins) => {
       }
 
       if (rule && value) {
+        if (!RULE_SYMBOLS.test(rule)) {
+          throw new RockeySyntaxError(rule);
+        }
+
         if (json[rule]) {
           // css fallback values
           let prev = Array.isArray(json[rule]) ? json[rule] : [json[rule]];
@@ -50,15 +42,18 @@ const cssTOJSON = (styles, context, plugins) => {
           json[rule] = value;
         }
       }
+    } else {
+      if (raw.join('').trim().length) {
+        throw new RockeySyntaxError(raw.join(':'));
+      }
     }
+
     return json;
   }, {});
 
   if (plugins) {
     stylesJson = plugins.reduce((styles, plugin) => plugin(styles), stylesJson);
   }
-
-  cache[key] = stylesJson;
 
   return stylesJson;
 };

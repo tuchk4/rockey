@@ -2,7 +2,7 @@
 
 exports[`Comopnent Look 1`] = `
 <button
-  className="Primary-{{ hash }} MyBytton-{{ hash }}"
+  className="Primary--hash- MyBytton--hash-"
 >
   Button.Primary
 </button>
@@ -10,7 +10,7 @@ exports[`Comopnent Look 1`] = `
 
 exports[`Comopnent Look 2`] = `
 <button
-  className="Warning-{{ hash }} MyBytton-{{ hash }}"
+  className="Warning--hash- MyBytton--hash-"
 >
   Button.Warning
 </button>
@@ -18,7 +18,7 @@ exports[`Comopnent Look 2`] = `
 
 exports[`Look 1`] = `
 <div
-  className="Layer-{{ hash }}"
+  className="Layer--hash-"
 >
   Layer
 </div>
@@ -26,7 +26,7 @@ exports[`Look 1`] = `
 
 exports[`Look 2`] = `
 <div
-  className="PrimaryLayer-{{ hash }} Layer-{{ hash }}"
+  className="PrimaryLayer--hash- Layer--hash-"
 >
   PrimaryLayer
 </div>
@@ -34,7 +34,7 @@ exports[`Look 2`] = `
 
 exports[`Look 3`] = `
 <div
-  className="PrimaryLayer-{{ hash }} Layer-{{ hash }} m-when-{{ hash }}-1"
+  className="PrimaryLayer--hash- Layer--hash- m-when--hash--1"
 >
   PrimaryLayer
 </div>
@@ -42,7 +42,7 @@ exports[`Look 3`] = `
 
 exports[`Look shortcuts 1`] = `
 <button
-  className="Button-{{ hash }}"
+  className="Button--hash-"
 >
   Button
 </button>
@@ -50,7 +50,7 @@ exports[`Look shortcuts 1`] = `
 
 exports[`Look shortcuts 2`] = `
 <button
-  className="PrimaryButton-{{ hash }} Button-{{ hash }}"
+  className="PrimaryButton--hash- Button--hash-"
 >
   PrimaryButton
 </button>

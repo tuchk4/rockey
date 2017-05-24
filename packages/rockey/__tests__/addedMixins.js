@@ -25,6 +25,8 @@ test('rule', () => {
   expect(classList).toMatchSnapshot();
   expect(insert.mock.calls).toMatchSnapshot();
 
+  insert.mockClear();
+
   const classList2 = css.getClassList({
     primary: false,
   });

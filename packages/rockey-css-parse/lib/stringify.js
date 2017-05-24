@@ -1,47 +1,46 @@
 export function renderRule(className, description) {
-  return `
-    ${className} {
-      ${Object.keys(description)
-        .map(key => {
-          // support fallback rules
-          if (Array.isArray(description[key])) {
-            return description[key].map(value => `${key}:${value};`).join('');
-          } else {
-            return `${key}:${description[key]};`;
-          }
-        })
-        .join('')}
-    }
-  `;
+  return `${className} {
+  ${Object.keys(description)
+    .map(key => {
+      // support fallback rules
+      if (Array.isArray(description[key])) {
+        return description[key].map(value => `${key}:${value};`).join('');
+      } else {
+        return `${key}:${description[key]};`;
+      }
+    })
+    .join('')}
+}`;
 }
 
-export function render({ selector, styles, frames, media }) {
+export function render({ selector, styles, frames, media, source, type }) {
   let css = '';
 
   if (styles) {
     if (media) {
-      css = `
-        ${media} {
-          ${renderRule(selector, styles)}
-        }
-      `;
+      css = `${media} {
+  ${renderRule(selector, styles)}
+}
+`;
     } else {
       css = renderRule(selector, styles);
     }
   } else if (frames) {
     if (media) {
-      css = `
-        ${media} {
-          ${selector} {
-            ${frames.map(stringify).join(' ')}
-          }
-        }
-      `;
+      css = `${media} {
+  ${selector} {
+    ${frames.map(stringify).join(' ')}
+  }
+}
+`;
     } else {
       css = `${selector} {
-        ${frames.map(stringify).join(' ')}
-      }`;
+  ${frames.map(stringify).join(' ')}
+}
+`;
     }
+  } else if (type === 'source') {
+    css = source + ';';
   }
 
   return css;
@@ -67,19 +66,36 @@ export function stringify(precss, props) {
 
     if (props) {
       precss.forEach(p => {
-        p.mixins.forEach(mixin => {
-          const { precss } = mixin(props);
-          css += renderRules(precss);
-        });
+        if (p.mixins) {
+          p.mixins.forEach(mixin => {
+            const { precss } = mixin(props);
+            if (precss) {
+              css += renderRules(precss);
+            }
+          });
+        }
+
+        // if (p.frames) {
+        //   p.frames.forEach(f => {
+        //     f.mixins.forEach(mixin => {
+        //       const { precss } = mixin(props);
+        //       if (precss) {
+        //         css += renderRules(precss);
+        //       }
+        //     });
+        //   });
+        // }
       });
     }
   } else {
     css = render(precss);
 
-    if (props) {
+    if (props && precss.mixins) {
       precss.mixins.forEach(mixin => {
         const { precss } = mixin(props);
-        css += renderRules(precss);
+        if (precss) {
+          css += renderRules(precss);
+        }
       });
     }
   }

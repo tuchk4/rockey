@@ -41,7 +41,6 @@ Array [
   Array [
     Array [
       Object {
-        "frames": undefined,
         "selector": Array [
           ".m-anon-hash-1.Button-hash",
         ],
@@ -65,50 +64,6 @@ Array [
   Array [
     Array [
       Object {
-        "media": null,
-        "mixins": Array [],
-        "root": Array [
-          "Button",
-        ],
-        "selector": Array [
-          ".Button-hash",
-        ],
-        "styles": Object {
-          "color": "red",
-        },
-      },
-      Object {
-        "media": null,
-        "mixins": Array [
-          [Function],
-        ],
-        "root": Array [
-          "Button",
-        ],
-        "selector": Array [
-          ".Button-hash",
-        ],
-        "styles": Object {},
-      },
-    ],
-  ],
-  Array [
-    Array [
-      Object {
-        "frames": undefined,
-        "selector": Array [
-          ".m-anon-hash-1.Button-hash",
-        ],
-        "styles": Object {
-          "color": "blue",
-        },
-      },
-    ],
-  ],
-  Array [
-    Array [
-      Object {
-        "frames": undefined,
         "selector": Array [
           ".m-anon-hash-2.Button-hash",
         ],

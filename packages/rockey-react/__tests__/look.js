@@ -7,7 +7,7 @@ import rockey from '../lib/';
 import look from '../lib/look';
 
 jest.mock('rockey/utils/hash', () => {
-  return () => '{{ hash }}';
+  return () => '-hash-';
 });
 
 describe('look', () => {

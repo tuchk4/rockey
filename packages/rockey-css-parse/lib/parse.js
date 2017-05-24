@@ -2,11 +2,17 @@ import cssToJSON from './cssToJSON';
 import createMixin from './mixins/createMixin';
 import interpolateWithMixins from './mixins/interpolateWithMixins';
 import * as classnames from './utils/classnames';
+import RockeySyntaxError from './utils/RockeySyntaxError';
 
 const isMedia = key => key.indexOf('@media') === 0;
 const isKeyFrames = key => key.indexOf('@keyframes') === 0;
 const isNot = key => key.indexOf(':not') === 0;
+
+const isNotSupported = key =>
+  key.indexOf('@charset') === 0 || key.indexOf('@import') === 0;
+
 const NOT_REGEX = /\(([^\)]+)\)(.*)/;
+const COMPONENT_SYMBOLS = /^[%+~A-Za-z0-9\-\_\(\)\:\"\'\]\=\^\.\#\[\s]+$/;
 
 // @replace-start
 const isModificatorStartSymbol = symbol => {
@@ -25,6 +31,9 @@ const isStartsWithModificator = raw => {
     0 === raw.indexOf('@media') ||
     0 === raw.indexOf('[') ||
     0 === raw.indexOf('@keyframes') ||
+    0 === raw.indexOf('@charset') ||
+    0 === raw.indexOf('@import') ||
+    0 === raw.indexOf('@font-face') ||
     0 === raw.indexOf('::placeholder') ||
     0 === raw.indexOf('::after') ||
     0 === raw.indexOf('::before') ||
@@ -112,8 +121,6 @@ export default function createParser(config = {}) {
       return className;
     };
 
-    let precss = [];
-
     let raw = null;
     let mixinsFunctions = {};
 
@@ -127,12 +134,39 @@ export default function createParser(config = {}) {
 
     const inline = raw.replace(/\r|\n/g, '').replace(/\s+/g, ' ');
 
-    const root = toPreCSS(inline, {
-      type: 'root',
-      selector: [],
-      media: null,
-      root: [],
-    });
+    let root = null;
+    let precss = [];
+
+    try {
+      root = toPreCSS(inline, {
+        type: 'root',
+        selector: [],
+        media: null,
+        root: [],
+      });
+    } catch (e) {
+      if (!e.rockeyError) {
+        throw e;
+      }
+
+      const [before, after] = context.raw.split(e.rule);
+
+      const desc =
+        before.split(' ').slice(-5).join('') +
+        e.rule +
+        after.split(' ').slice(0, 10).join('');
+      const index = desc.indexOf(e.rule);
+
+      const arrows = `${' '.repeat(index)}${'^'.repeat(e.rule.length)}`;
+      throw new Error(
+        `(rockey-css-parse) ${e.message}
+
+${desc}
+${arrows}
+
+`
+      );
+    }
 
     return {
       classList: root.reduce((components, c) => {
@@ -143,6 +177,13 @@ export default function createParser(config = {}) {
     };
 
     function toPreCSS(raw, parent = {}) {
+      let contextBackup = null;
+      if (context.raw) {
+        contextBackup = context.raw;
+      }
+
+      context.raw = raw;
+
       let openedBrackets = 0;
       let openedModificatorBrackets = 0;
       let styles = '';
@@ -155,6 +196,14 @@ export default function createParser(config = {}) {
 
       let current = '';
       let currentBackup = '';
+
+      // @replace-start
+      const validateComponent = c => {
+        if (!COMPONENT_SYMBOLS.test(c)) {
+          throw new RockeySyntaxError(c);
+        }
+      };
+      // @replace-end
 
       // @replace-start
       const restore = () => {
@@ -246,13 +295,6 @@ export default function createParser(config = {}) {
       // @replace-end
 
       // @replace-start
-      const startModificator = () => {
-        modificator = current;
-        current = '';
-      };
-      // @replace-end
-
-      // @replace-start
       const saveModificator = () => {
         modificator = modificator.trim();
 
@@ -283,24 +325,45 @@ export default function createParser(config = {}) {
           }
         }
 
-        if (keyframes) {
-          let animationName = modificator.split(' ')[1];
+        if (media && parent.media) {
+          throw new RockeySyntaxError(
+            modificator,
+            `@media should not be inside @media.
+"${modificator}" inside "${parent.media}`
+          );
+        }
 
+        if (keyframes) {
+          if (parent.media) {
+            throw new RockeySyntaxError(
+              modificator,
+              `@keyframes should not be inside @media.
+"${modificator}" inside "${parent.media}`
+            );
+          }
+
+          let animationName = modificator.split(' ')[1];
           let uniqAnimationName = actions.getAnimationName(animationName);
 
-          context.hasAnimations = true;
+          if (context.animations[animationName]) {
+            throw new Error(
+              `(rockey-css-parse) duplicated keyframes "${animationName}"`
+            );
+          }
+
           context.animations[animationName] = uniqAnimationName;
+          context.hasAnimations = true;
 
           const backup = precss;
           precss = [];
 
           toPreCSS(current, {
+            selector: [],
             type: 'keyframes',
             root: parent.root,
           });
 
           backup.push({
-            media: media ? modificator : parent.media,
             selector: modificator.replace(animationName, uniqAnimationName),
             frames: precss,
           });
@@ -316,6 +379,19 @@ export default function createParser(config = {}) {
         }
 
         modificator = '';
+      };
+      // @replace-end
+
+      // @replace-start
+      const startModificator = () => {
+        modificator = current;
+        current = '';
+
+        if (isNotSupported(modificator)) {
+          throw new Error(
+            '(rockey) @import and @charset are temporary not supported'
+          );
+        }
       };
       // @replace-end
 
@@ -374,9 +450,12 @@ export default function createParser(config = {}) {
       // @replace-start
       const saveComponent = () => {
         const selector = [];
-
         if (shouldGenerateSelectors(parent)) {
           components.forEach(c => {
+            if (process.env.NODE_ENV !== 'production') {
+              validateComponent(c);
+            }
+
             rootComponents.push(c);
 
             const className = getSelector(c);
@@ -392,7 +471,7 @@ export default function createParser(config = {}) {
         }
 
         toPreCSS(current, {
-          type: 'component',
+          type: parent.type === 'keyframes' ? 'keyframes' : 'component',
           media: parent.media,
           root: parent.root.length ? parent.root : components,
           selector: parent.type === 'keyframes' ? components : selector,
@@ -418,7 +497,7 @@ export default function createParser(config = {}) {
 
       // @replace-start
       const isMixinStartSymbol = symbol => {
-        return symbol === '_';
+        return symbol === '|';
       };
       // @replace-end
 
@@ -466,20 +545,43 @@ export default function createParser(config = {}) {
 
       // @replace-start
       const saveMixin = () => {
+        if (parent.type === 'keyframes') {
+          throw new Error(
+            '(rockey-css-parse) mixins inside keyframes are temporary disabled'
+          );
+        }
+
         const mixinFunction = createMixin({
           className: actions.getMixinClassName(mixinsFunctions[mixin]),
           selector: parent.selector,
           root: parent.root,
           func: mixinsFunctions[mixin],
           parse,
+          plugins,
         });
 
         mixins.push(mixinFunction);
       };
       // @replace-end
+
       let size = raw.length;
+      let isComment = false;
+
       for (let i = 0; i < size; i++) {
         const symbol = raw[i];
+
+        if (isComment) {
+          if (symbol === '/' && raw[i - 1] === '*') {
+            isComment = false;
+          }
+
+          continue;
+        }
+
+        if (symbol === '/' && raw[i + 1] === '*') {
+          isComment = true;
+          continue;
+        }
 
         if (!isInsideComponent() && !isInsideModificator()) {
           if (isMixinStartSymbol(symbol)) {
@@ -492,7 +594,8 @@ export default function createParser(config = {}) {
               saveMixin();
               removeMixinFromStyles();
               clearMixin();
-              continue;
+
+              /* continue; */
             } else {
               saveMixinString(symbol);
             }
@@ -515,6 +618,7 @@ export default function createParser(config = {}) {
             }
 
             possibleModificatorEnd();
+            /* continue */
           }
         }
 
@@ -545,6 +649,8 @@ export default function createParser(config = {}) {
             closeBracket();
           } else if (isInsideModificator()) {
             closeModificatorBracket();
+          } else {
+            throw new RockeySyntaxError(`${raw.slice(i - 1, i + 1)}`);
           }
 
           if (isInsideComponent()) {
@@ -571,7 +677,19 @@ export default function createParser(config = {}) {
 
       styles = styles.trim();
 
+      if (isInsideModificator()) {
+        throw new RockeySyntaxError(modificator, 'not closed block');
+      }
+
+      if (isInsideComponent()) {
+        throw new RockeySyntaxError(components[0], 'not closed block');
+      }
+
       if (styles || mixins.length) {
+        if (parent.type !== 'keyframes' && !parent.selector.length) {
+          throw new RockeySyntaxError(styles);
+        }
+
         precss.push({
           selector: parent.selector,
           media: parent.media,
@@ -579,6 +697,10 @@ export default function createParser(config = {}) {
           styles: styles ? cssToJSON(styles, context, plugins) : {},
           mixins,
         });
+      }
+
+      if (contextBackup) {
+        context.raw = contextBackup;
       }
 
       return rootComponents;

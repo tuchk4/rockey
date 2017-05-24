@@ -16,52 +16,50 @@ const optimizedParse = createOptimizedParser({
 });
 
 const raw = `
-Button {
-  :not([disabled]):hover {
-    background-color: transparent;
-  }
-
-  :not(PrimaryButton.active):hover {
-    background-color: black;
-  }
-}
-
-Bar, Foo {
-  font-size: 10px;
-
-  @keyframes colorized {
-    from { color: red; }
-    to { color: #fc3; }
-  }
-
-  animation: colorized 10s infinity;
-
-  WarningButton, PrimaryButton, SucceessButton {
-    padding: 10px;
-    margin: 10px;
-
-    @keyframes example-first {
-      0% { color: red; }
-      100% { color: red; }
+  Button {
+    :not([disabled]):hover {
+      background-color: transparent;
     }
 
-    animation: example-first 10s infinity;
+    :not(PrimaryButton.active):hover {
+      background-color: black;
+    }
+  }
 
-    + Icon {
-      padding-right: 15px;
+  Bar, Foo {
+    font-size: 10px;
 
-      @media (max-width: 199px) {
-        color: purple;
+    @keyframes colorized {
+      from { color: red; }
+      to { color: #fc3; }
+    }
+
+    animation: colorized 10s infinity;
+
+    WarningButton, PrimaryButton, SucceessButton {
+      padding: 10px;
+      margin: 10px;
+
+      @keyframes first {
+        0% { color: red; }
+        100% { color: red; }
       }
-    }
 
-    border: 10px;
+      animation: first 10s infinity;
 
-    ~ Spinner {
-      @media (max-width: 699px) {
-        color: yellow;
+      + Icon {
+        padding-right: 15px;
 
-        @keyframes example-first {
+        @media (max-width: 199px) {
+          color: purple;
+        }
+      }
+
+      border: 10px;
+
+      ~ Spinner {
+
+        @keyframes second {
           0% { color: red; }
           40% { color: #fc3; }
           50% { color: red; }
@@ -69,20 +67,19 @@ Bar, Foo {
           100% { color: red; }
         }
 
-        animation: example-first 1s infinity;
+        @media (max-width: 688px) {
+          color: yellow;
+          animation: second 1s infinity;
+        }
       }
-    }
 
-    :hover, :active, :focus {
-      color: red;
+      :hover, :active, :focus {
+        color: red;
 
-      @media (max-width: 100px) {
-        color: green;
+        @media (max-width: 100px) {
+          color: green;
+        }
       }
-    }
-
-    @media (max-width: 1000px) {
-      background: green;
 
       @keyframes example-first {
         0% { color: red; }
@@ -90,10 +87,13 @@ Bar, Foo {
         100% { color: red; }
       }
 
-      animation: example-first 1s infinity;
+      @media (max-width: 1000px) {
+        background: green;
+        animation: example-first 1s infinity;
+      }
     }
   }
-}`;
+`;
 
 test('should be same results', () => {
   const parsed = parse(raw);

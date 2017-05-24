@@ -16,11 +16,11 @@ import validateCSSRule from './plugins/validateCSSRule';
 
 const plugins = [];
 
-plugins.push(vendorPrefix);
+plugins.push(vendorPrefix());
 
-if (process.env.NODE_ENV !== 'production') {
-  plugins.push(validateCSSRule);
-}
+// if (process.env.NODE_ENV !== 'production') {
+//   plugins.push(validateCSSRule());
+// }
 
 const parse = createParser({
   getClassName,
@@ -45,6 +45,11 @@ export default function rule(raw, ...values) {
   } else {
     throw new Error('rockey-rule: wrong call type');
   }
+
+  const key = JSON.stringify({
+    raw,
+    values,
+  });
 
   return {
     wrapWith(displayName) {
@@ -91,7 +96,8 @@ export default function rule(raw, ...values) {
             });
           });
         } else {
-          const parsed = parse(raw, ...values);
+          let parsed = parse(raw, ...values);
+
           precss = parsed.precss;
           classList = parsed.classList;
         }
@@ -189,24 +195,25 @@ export default function rule(raw, ...values) {
       let mixinsPrecss = [];
 
       precss.forEach(pre => {
-        pre.mixins.forEach(mixin => {
-          const result = mixin(props);
+        if (pre.mixins) {
+          pre.mixins.forEach(mixin => {
+            const result = mixin(props);
 
-          if (result) {
-            if (result.className) {
-              pre.root.forEach(c => {
-                resultClassList[c] += ` ${result.className}`;
-              });
-            }
+            if (result) {
+              if (result.className) {
+                pre.root.forEach(c => {
+                  resultClassList[c] += ` ${result.className}`;
+                });
+              }
 
-            if (result.precss) {
-              result.precss.forEach(p => {
-                mixinsPrecss.push(p);
-              });
-              // mixinsPrecss = mixinsPrecss.concat(result.precss);
+              if (result.precss) {
+                result.precss.forEach(p => {
+                  mixinsPrecss.push(p);
+                });
+              }
             }
-          }
-        });
+          });
+        }
       });
 
       if (mixinsPrecss.length) {

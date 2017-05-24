@@ -26,9 +26,10 @@ const assignShortcuts = rockey => {
             ...args
           );
         } else {
-          throw new Error(
-            `shortcut.${tag} used as React Component but without defined styles. Use jsx syntax directly for such cases - "<${tag}>...</${tag}>"`
-          );
+          return React.createElement(tag, filterProps(args[0]));
+          // throw new Error(
+          //   `shortcut.${tag} used as React Component but without defined styles. Use jsx syntax directly for such cases - "<${tag}>...</${tag}>"`
+          // );
         }
       },
       set: () => {

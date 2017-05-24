@@ -1,6 +1,3 @@
-import parse from '../css/parse';
-// import { generateMixinClassName, getClassName } from '../css/getClassName';
-import insert from '../styleSheets';
 import createMixin from './createMixin';
 
 const extractMixins = (mixinsFunctions, precss) => {
@@ -17,7 +14,6 @@ const extractMixins = (mixinsFunctions, precss) => {
           selector: part.selector,
           root: part.root,
           forComponents: mixin.forComponents,
-          // mixinClassName: generateMixinClassName(mixinFunc),
           mixinFunc,
         })
       );
