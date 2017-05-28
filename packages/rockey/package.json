@@ -1,6 +1,6 @@
 {
   "name": "rockey",
-  "version": "0.0.15-0",
+  "version": "0.0.15-1",
   "description": "Stressless CSS for components using JS. Write Component Based CSS with functional mixins.",
   "main": "index.js",
   "keywords": [
@@ -23,7 +23,7 @@
     "classnames": "^2.2.5",
     "css-vendor": "^0.3.8",
     "lodash": "^4.17.4",
-    "rockey-css-parse": "^0.0.15-0"
+    "rockey-css-parse": "^0.0.15-1"
   },
   "files": [
     "condition.js",
