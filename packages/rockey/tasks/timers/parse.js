@@ -4,7 +4,6 @@ import chalk from 'chalk';
 import getCss from './utils/getCss';
 import timer from './utils/timer';
 import output from './utils/output';
-
 import parse from '../../lib/css/parse';
 import { stringifyRules } from '../../lib/styleSheets/utils/stringify';
 

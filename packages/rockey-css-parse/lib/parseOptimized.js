@@ -126,11 +126,18 @@ export default function createParser(config = {}) {
       if (!e.rockeyError) {
         throw e;
       }
-      const [before, after] = context.raw.split(e.rule);
-      const desc =
-        before.split(' ').slice(-5).join('') +
-        e.rule +
-        after.split(' ').slice(0, 10).join('');
+      // const [before, after] = context.raw.split(e.rule.trim());
+      //
+      // let desc = null;
+      //
+      // if (after) {
+      //   desc = before.split(' ').slice(0, 5).join(' ') +
+      //     e.rule +
+      //     after.split(' ').slice(0, 5).join('');
+      // } else {
+      //   desc =  e.rule
+      // }
+      const desc = e.rule;
       const index = desc.indexOf(e.rule);
       const arrows = `${' '.repeat(index)}${'^'.repeat(e.rule.length)}`;
       throw new Error(
@@ -149,10 +156,11 @@ ${arrows}
     };
     function toPreCSS(raw, parent = {}) {
       let contextBackup = null;
-      if (context.raw) {
-        contextBackup = context.raw;
-      }
-      context.raw = raw;
+      // if (context.raw) {
+      //   contextBackup = context.raw;
+      // }
+      //
+      // context.raw = raw;
       let openedBrackets = 0;
       let openedModificatorBrackets = 0;
       let styles = '';
@@ -245,6 +253,15 @@ ${arrows}
           let i = null;
           for (i = current.length; i > 0; i--) {
             const symbol = current[i];
+            if ((symbol === ':' || symbol === '[') && current[i - 1] === ' ') {
+              throw new RockeySyntaxError(current);
+            }
+            if (
+              symbol === ' ' &&
+              (current[i - 1] === ':' || current[i - 1] === '[')
+            ) {
+              throw new RockeySyntaxError(current);
+            }
             if (symbol === ';') {
               i++;
               break;
@@ -420,9 +437,9 @@ ${arrows}
           mixins,
         });
       }
-      if (contextBackup) {
-        context.raw = contextBackup;
-      }
+      // if (contextBackup) {
+      //   context.raw = contextBackup;
+      // }
       return rootComponents;
     }
   };
