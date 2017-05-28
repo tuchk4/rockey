@@ -41,6 +41,8 @@ const cssTOJSON = (styles, context, plugins) => {
         } else {
           json[rule] = value;
         }
+      } else if (rule) {
+        throw new RockeySyntaxError(raw.join(':'));
       }
     } else {
       if (raw.join('').trim().length) {
