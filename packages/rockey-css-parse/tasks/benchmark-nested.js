@@ -29,7 +29,7 @@ if (prevBestSizeTimings) {
 const modules = [
   'parse',
   'parseOptimized',
-  // 'stylis',
+  'stylis',
   'postcssNested',
   'postcssNestedSafeParser',
 ];
