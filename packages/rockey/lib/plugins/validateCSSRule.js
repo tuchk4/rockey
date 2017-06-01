@@ -3,7 +3,7 @@ export default function validateCSSrules(reporter = console.warn) {
     const experimental = document.createElement('div');
 
     Object.keys(styles).forEach(prop => {
-      let value = styles[prop];
+      let value = styles[prop].toString();
       const isImportant = value.indexOf('!important') !== -1;
 
       value = isImportant ? value.replace('!important', '').trim() : value;

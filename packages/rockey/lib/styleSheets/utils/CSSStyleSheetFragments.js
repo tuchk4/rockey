@@ -18,8 +18,30 @@ const getSheetForTag = tag => {
 let node = null;
 let size = 0;
 
-const create = length => {
+export const createInitialNode = () => {
   node = mount();
+};
+
+export const insertRule = css => {
+  if (size === STYLES_SIZE_PER_NODE) {
+    node = mount();
+    size = 0;
+  }
+
+  let sheet = getSheetForTag(node);
+  let index = sheet.cssRules.length;
+
+  sheet.insertRule(css, sheet.cssRules.length);
+  size++;
+
+  return sheet.cssRules[index];
+};
+
+const create = length => {
+  if (!node) {
+    node = mount();
+  }
+
   let sheet = getSheetForTag(node);
 
   for (let i = 0; i < length; i++) {
@@ -46,10 +68,12 @@ export const createFragments = () => {
   create(INITIAL_SIZE);
 };
 
+let j = 0;
 export const requestFragment = () => {
-  const fragment = availableFragments.shift();
+  const fragment = availableFragments[j];
+  j++;
 
-  if (availableFragments.length < 10) {
+  if (j === availableFragments.length) {
     fillFraments();
   }
 

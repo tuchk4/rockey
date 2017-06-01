@@ -55,7 +55,7 @@ exports[`parse css string correctly (wihtout mixins) 1`] = `
 }
 @media (max-width: 688px) {
   .c-Bar-hash .c-WarningButton-hash ~.c-Spinner-hash,.c-Foo-hash .c-WarningButton-hash ~.c-Spinner-hash,.c-Bar-hash .c-PrimaryButton-hash ~.c-Spinner-hash,.c-Foo-hash .c-PrimaryButton-hash ~.c-Spinner-hash,.c-Bar-hash .c-SucceessButton-hash ~.c-Spinner-hash,.c-Foo-hash .c-SucceessButton-hash ~.c-Spinner-hash {
-  color:yellow;animation:a-second-hash 1s infinity;
+  color:yellow;animation:1s a-second-hash infinity;
 }
 }
 @media (max-width: 100px) {
@@ -76,13 +76,13 @@ exports[`parse css string correctly (wihtout mixins) 1`] = `
 }
 @media (max-width: 1000px) {
   .c-Bar-hash .c-WarningButton-hash,.c-Foo-hash .c-WarningButton-hash,.c-Bar-hash .c-PrimaryButton-hash,.c-Foo-hash .c-PrimaryButton-hash,.c-Bar-hash .c-SucceessButton-hash,.c-Foo-hash .c-SucceessButton-hash {
-  background:green;animation:a-example-first-hash 1s infinity;
+  background:green;animation:1s a-example-first-hash infinity;
 }
 }
 .c-Bar-hash .c-WarningButton-hash,.c-Foo-hash .c-WarningButton-hash,.c-Bar-hash .c-PrimaryButton-hash,.c-Foo-hash .c-PrimaryButton-hash,.c-Bar-hash .c-SucceessButton-hash,.c-Foo-hash .c-SucceessButton-hash {
-  padding:10px;margin:10px;animation:a-first-hash 10s infinity;border:10px;
+  padding:10px;margin:10px;animation:10s a-first-hash infinity;border:10px;
 }.c-Bar-hash,.c-Foo-hash {
-  font-size:10px;animation:a-colorized-hash 10s infinity;
+  font-size:10px;animation:10s a-colorized-hash infinity;
 }"
 `;
 

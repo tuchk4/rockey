@@ -13,7 +13,7 @@ export function renderRule(className, description) {
 }`;
 }
 
-export function render({ selector, styles, frames, media, source, type }) {
+export function render({ selector, styles, frames, media, type }) {
   let css = '';
 
   if (styles) {
@@ -39,8 +39,6 @@ export function render({ selector, styles, frames, media, source, type }) {
 }
 `;
     }
-  } else if (type === 'source') {
-    css = source + ';';
   }
 
   return css;

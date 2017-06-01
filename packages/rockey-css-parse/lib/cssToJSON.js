@@ -17,7 +17,7 @@ const cssTOJSON = (styles, context, plugins) => {
         let animationName = null;
 
         if (rule === 'animation') {
-          animationName = value.split(' ')[0];
+          animationName = value.split(' ')[1];
         } else if (rule === 'animation-name') {
           animationName = value;
         }

@@ -14,15 +14,16 @@ npm install --save rockey
 npm install --save rockey-react
 ```
 
-![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey gzip size](http://img.badgesize.io/https://unpkg.com/rockey@0.0.14/rockey.min.js?compression=gzip&label=rockey%20gzip) ![rockey-react gzip size](http://img.badgesize.io/https://unpkg.com/rockey-react@0.0.14/rockey-react.min.js?compression=gzip&label=rockey%20react%20gzip) ![rockey-css-parse gzip size](http://img.badgesize.io/https://unpkg.com/rockey-css-parse@0.0.14/rockey-react.min.js?compression=gzip&label=rockey%20css%20parse%20gzip)
+![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master)
 
 ---
 
 ## Documentation
 
 - [rockey](https://github.com/tuchk4/rockey/tree/master/packages/rockey)
-- [rockey-parse-css](https://github.com/tuchk4/rockey/tree/master/packages/rockey-parse-css)
+- [rockey-css-parse](https://github.com/tuchk4/rockey/tree/master/packages/rockey-css-parse)
 - [rockey-react](https://github.com/tuchk4/rockey/tree/master/packages/rockey-react)
+- [rockey-css-parse REPL](https://tuchk4.github.io/rockey-css-parse-repl/)
 
 
 ### Why do we need CSS in JS?
@@ -31,11 +32,13 @@ Firstly, CSS in JS approach is the vanilla JS. 
 
 CSS in JS approach — is native JS. You don’t need additional tools to use or build it.
 
+- Developer Experience!
 - For components libraries. Or when going to share components between applications.
 - More simpler application configuration
 - There is no custom loaders
 - More cleaner file structure
 - Easier to run tests
+- DRY
 
 More details explained at Medium Post - <img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@tuchk4/css-in-js-rockey-890ebbbd16e7)
 

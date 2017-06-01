@@ -8,7 +8,12 @@ Very fast function to parse dynamic CSS (with JS functions inside) and generate 
 npm install --save rockey-css-parse
 ```
 
-![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey-css-parse gzip size](http://img.badgesize.io/https://unpkg.com/rockey-css-parse@0.0.12/rockey-react.min.js?compression=gzip&label=rockey%20css%20parse%20gzip)
+![Rockey tests](https://api.travis-ci.org/tuchk4/rockey.svg?branch=master) ![rockey-css-parse gzip size]
+
+# REPL
+
+- [LIVE: rockey-css-parse REPL](https://tuchk4.github.io/rockey-css-parse-repl/)
+- [REPO: rockey-css-parse REPL](https://github.com/tuchk4/rockey-css-parse-repl)
 
 # Table of contents:
 
@@ -213,7 +218,7 @@ function warnIfImportant(styles) {
 
 ## Stringify
 
-Stringify without dynmaic rules:
+Stringify without dynamic rules:
 
 ```js
 import createParser from 'rockey-css-parse';

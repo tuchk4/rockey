@@ -7,7 +7,7 @@ export default function vendorPrefix(reporter = console.warn) {
     Object.keys(styles).forEach(prop => {
       const supportedProp = vendor.supportedProperty(prop);
 
-      const value = styles[prop];
+      const value = styles[prop].toString();
       const isImportant = value.indexOf('!important') !== -1;
       const supportedValue = vendor.supportedValue(
         supportedProp,

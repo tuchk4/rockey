@@ -44,10 +44,7 @@ Array [
 
 exports[`wrapWith string parsed 1`] = `
 Object {
-  "Layer": Array [
-    "Layer-hash",
-    "Button-hash m-fontSize-hash-1",
-  ],
+  "Layer": "Layer-hash Button-hash m-fontSize-hash-1",
 }
 `;
 
@@ -98,7 +95,9 @@ Array [
         "root": Array [
           "Layer",
         ],
-        "selector": ".Layer-hash .PrimaryButton-hash",
+        "selector": Array [
+          ".Layer-hash .PrimaryButton-hash",
+        ],
         "styles": Object {
           "color": "blue",
         },

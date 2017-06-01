@@ -63,7 +63,7 @@ export default function rule(raw, ...values) {
         const selector = getSelector(displayName);
 
         raw.forEach(precss => {
-          precss.selector = `${selector} ${precss.selector}`;
+          precss.selector = precss.selector.map(p => `${selector} ${p}`);
           precss.root = [displayName];
 
           precss.mixins.forEach(m => {
@@ -185,9 +185,12 @@ export default function rule(raw, ...values) {
       let resultClassList = {};
 
       if (parent) {
-        Object.keys(classList).forEach(name => {
-          resultClassList[name] = [classList[name], ...parentClasses];
-        });
+        let parentClassList = parentClasses.join(' ');
+        if (parentClassList) {
+          Object.keys(classList).forEach(name => {
+            resultClassList[name] = `${classList[name]} ${parentClassList}`;
+          });
+        }
       } else {
         resultClassList = Object.assign({}, classList);
       }

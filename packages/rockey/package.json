@@ -19,7 +19,6 @@
     "url": "https://github.com/tuchk4/rockey.git"
   },
   "dependencies": {
-    "asap": "^2.0.5",
     "classnames": "^2.2.5",
     "css-vendor": "^0.3.8",
     "lodash": "^4.17.4",
@@ -31,7 +30,6 @@
     "rule.js",
     "insert.js",
     "when.js",
-    "speedy.js",
     "css",
     "styleSheets",
     "utils",

@@ -6,10 +6,27 @@ const availableFragments = [];
 let node = null;
 let size = 0;
 
-const create = length => {
-  let fragment = document.createDocumentFragment();
-
+export const createInitialNode = () => {
   node = mount();
+};
+
+export const insertRule = css => {
+  if (size === STYLES_SIZE_PER_NODE) {
+    node = mount();
+    size = 0;
+  }
+
+  const textNode = document.createTextNode(css);
+  node.appendChild(textNode);
+  size++;
+};
+
+const create = length => {
+  if (!node) {
+    node = mount();
+  }
+
+  let fragment = document.createDocumentFragment();
 
   for (let i = 0; i < length; i++) {
     if (size === STYLES_SIZE_PER_NODE) {

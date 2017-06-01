@@ -29,7 +29,7 @@ test('parse css string correctly (wihtout mixins)', () => {
         to { color: #fc3; }
       }
 
-      animation: colorized 10s infinity;
+      animation: 10s colorized infinity;
 
       WarningButton, PrimaryButton, SucceessButton {
         padding: 10px;
@@ -40,7 +40,7 @@ test('parse css string correctly (wihtout mixins)', () => {
           100% { color: red; }
         }
 
-        animation: first 10s infinity;
+        animation: 10s first infinity;
 
         + Icon {
           padding-right: 15px;
@@ -64,7 +64,7 @@ test('parse css string correctly (wihtout mixins)', () => {
 
           @media (max-width: 688px) {
             color: yellow;
-            animation: second 1s infinity;
+            animation: 1s second infinity;
           }
         }
 
@@ -84,7 +84,7 @@ test('parse css string correctly (wihtout mixins)', () => {
 
         @media (max-width: 1000px) {
           background: green;
-          animation: example-first 1s infinity;
+          animation: 1s example-first infinity;
         }
       }
     }
