@@ -27,6 +27,8 @@
     "look.js",
     "recompose.js",
     "RockeyHoc.js",
+    "RockeyThemeProvider.js",
+    "RockeyComponent.js",
     "rockey-react.min.js"
   ],
   "peerDependencies": {

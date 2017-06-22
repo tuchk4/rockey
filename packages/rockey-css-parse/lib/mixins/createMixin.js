@@ -1,3 +1,5 @@
+import memoize from 'lodash/memoize';
+
 const createMixin = ({ className, selector, func, parse, plugins }) => {
   let counter = 0;
   const variations = {};
@@ -10,8 +12,9 @@ const createMixin = ({ className, selector, func, parse, plugins }) => {
     return styles;
   };
 
-  const mixin = props => {
+  const mixin = memoize(props => {
     const raw = func(props);
+
     if (!raw) {
       return {
         className: null,
@@ -62,7 +65,7 @@ const createMixin = ({ className, selector, func, parse, plugins }) => {
       precss,
       className: variateClassName,
     };
-  };
+  });
 
   mixin.updateSelector = update => {
     selector = update(selector);

@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 
 import isString from 'lodash/isString';
@@ -7,10 +9,12 @@ import isArray from 'lodash/isArray';
 import rule from 'rockey/rule';
 import look from './look';
 
-import RockeyHocWithHandlers from './utils/RockeyHocWithHandlers';
 import createElement from './utils/createElement';
 
 import { ROCKEY_MIXIN_HANDLER_KEY } from './handler';
+
+import { CONTEXT_KEY } from './RockeyThemeProvider';
+import RockeyComponent from './RockeyComponent';
 
 const COMPONENT_EXTENDS = 'COMPONENT_EXTENDS';
 const DEFINE_COMPONENT_NAME = 'DEFINE_COMPONENT_NAME';
@@ -98,22 +102,22 @@ export const getRockeyHoc = () => {
             css = createEmtpyCss(name);
           }
 
-          let finshCssRule = null;
+          let rockeyCSSRule = null;
           if (at === DEFINE_COMPONENT_NAME) {
             // wrap with name because Function is used as React comopnent
             // but currect css object === parentCss. line :60
-            finshCssRule = createEmtpyCss(name);
+            rockeyCSSRule = createEmtpyCss(name);
             finshCssRule.addParent(css);
           } else {
-            finshCssRule = css;
+            rockeyCSSRule = css;
           }
 
           // collect handler mixins
           const handlers = [];
           // TODO: remove this condition. mixins alwasy should be array
-          if (finshCssRule.mixins) {
-            Object.keys(finshCssRule.mixins).forEach(key => {
-              const mixin = finshCssRule.mixins[key];
+          if (rockeyCSSRule.mixins) {
+            Object.keys(rockeyCSSRule.mixins).forEach(key => {
+              const mixin = rockeyCSSRule.mixins[key];
 
               if (mixin[ROCKEY_MIXIN_HANDLER_KEY]) {
                 handlers.push(mixin);
@@ -123,21 +127,23 @@ export const getRockeyHoc = () => {
 
           if (handlers.length) {
             return (
-              <RockeyHocWithHandlers
-                css={finshCssRule}
+              <RockeyComponent
+                rockeyCSSRule={rockeyCSSRule}
                 selector={name}
                 handlers={handlers}
-                BaseComponent={BaseComponent}
-                proxy={props}
+                Component={BaseComponent}
+                componentProps={props}
               />
             );
           } else {
-            const classList = finshCssRule.getClassList(props);
-            const className = classnames(classList[name], props.className);
-            return createElement(BaseComponent, {
-              ...props,
-              className,
-            });
+            return (
+              <RockeyComponent
+                rockeyCSSRule={rockeyCSSRule}
+                selector={name}
+                Component={BaseComponent}
+                componentProps={props}
+              />
+            );
           }
 
         default:
