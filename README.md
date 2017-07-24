@@ -1,5 +1,7 @@
 # Rockey <sup>Component Based CSS in JS</sup>
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/tuchk4/rockey.svg)](https://greenkeeper.io/)
+
 Stressless CSS for components using JS. Write Component Based CSS with functional mixins.
 
 - <img src="http://i.imgur.com/ULoeOL4.png" height="16"/> [CSS in JS. Rockey](https://medium.com/@tuchk4/css-in-js-rockey-890ebbbd16e7)
