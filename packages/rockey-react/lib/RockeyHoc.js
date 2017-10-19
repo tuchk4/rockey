@@ -1,4 +1,6 @@
 import React from 'react';
+import PropTypes from 'prop-types';
+import ReactDOM from 'react-dom';
 import classnames from 'classnames';
 
 import isString from 'lodash/isString';
@@ -7,10 +9,12 @@ import isArray from 'lodash/isArray';
 import rule from 'rockey/rule';
 import look from './look';
 
-import RockeyHocWithHandlers from './utils/RockeyHocWithHandlers';
 import createElement from './utils/createElement';
 
 import { ROCKEY_MIXIN_HANDLER_KEY } from './handler';
+
+import { CONTEXT_KEY } from './RockeyThemeProvider';
+import RockeyComponent from './RockeyComponent';
 
 const COMPONENT_EXTENDS = 'COMPONENT_EXTENDS';
 const DEFINE_COMPONENT_NAME = 'DEFINE_COMPONENT_NAME';
@@ -59,6 +63,7 @@ export const getRockeyHoc = () => {
 
         case COMPONENT_EXTENDS:
           const componentCss = rule(...args);
+          // componentCss.selector = name;
 
           if (queuedMixins) {
             componentCss.addMixins(queuedMixins);
@@ -96,24 +101,26 @@ export const getRockeyHoc = () => {
 
           if (!css) {
             css = createEmtpyCss(name);
+            // css.selector = name;
           }
 
-          let finshCssRule = null;
+          let rockeyCSSRule = null;
           if (at === DEFINE_COMPONENT_NAME) {
             // wrap with name because Function is used as React comopnent
             // but currect css object === parentCss. line :60
-            finshCssRule = createEmtpyCss(name);
-            finshCssRule.addParent(css);
+            rockeyCSSRule = createEmtpyCss(name);
+            rockeyCSSRule.addParent(css);
+            // rockeyCSSRule.selector = name;
           } else {
-            finshCssRule = css;
+            rockeyCSSRule = css;
           }
 
           // collect handler mixins
           const handlers = [];
           // TODO: remove this condition. mixins alwasy should be array
-          if (finshCssRule.mixins) {
-            Object.keys(finshCssRule.mixins).forEach(key => {
-              const mixin = finshCssRule.mixins[key];
+          if (rockeyCSSRule.mixins) {
+            Object.keys(rockeyCSSRule.mixins).forEach(key => {
+              const mixin = rockeyCSSRule.mixins[key];
 
               if (mixin[ROCKEY_MIXIN_HANDLER_KEY]) {
                 handlers.push(mixin);
@@ -121,24 +128,35 @@ export const getRockeyHoc = () => {
             });
           }
 
-          if (handlers.length) {
-            return (
-              <RockeyHocWithHandlers
-                css={finshCssRule}
-                selector={name}
-                handlers={handlers}
-                BaseComponent={BaseComponent}
-                proxy={props}
-              />
-            );
-          } else {
-            const classList = finshCssRule.getClassList(props);
-            const className = classnames(classList[name], props.className);
-            return createElement(BaseComponent, {
-              ...props,
-              className,
-            });
-          }
+          return (
+            <RockeyComponent
+              rockeyCSSRule={rockeyCSSRule}
+              selector={name}
+              handlers={handlers}
+              Component={BaseComponent}
+              componentProps={props}
+            />
+          );
+        // if (handlers.length) {
+        //   return (
+        //     <RockeyComponent
+        //       rockeyCSSRule={rockeyCSSRule}
+        //       selector={name}
+        //       handlers={handlers}
+        //       Component={BaseComponent}
+        //       componentProps={props}
+        //     />
+        //   );
+        // } else {
+        //   return (
+        //     <RockeyComponent
+        //       rockeyCSSRule={rockeyCSSRule}
+        //       selector={name}
+        //       Component={BaseComponent}
+        //       componentProps={props}
+        //     />
+        //   );
+        // }
 
         default:
           throw new Error('Wrong component call');
@@ -170,7 +188,7 @@ export const getRockeyHoc = () => {
       });
 
       const childComponents = look(component, {
-        extendBase: false,
+        extendBase: true,
       })(...args);
 
       Object.keys(childComponents).forEach(key => {

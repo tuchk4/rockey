@@ -36,7 +36,7 @@
   },
   "dependencies": {
     "classnames": "^2.2.5",
-    "is-react-prop": "^0.1.2",
+    "is-react-prop": "^1.0.0",
     "lodash": "^4.17.4",
     "rockey": "^0.0.15-1"
   },
@@ -45,8 +45,8 @@
     "transpile": "node tasks/prepublish.js"
   },
   "devDependencies": {
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
-    "recompose": "^0.23.1"
+    "react": "^16.0.0",
+    "react-dom": "^16.0.0",
+    "recompose": "^0.26.0"
   }
 }

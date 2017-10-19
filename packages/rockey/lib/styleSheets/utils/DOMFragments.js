@@ -11,7 +11,7 @@ export const createInitialNode = () => {
 };
 
 export const insertRule = css => {
-  if (size === STYLES_SIZE_PER_NODE) {
+  if (size === STYLES_SIZE_PER_NODE || !node) {
     node = mount();
     size = 0;
   }

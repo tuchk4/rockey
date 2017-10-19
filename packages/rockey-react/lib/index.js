@@ -17,6 +17,11 @@ const RootRockeyHoc = (...args) => {
   // TODO: check types
   if (args.length === 1) {
     BaseComponent = args[0];
+
+    // if (!isString(BaseComponent)) {
+    displayName = BaseComponent.name || BaseComponent.displayName;
+    // }
+
     css = args[1];
   } else {
     displayName = args[0];

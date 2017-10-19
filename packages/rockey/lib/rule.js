@@ -31,29 +31,46 @@ const parse = createParser({
 
 const getSelector = classnames.getSelector(getClassName);
 
+const merge = (classList1, classList2) => {
+  Object.keys(classList2).forEach(c => {
+    if (classList1[c]) {
+      classList1[c] = `${classList1[c]} ${classList2[c]}`;
+    } else {
+      classList1[c] = classList2[c];
+    }
+  });
+
+  return classList1;
+};
+
 export default function rule(raw, ...values) {
   // export default function rule(...args) {
   let parent = null;
-  let cached = null;
-  let inserted = false;
+  let parseCache = null;
+  let staticClassesInserted = false;
   let isAlreadyParsed = false;
   let addedMixins = [];
+  let ParentCSSVariables = {};
 
   if (Array.isArray(raw)) {
     isAlreadyParsed = !isString(raw[0]);
+
+    if (isAlreadyParsed) {
+      ParentCSSVariables = values[0];
+    }
   } else if (isString(raw)) {
   } else {
     throw new Error('rockey-rule: wrong call type');
   }
 
-  const key = JSON.stringify({
-    raw,
-    values,
-  });
+  // const key = JSON.stringify({
+  //   raw,
+  //   values,
+  // });
 
   return {
     wrapWith(displayName) {
-      if (cached) {
+      if (parseCache) {
         throw new Error(
           'Can not wrap because rule is already parsed and inserted'
         );
@@ -82,11 +99,13 @@ export default function rule(raw, ...values) {
     parse() {
       let precss = null;
       let classList = null;
+      let CSSVariables = null;
 
-      if (!cached) {
+      if (!parseCache) {
         if (isAlreadyParsed) {
           precss = raw;
           classList = {};
+          CSSVariables = {};
 
           raw.forEach(part => {
             part.root.forEach(c => {
@@ -100,6 +119,7 @@ export default function rule(raw, ...values) {
 
           precss = parsed.precss;
           classList = parsed.classList;
+          CSSVariables = parsed.CSSVariables;
         }
 
         if (addedMixins.length) {
@@ -114,32 +134,31 @@ export default function rule(raw, ...values) {
               css.parse().precss.forEach(p => {
                 precss.push(p);
               });
-
-              // precss = precss.concat(css.parse().precss);
             });
           });
         }
 
-        cached = {
-          precss,
-          classList,
-        };
+        parseCache = { precss, classList, CSSVariables };
       } else {
-        precss = cached.precss;
-        classList = cached.classList;
+        CSSVariables = parseCache.CSSVariables;
+        precss = parseCache.precss;
+        classList = parseCache.classList;
       }
 
-      return { precss, classList };
+      return { precss, classList, CSSVariables };
     },
 
     transform(transformFunc) {
       let precss = {};
+      let CSSVariables = ParentCSSVariables;
 
       if (isAlreadyParsed) {
         precss = raw;
       } else {
         const parsed = this.parse();
         precss = parsed.precss;
+
+        CSSVariables = Object.assign({}, CSSVariables, parsed.CSSVariables);
       }
 
       const tree = {};
@@ -154,7 +173,10 @@ export default function rule(raw, ...values) {
       });
 
       return transformFunc(tree, transformed => {
-        return rule(Array.isArray(transformed) ? transformed : [transformed]);
+        return rule(
+          Array.isArray(transformed) ? transformed : [transformed],
+          CSSVariables
+        );
       });
     },
 
@@ -162,68 +184,111 @@ export default function rule(raw, ...values) {
       addedMixins = addedMixins.concat(mixins);
     },
 
-    getClassList(props = {}) {
-      let parentClasses = [];
+    getStaticClassList() {
+      let classList = {};
 
       if (parent) {
-        const parentClassList = parent.getClassList(props);
-        Object.keys(parentClassList).forEach(name => {
-          parentClasses.push(parentClassList[name]);
-        });
+        classList = parent.getStaticClassList();
       }
 
-      const { classList, precss } = this.parse();
+      const parsed = this.parse();
 
-      if (!inserted) {
-        if (precss.length) {
-          insert(precss);
+      if (!staticClassesInserted) {
+        if (parsed.precss.length) {
+          insert(parsed.precss);
         }
-
-        inserted = true;
+        staticClassesInserted = true;
       }
 
-      let resultClassList = {};
+      return merge(classList, parsed.classList);
+    },
+
+    getDynamicCSS(props = {}) {
+      let classList = {};
 
       if (parent) {
-        let parentClassList = parentClasses.join(' ');
-        if (parentClassList) {
-          Object.keys(classList).forEach(name => {
-            resultClassList[name] = `${classList[name]} ${parentClassList}`;
-          });
-        }
-      } else {
-        resultClassList = Object.assign({}, classList);
+        classList = parent.getDynamicCSS(props);
       }
 
-      let mixinsPrecss = [];
+      const { precss } = this.parse();
+      let dynamicCSSToInsert = [];
 
-      precss.forEach(pre => {
-        if (pre.mixins) {
-          pre.mixins.forEach(mixin => {
+      const appendMixins = (precss, className) => {
+        for (let i = 0, s = precss.root.length; i < s; i++) {
+          if (classList[precss.root[i]]) {
+            classList[precss.root[i]] = `${classList[
+              precss.root[i]
+            ]} ${className}`;
+          } else {
+            classList[precss.root[i]] = className;
+          }
+        }
+      };
+
+      const appendCSSToInsert = precss => {
+        for (let i = 0, s = precss.length; i < s; i++) {
+          dynamicCSSToInsert.push(precss[i]);
+        }
+      };
+
+      for (let i = 0, s = precss.length; i < s; i++) {
+        const p = precss[i];
+        if (p.mixins) {
+          for (let j = 0, ms = p.mixins.length; j < ms; j++) {
+            const mixin = p.mixins[j];
             const result = mixin(props);
 
             if (result) {
               if (result.className) {
-                pre.root.forEach(c => {
-                  resultClassList[c] += ` ${result.className}`;
-                });
+                appendMixins(p, result.className);
               }
 
               if (result.precss) {
-                result.precss.forEach(p => {
-                  mixinsPrecss.push(p);
-                });
+                appendCSSToInsert(result.precss);
               }
             }
-          });
+          }
         }
-      });
-
-      if (mixinsPrecss.length) {
-        insert(mixinsPrecss);
       }
 
-      return resultClassList;
+      if (dynamicCSSToInsert.length) {
+        insert(dynamicCSSToInsert);
+      }
+
+      return classList;
+    },
+
+    getCSSVariables(props = {}) {
+      let CSSVariables = {};
+
+      if (parent) {
+        CSSVariables = parent.getCSSVariables(props);
+      }
+
+      const parsed = this.parse();
+
+      const CSSVariablesFunctions = Object.assign(
+        {},
+        ParentCSSVariables,
+        parsed.CSSVariables
+      );
+
+      const variables = Object.keys(CSSVariablesFunctions);
+
+      for (let i = 0, s = variables.length; i < s; i++) {
+        const f = CSSVariablesFunctions[variables[i]];
+        CSSVariables[variables[i]] = f(props);
+      }
+
+      return CSSVariables;
+    },
+
+    getClassList(props = {}) {
+      const staticClassList = this.getStaticClassList();
+      const dynamicClassList = this.getDynamicCSS(props);
+      const CSSVariables = this.getCSSVariables(props);
+
+      return Object.assign({}, staticClassList);
     },
   };
 }

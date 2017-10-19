@@ -1,12 +1,17 @@
 import isFunction from 'lodash/isFunction';
 import camelCase from 'lodash/camelCase';
 
+const USE_CSS_VARIABLES = false;
+
 const MIXIN_PREFIX = '|MIXIN_';
 const getMixinName = mixinFunc => mixinFunc.displayName || mixinFunc.name;
 
+let counter = 0;
+
 const interpolateWithMixins = (strings, ...values) => {
-  const mixinsFunctions = {};
-  let counter = 0;
+  const mixinsFunctions = {
+    CSSVariables: {},
+  };
 
   const raw = strings.reduce((rule, part, i) => {
     let value = values[i] === undefined ? '' : values[i];
@@ -46,25 +51,41 @@ const interpolateWithMixins = (strings, ...values) => {
         name = getMixinName(value);
       }
 
-      let placeholder = `${MIXIN_PREFIX}${name}${++counter}`;
+      let id = counter === 0 ? '' : counter;
+      counter++;
+
+      const placeholder = `${MIXIN_PREFIX}${name}${id}`;
 
       if (found) {
-        mixinsFunctions[placeholder] = (...args) => {
-          const propValue = value(...args);
-          return propValue
-            ? {
-                [prop]: propValue,
-              }
-            : null;
-        };
+        if (USE_CSS_VARIABLES) {
+          const CSSVariable = `${name}${id}`;
+          const CSSVariableMixin = (...args) => {
+            return value(...args);
+          };
 
-        mixinsFunctions[placeholder].prop = prop;
-        mixinsFunctions[placeholder].displayName = name;
+          CSSVariableMixin.CSSVariable = CSSVariable;
+
+          mixinsFunctions.CSSVariables[CSSVariable] = CSSVariableMixin;
+          append = ` ${prop}: var(--${CSSVariable}); `;
+        } else {
+          mixinsFunctions[placeholder] = (...args) => {
+            const propValue = value(...args);
+            return propValue
+              ? {
+                  [prop]: propValue,
+                }
+              : null;
+          };
+
+          mixinsFunctions[placeholder].prop = prop;
+          mixinsFunctions[placeholder].displayName = name;
+          append = `${placeholder} `;
+        }
       } else {
         mixinsFunctions[placeholder] = value;
-      }
 
-      append = `${placeholder} `;
+        append = `${placeholder} `;
+      }
     }
 
     return rule + raw + ' ' + append;

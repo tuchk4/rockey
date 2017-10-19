@@ -176,6 +176,7 @@ ${arrows}
     }
 
     return {
+      CSSVariables: mixinsFunctions.CSSVariables || {},
       classList: root.reduce((components, c) => {
         components[getComponentName(c)] = getClassName(c);
         return components;
@@ -313,8 +314,10 @@ ${arrows}
           if (media || keyframes) {
             selector = [...parent.selector];
           } else {
-            modificator.split(',').forEach(m => {
-              m = m.trim();
+            const parts = modificator.split(',');
+
+            for (let i = 0, s = parts.length; i < s; i++) {
+              let m = parts[i];
 
               if (isNot(m)) {
                 const matches = m.match(NOT_REGEX);
@@ -322,13 +325,13 @@ ${arrows}
               }
 
               if (parent.selector.length) {
-                parent.selector.forEach(s => {
-                  selector.push(s + m);
-                });
+                for (let j = 0, ps = parent.selector.length; j < ps; j++) {
+                  selector.push(parent.selector[j] + m);
+                }
               } else {
                 selector.push(m);
               }
-            });
+            }
           }
         }
 
@@ -446,9 +449,9 @@ ${arrows}
           currentComponents = current.split(',');
         }
 
-        currentComponents.forEach(c => {
-          components.push(c.trim());
-        });
+        for (let i = 0, s = currentComponents.length; i < s; i++) {
+          components.push(currentComponents[i].trim());
+        }
 
         current = '';
       };
@@ -469,8 +472,14 @@ ${arrows}
       // @replace-start
       const saveComponent = () => {
         const selector = [];
+        // if (parent.root[0] === 'MaterialCheckbox') {
+        //   debugger;
+        // }
+
         if (shouldGenerateSelectors(parent)) {
-          components.forEach(c => {
+          for (let i = 0, s = components.length; i < s; i++) {
+            const c = components[i];
+
             if (process.env.NODE_ENV !== 'production') {
               validateComponent(c);
             }
@@ -480,13 +489,13 @@ ${arrows}
             const className = getSelector(c);
 
             if (parent.selector.length) {
-              parent.selector.forEach(p => {
-                selector.push(`${p} ${className}`);
-              });
+              for (let j = 0, ps = parent.selector.length; j < ps; j++) {
+                selector.push(`${parent.selector[j]} ${className}`);
+              }
             } else {
               selector.push(className);
             }
-          });
+          }
         }
 
         toPreCSS(current, {
