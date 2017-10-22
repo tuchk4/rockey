@@ -1,6 +1,6 @@
 {
   "name": "rockey-react",
-  "version": "0.0.15-1",
+  "version": "0.0.16",
   "description": "Stressless CSS for components using JS. Write Component Based CSS with functional mixins.",
   "main": "index.js",
   "keywords": [
@@ -26,7 +26,9 @@
     "index.js",
     "look.js",
     "recompose.js",
+    "RockeyComponent.js",
     "RockeyHoc.js",
+    "RockeyThemeProvider.js",
     "rockey-react.min.js"
   ],
   "peerDependencies": {
@@ -38,7 +40,7 @@
     "classnames": "^2.2.5",
     "is-react-prop": "^1.0.0",
     "lodash": "^4.17.4",
-    "rockey": "^0.0.15-1"
+    "rockey": "^0.0.16"
   },
   "scripts": {
     "dev": "node tasks/prepublish.js --watch",
