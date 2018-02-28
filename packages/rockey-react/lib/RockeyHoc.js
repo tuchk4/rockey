@@ -63,6 +63,7 @@ export const getRockeyHoc = () => {
 
         case COMPONENT_EXTENDS:
           const componentCss = rule(...args);
+          // componentCss.selector = name;
 
           if (queuedMixins) {
             componentCss.addMixins(queuedMixins);
@@ -100,6 +101,7 @@ export const getRockeyHoc = () => {
 
           if (!css) {
             css = createEmtpyCss(name);
+            // css.selector = name;
           }
 
           let rockeyCSSRule = null;
@@ -108,6 +110,7 @@ export const getRockeyHoc = () => {
             // but currect css object === parentCss. line :60
             rockeyCSSRule = createEmtpyCss(name);
             finshCssRule.addParent(css);
+            // rockeyCSSRule.selector = name;
           } else {
             rockeyCSSRule = css;
           }
@@ -125,26 +128,35 @@ export const getRockeyHoc = () => {
             });
           }
 
-          if (handlers.length) {
-            return (
-              <RockeyComponent
-                rockeyCSSRule={rockeyCSSRule}
-                selector={name}
-                handlers={handlers}
-                Component={BaseComponent}
-                componentProps={props}
-              />
-            );
-          } else {
-            return (
-              <RockeyComponent
-                rockeyCSSRule={rockeyCSSRule}
-                selector={name}
-                Component={BaseComponent}
-                componentProps={props}
-              />
-            );
-          }
+          return (
+            <RockeyComponent
+              rockeyCSSRule={rockeyCSSRule}
+              selector={name}
+              handlers={handlers}
+              Component={BaseComponent}
+              componentProps={props}
+            />
+          );
+        // if (handlers.length) {
+        //   return (
+        //     <RockeyComponent
+        //       rockeyCSSRule={rockeyCSSRule}
+        //       selector={name}
+        //       handlers={handlers}
+        //       Component={BaseComponent}
+        //       componentProps={props}
+        //     />
+        //   );
+        // } else {
+        //   return (
+        //     <RockeyComponent
+        //       rockeyCSSRule={rockeyCSSRule}
+        //       selector={name}
+        //       Component={BaseComponent}
+        //       componentProps={props}
+        //     />
+        //   );
+        // }
 
         default:
           throw new Error('Wrong component call');

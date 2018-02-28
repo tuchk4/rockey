@@ -1,9 +1,0 @@
-// Jest Snapshot v1, https://goo.gl/fbAQLP
-
-exports[`stringify with props 1`] = `
-".c-Button-hash {
-  color:red;
-}.m-background-hash-1.c-Button-hash {
-  background:#ffcc33;
-}"
-`;

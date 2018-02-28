@@ -131,7 +131,7 @@ export default class RockeyComponent extends React.Component {
   missedHandler = {};
 
   dom = null;
-  dynamicRule = null;
+  // dynamicRule = null;
 
   getRockeyProps(props, context) {
     const { componentProps } = this.props;
@@ -150,10 +150,6 @@ export default class RockeyComponent extends React.Component {
 
     this.staticClassName = classList[selector];
 
-    // this.setState({
-    //   staticClassName: classList[selector],
-    // });
-
     if (this.props.handlers) {
       this.props.handlers.forEach(handler => {
         handler.clear();
@@ -167,77 +163,48 @@ export default class RockeyComponent extends React.Component {
     const CSSProps = this.getRockeyProps();
     this.updateCSSVariables(CSSProps);
   }
-  //
+
   // componentWillReceiveProps({ componentProps, rockeyCSSRule }, context) {
-  //   if (this.dom) {
-  //     const CSSProps = this.getRockeyProps(componentProps, context);
-  //     this.updateDynamicClassName(CSSProps);
-  //     this.updateCSSVariables(CSSProps);
-  //   }
+  // if (this.dom) {
+  //   const CSSProps = this.getRockeyProps(componentProps, context);
+  //   this.updateDynamicClassName(CSSProps);
+  //   this.updateCSSVariables(CSSProps);
+  // }
   // }
 
-  // updateDynamicClassName(props) {
-  //   this.updateCSSVariables(props);
-  //
-  //   const { selector } = this.props;
-  //   const classList = this.props.rockeyCSSRule.getDynamicCSS(props);
-  //
-  //   if (classList[selector]) {
-  //     this.dom.classList.add(classList[selector]);
-  //   }
+  componentWillReceiveProps() {
+    const CSSProps = this.getRockeyProps();
+    this.updateCSSVariables(CSSProps);
+  }
 
+  // updateDynamicClassName(props) {
+  // const { selector } = this.props;
+  // const classList = this.props.rockeyCSSRule.getDynamicCSS(props);
+  //
+  // if (classList[selector]) {
+  //   this.dom.classList.add(classList[selector]);
+  // }
   // this.dynamicClassName = classList[selector];
-  // this.setState({
-  //   dynamicClassName: classList[selector],
-  // });
   // }
 
   updateCSSVariables(props) {
     const CSSVariables = this.props.rockeyCSSRule.getCSSVariables(props);
+
     Object.keys(CSSVariables).forEach(v => {
       // TODO: rm propterty
       this.dom.style.setProperty(`--${v}`, CSSVariables[v]);
     });
-    // const vars = Object.keys(CSSVariables);
-
-    // if (vars.length) {
-    //   if (!this.varsRule) {
-    //     this.createVarsRule();
-    //   }
-
-    //   const rules = {};
-    //   for (let i = 0, s = vars.length; i < s; i++) {
-    //     rules[`--${vars[i]}`] = CSSVariables[vars[i]];
-    //   }
-    //
-    //   this.varsRule.update(rules);
-    // }
   }
-
-  // createVarsRule() {
-  //   const varsClassName = `${this.staticClassName}-vars-${hash()}`;
-  //   this.varsRule = createDynamicRule(varsClassName);
-  //
-  //   this.dom.classList.add(varsClassName);
-
-  // this.setState({
-  //   varsClassName,
-  // });
-  // }
 
   render() {
     const { rockeyCSSRule, Component, selector, componentProps } = this.props;
 
     const CSSProps = this.getRockeyProps();
-
-    const classList = rockeyCSSRule.getDynamicCSS(CSSProps);
+    const dynamicClassList = rockeyCSSRule.getDynamicCSS(CSSProps);
 
     const className = classnames(
       this.staticClassName,
-      classList[selector],
-      // this.state.staticClassName,
-      // this.state.varsClassName,
-      // this.state.dynamicClassName,
+      dynamicClassList[selector],
       componentProps.className
     );
 

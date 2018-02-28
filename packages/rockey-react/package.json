@@ -1,15 +1,12 @@
 {
   "name": "rockey-react",
   "version": "0.0.15-1",
-  "description": "Stressless CSS for components using JS. Write Component Based CSS with functional mixins.",
+  "description":
+    "Stressless CSS for components using JS. Write Component Based CSS with functional mixins.",
   "main": "index.js",
-  "keywords": [
-    "react",
-    "css",
-    "css-in-js",
-    "rockey"
-  ],
-  "author": "Valerii Sorokobatko <valeriy.sorokobatko@gmail.com> (https://github.com/tuchk4)",
+  "keywords": ["react", "css", "css-in-js", "rockey"],
+  "author":
+    "Valerii Sorokobatko <valeriy.sorokobatko@gmail.com> (https://github.com/tuchk4)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tuchk4/rockey/issues"
@@ -33,8 +30,7 @@
   ],
   "peerDependencies": {
     "react": "^15.5.4",
-    "react-dom": "^15.5.4",
-    "recompose": "^0.23.1"
+    "react-dom": "^15.5.4"
   },
   "dependencies": {
     "classnames": "^2.2.5",
@@ -43,8 +39,9 @@
     "rockey": "^0.0.15-1"
   },
   "scripts": {
-    "dev": "node tasks/prepublish.js --watch",
-    "transpile": "node tasks/prepublish.js"
+    "transpile": "node tasks/transpile.js",
+    "dev": "node tasks/transpile.js --watch",
+    "clean": "node tasks/clean.js"
   },
   "devDependencies": {
     "react": "^15.5.4",

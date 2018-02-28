@@ -11,4 +11,3 @@ const spawnDev = packageName => {
 
 spawnDev('rockey');
 spawnDev('rockey-react');
-spawnDev('rockey-css-parse');

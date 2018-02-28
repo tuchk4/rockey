@@ -5,7 +5,7 @@ const toCamelCase = require('lodash/camelCase');
 const webpack = require('webpack');
 const prettyBytes = require('pretty-bytes');
 const gzipSize = require('gzip-size');
-
+const PrepackWebpackPlugin = require('prepack-webpack-plugin').default;
 const { argv } = require('yargs');
 
 const packageName = argv.package;
@@ -62,6 +62,7 @@ const compiler = webpack({
       'process.env.NODE_ENV': '"production"',
       'process.NODE_ENV': '"production"',
     }),
+    new PrepackWebpackPlugin({}),
   ],
 });
 

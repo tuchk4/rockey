@@ -1,0 +1,40 @@
+{
+  "name": "benchmarks",
+  "version": "0.0.1",
+  "private": true,
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "node tasks/transpile.js --watch",
+    "clean": "node tasks/clean.js",
+    "run:native": "node benchmark-native.js",
+    "run:nested": "node benchmark-nested.js",
+    "run:array": "node benchmark-nativeAsArray.js",
+    "transpile": "node tasks/prepublish.js",
+    "publish": "echo \"Never publish this package\" && exit 1"
+  },
+  "dependencies": {
+    "chalk": "^2.3.0",
+    "cross-spawn": "^5.1.0",
+    "css": "^2.2.1",
+    "postcss": "^6.0.13",
+    "postcss-nested": "^2.1.2",
+    "postcss-safe-parser": "^3.0.1",
+    "rockey-css-parse": "0.0.1",
+    "stylis": "^3.4.0",
+    "yargs": "^10.0.3"
+  },
+  "files": [
+    "native",
+    "nativeAsArray",
+    "nested",
+    "utils",
+    "benchmark-native.js",
+    "benchmark-nativeAsArray.js",
+    "benchmark-nested.js",
+    "run.js"
+  ],
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

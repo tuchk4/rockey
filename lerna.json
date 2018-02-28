@@ -1,5 +1,5 @@
 {
-  "lerna": "2.0.0-beta.37",
+  "lerna": "2.4.0",
   "changelog": {
     "repo": "tuchk4/rockey",
     "labels": {
@@ -13,9 +13,13 @@
     "cacheDir": ".changelog"
   },
   "packages": [
+    "packages/chainlet",
+    "packages/benchmarks",
     "packages/rockey",
     "packages/rockey-react",
-    "packages/rockey-css-parse"
+    "packages/rockey-css-parse",
+    "packages/vishenka",
+    "packages/vishenka-viewer"
   ],
-  "version": "0.0.15-1"
+  "version": "independent"
 }

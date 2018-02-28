@@ -1,0 +1,11 @@
+[ignore]
+node_moduels
+
+[include]
+/packages/**/*.js
+
+[libs]
+
+[options]
+emoji=true 
+include_warnings=true

@@ -1,19 +1,7 @@
-const chalk = require('chalk');
+const spawnDev = require('./utils/spawnDev');
 
-const spawn = require('cross-spawn');
-
-const spawnDev = packageName => {
-  console.log(`dev: ${chalk.green(packageName)}`);
-
-  spawn('npm', ['run', 'dev'], {
-    stdio: 'inherit',
-    cwd: __dirname + `/../packages/${packageName}`,
-    env: Object.assign({}, process.env, {
-      NODE_ENV: 'production',
-    }),
-  });
-};
-
-spawnDev('rockey');
-spawnDev('rockey-react');
-spawnDev('rockey-css-parse');
+spawnDev({
+  packages: ['rockey', 'rockey-react', 'rockey-css-parse', 'benchmarks'],
+  command: 'npm',
+  args: ['run', 'dev'],
+});

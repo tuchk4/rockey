@@ -1,0 +1,16 @@
+/etc
+/native
+/nativeAsArray
+/nested
+/utils
+
+/benchmark-native.js
+/benchmark-nativeAsArray.js
+/benchmark-nested.js
+/run.js
+
+
+/bestResults/*.json
+/results-native.json
+/results-nativeAsArray.json
+/results-nested.json

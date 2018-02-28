@@ -1,7 +1,7 @@
 {
   "name": "rockey-css-parse",
-  "version": "0.0.15-1",
-  "description": "Dynamic CSS string parser",
+  "version": "0.0.1",
+  "description": "Chain / Chainable configuration",
   "main": "index.js",
   "keywords": [
     "react",
@@ -18,28 +18,24 @@
     "type": "git",
     "url": "https://github.com/tuchk4/rockey.git"
   },
-  "devDependencies": {
-    "css": "^2.2.1",
-    "postcss": "^5.2.16",
-    "postcss-nested": "^1.0.0",
-    "postcss-safe-parser": "^2.0.0",
-    "stylis": "^2.0.4"
-  },
-  "dependencies": {
-    "lodash": "^4.17.4"
-  },
   "files": [
-    "mixins",
-    "utils",
-    "cssToJSON.js",
-    "index.js",
-    "parse.js",
-    "parseOptimized.js",
-    "stringify.js",
-    "rockey-css-parse.min.js"
+    "ast",
+    "istf",
+    "json",
+    "native",
+    "quick",
+    "schema",
+    "factory.js",
+    "interpolate.js"
   ],
   "scripts": {
-    "dev": "node tasks/prepublish.js --watch",
-    "transpile": "node tasks/prepublish.js"
+    "transpile": "node tasks/transpile.js",
+    "dev": "node tasks/transpile.js --watch",
+    "clean": "node tasks/clean.js"
+  },
+  "devDependencies": {
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-es2015": "^6.24.1"
   }
 }

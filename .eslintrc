@@ -1,3 +1,19 @@
 {
-  "extends": "react-app"
+  "parser": "babel-eslint",
+  "extends": [
+    "eslint:recommended",
+    "plugin:jest/recommended",
+    "prettier",
+    "prettier/flowtype",
+    "prettier/standard"
+  ],
+  "plugins": ["import", "jest"],
+  "rules": {
+    "no-console": 0
+  },
+  "env": {
+    "es6": true,
+    "node": true,
+    "browser": true
+  }
 }
