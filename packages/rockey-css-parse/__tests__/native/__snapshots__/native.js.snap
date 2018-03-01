@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`native css few rules 1`] = `
+Array [
+  Object {
+    "classnames": Object {
+      "bar": ".bar-1",
+    },
+    "css": ".bar-1{color:yellow;}",
+  },
+  Object {
+    "classnames": Object {
+      "foo": ".foo-2",
+    },
+    "css": ".foo-2{color:orange;}",
+  },
+]
+`;
+
+exports[`native css simple 1`] = `
+Array [
+  Object {
+    "classnames": Object {
+      "bar": ".bar-1",
+    },
+    "css": ".bar-1{color:yellow;}",
+  },
+]
+`;
