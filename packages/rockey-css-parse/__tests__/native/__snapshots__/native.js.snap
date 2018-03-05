@@ -4,15 +4,58 @@ exports[`native css few rules 1`] = `
 Array [
   Object {
     "classnames": Object {
-      "bar": ".bar-1",
+      "bar": "bar",
     },
-    "css": ".bar-1{color:yellow;}",
+    "css": ".bar {color:yellow;}",
   },
   Object {
     "classnames": Object {
-      "foo": ".foo-2",
+      "foo": "foo",
     },
-    "css": ".foo-2{color:orange;}",
+    "css": ".foo {color:orange;}",
+  },
+]
+`;
+
+exports[`native css multiple classes 1`] = `
+Array [
+  Object {
+    "classnames": Object {
+      "bar": "bar-hash",
+      "foo": "foo-hash",
+    },
+    "css": "span.foo-hash.bar-hash {color:red;}",
+  },
+  Object {
+    "classnames": Object {
+      "active": "active-hash",
+      "item": "item-hash",
+    },
+    "css": "div.item-hash.active-hash {color:red;}",
+  },
+]
+`;
+
+exports[`native css not selector 1`] = `
+Array [
+  Object {
+    "classnames": Object {
+      "bar": "bar-hash",
+      "foo": "foo-hash",
+    },
+    "css": ".bar-hash:not(:hover,.foo-hash) {color:yellow;}",
+  },
+]
+`;
+
+exports[`native css simple - updateClassName 1`] = `
+Array [
+  Object {
+    "classnames": Object {
+      "bar": "bar-hash",
+      "foo": "foo-hash",
+    },
+    "css": ".bar-hash .foo-hash {color:yellow;}",
   },
 ]
 `;
@@ -21,9 +64,28 @@ exports[`native css simple 1`] = `
 Array [
   Object {
     "classnames": Object {
-      "bar": ".bar-1",
+      "bar": "bar",
+      "foo": "foo",
     },
-    "css": ".bar-1{color:yellow;}",
+    "css": ".bar .foo {color:yellow;}",
+  },
+]
+`;
+
+exports[`native css tag and classname 1`] = `
+Array [
+  Object {
+    "classnames": Object {
+      "bar": "bar-hash",
+      "foo": "foo-hash",
+    },
+    "css": "span.foo-hash,div.bar-hash:not(div:hover) {color:yellow;}",
+  },
+  Object {
+    "classnames": Object {
+      "active": "active-hash",
+    },
+    "css": "span.active-hash {display:flex;}",
   },
 ]
 `;

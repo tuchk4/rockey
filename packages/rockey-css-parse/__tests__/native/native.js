@@ -1,30 +1,36 @@
 import create from '../../native';
-import { SELECTOR_TYPES } from '../../native/NativeContext';
-
-let id = 0;
-
-function resetId() {
-  id = 0;
-}
-
-const parse = create({
-  updateSelector: (selector, type) => {
-    switch (type) {
-      case SELECTOR_TYPES.CLASS:
-      case SELECTOR_TYPES.ID:
-        return `${selector}-${++id}`;
-      default:
-        return selector;
-    }
-  },
-});
 
 describe('native css', () => {
-  beforeEach(() => resetId());
-
   test('simple', () => {
+    const parse = create();
     const context = parse(`
-.bar { 
+.bar   .foo {
+  color: yellow;
+}`);
+
+    expect(context.export()).toMatchSnapshot();
+  });
+
+  test('simple - updateClassName', () => {
+    const parse = create({
+      updateClassName: classname => `${classname}-hash`,
+    });
+
+    const context = parse(`
+.bar   .foo {
+  color: yellow;
+}`);
+
+    expect(context.export()).toMatchSnapshot();
+  });
+
+  test('not selector', () => {
+    const parse = create({
+      updateClassName: classname => `${classname}-hash`,
+    });
+
+    const context = parse(`
+.bar:not(:hover, .foo) { 
   color: yellow;
 }`);
 
@@ -32,14 +38,52 @@ describe('native css', () => {
   });
 
   test('few rules', () => {
+    const parse = create();
+
     const context = parse(`
-.bar { 
+.bar {
   color: yellow;
 }
 
 .foo {
-  color: orange; 
+  color: orange;
 }`);
+
+    expect(context.export()).toMatchSnapshot();
+  });
+
+  test('tag and classname', () => {
+    const parse = create({
+      updateClassName: classname => `${classname}-hash`,
+    });
+
+    const context = parse(`
+span.foo, div.bar:not(div:hover) {
+  color: yellow;
+}
+
+span.active {
+  display: flex;
+}
+`);
+
+    expect(context.export()).toMatchSnapshot();
+  });
+
+  test('multiple classes', () => {
+    const parse = create({
+      updateClassName: classname => `${classname}-hash`,
+    });
+
+    const context = parse(`
+span.foo.bar {
+  color: red;
+}
+
+div.item.active {
+  color: red;
+}
+`);
 
     expect(context.export()).toMatchSnapshot();
   });
