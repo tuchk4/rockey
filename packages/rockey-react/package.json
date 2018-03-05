@@ -1,12 +1,15 @@
 {
   "name": "rockey-react",
   "version": "0.0.15-1",
-  "description":
-    "Stressless CSS for components using JS. Write Component Based CSS with functional mixins.",
+  "description": "Stressless CSS for components using JS. Write Component Based CSS with functional mixins.",
   "main": "index.js",
-  "keywords": ["react", "css", "css-in-js", "rockey"],
-  "author":
-    "Valerii Sorokobatko <valeriy.sorokobatko@gmail.com> (https://github.com/tuchk4)",
+  "keywords": [
+    "react",
+    "css",
+    "css-in-js",
+    "rockey"
+  ],
+  "author": "Valerii Sorokobatko <valeriy.sorokobatko@gmail.com> (https://github.com/tuchk4)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tuchk4/rockey/issues"
@@ -33,6 +36,7 @@
     "react-dom": "^15.5.4"
   },
   "dependencies": {
+    "babel-preset-react-app": "^3.1.1",
     "classnames": "^2.2.5",
     "is-react-prop": "^0.1.2",
     "lodash": "^4.17.4",

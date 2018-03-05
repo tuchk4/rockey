@@ -3,13 +3,9 @@
   "version": "0.0.1",
   "description": "Chain / Chainable configuration",
   "main": "index.js",
-  "keywords": [
-    "react",
-    "css",
-    "css-in-js",
-    "rockey"
-  ],
-  "author": "Valerii Sorokobatko <valeriy.sorokobatko@gmail.com> (https://github.com/tuchk4)",
+  "keywords": ["react", "css", "css-in-js", "rockey"],
+  "author":
+    "Valerii Sorokobatko <valeriy.sorokobatko@gmail.com> (https://github.com/tuchk4)",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/tuchk4/rockey/issues"
