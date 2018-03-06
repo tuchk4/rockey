@@ -30,17 +30,9 @@ function valueEnd(context) {
   context.addValue(context.buffer);
 }
 
-export default function mediaBlock({ schema, blocks }) {
+export default function ruleBlock({ schema, blocks }) {
   schema.block(
-    RULE_BLOCK,
-    {
-      onEnter: ruleStart,
-      onLeave: ruleEnd,
-    },
-
-    block(blocks.SELECTORS_BLOCK),
-    step('{', declarationStart),
-
+    'DEFINITIONS',
     rule.repeat.maybe(
       branch(
         block(blocks.COMMENTS_BLOCK),
@@ -58,6 +50,20 @@ export default function mediaBlock({ schema, blocks }) {
         )
       )
     ),
+    block.out()
+  );
+
+  schema.block(
+    RULE_BLOCK,
+    {
+      onEnter: ruleStart,
+      onLeave: ruleEnd,
+    },
+
+    block(blocks.SELECTORS_BLOCK),
+    step('{', declarationStart),
+
+    block('DEFINITIONS'),
 
     step('}', declarationEnd),
     block.out()
