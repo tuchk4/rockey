@@ -2,7 +2,12 @@ import { rule, block, step, branch } from 'rockster/schema';
 import { clearContext, AZ_MARKER } from './utils';
 
 const RULE_BLOCK = 'RULE_BLOCK';
-export const NAME = RULE_BLOCK;
+const DEFINITION_BLOCK = 'DEFINITION_BLOCKS';
+
+export const blocks = {
+  RULE_BLOCK,
+  DEFINITION_BLOCK,
+};
 
 function ruleStart(context) {
   context.ruleStart();
@@ -32,7 +37,7 @@ function valueEnd(context) {
 
 export default function ruleBlock({ schema, blocks }) {
   schema.block(
-    'DEFINITIONS',
+    DEFINITION_BLOCK,
     rule.repeat.maybe(
       branch(
         block(blocks.COMMENTS_BLOCK),
@@ -63,7 +68,7 @@ export default function ruleBlock({ schema, blocks }) {
     block(blocks.SELECTORS_BLOCK),
     step('{', declarationStart),
 
-    block('DEFINITIONS'),
+    block(DEFINITION_BLOCK),
 
     step('}', declarationEnd),
     block.out()

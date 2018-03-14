@@ -1,20 +1,22 @@
 import { rule, branch, block, Schema } from 'rockster/schema';
 
-import registerSelectors, { NAME as SELECTORS_BLOCK } from './blocks/selectors';
-import registerMedia, { NAME as MEDIA_BLOCK } from './blocks/media';
-import registerComments, { NAME as COMMENTS_BLOCK } from './blocks/comments';
-import registerImport, { NAME as IMPORT_BLOCK } from './blocks/import';
-import registerCSSRule, { NAME as CSS_RULE_BLOCK } from './blocks/rule';
+import registerSelectors, {
+  blocks as SELECTORS_BLOCKS,
+} from './blocks/selectors';
+import registerMedia, { blocks as MEDIA_BLOCKS } from './blocks/media';
+import registerComments, { blocks as COMMENTS_BLOCKS } from './blocks/comments';
+import registerImport, { blocks as IMPORT_BLOCKS } from './blocks/import';
+import registerCSSRule, { blocks as CSS_RULE_BLOCKS } from './blocks/rule';
 
 export default function factory() {
   const schema = new Schema();
 
   const blocks = {
-    SELECTORS_BLOCK,
-    MEDIA_BLOCK,
-    IMPORT_BLOCK,
-    COMMENTS_BLOCK,
-    CSS_RULE_BLOCK,
+    ...SELECTORS_BLOCKS,
+    ...MEDIA_BLOCKS,
+    ...IMPORT_BLOCKS,
+    ...COMMENTS_BLOCKS,
+    ...CSS_RULE_BLOCKS,
   };
 
   registerSelectors({

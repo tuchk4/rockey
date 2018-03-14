@@ -1,7 +1,10 @@
 import { step, block } from 'rockster/schema';
 
 const IMPORT_BLOCK = 'IMPORT_BLOCK';
-export const NAME = IMPORT_BLOCK;
+
+export const blocks = {
+  IMPORT_BLOCK,
+};
 
 function addImport(context) {
   context.addImport(context.buffer);

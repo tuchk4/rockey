@@ -2,7 +2,10 @@ import { rule, block, step } from 'rockster/schema';
 import { clearContext } from './utils';
 
 const MEDIA_BLOCK = 'MEDIA_BLOCK';
-export const NAME = MEDIA_BLOCK;
+
+export const blocks = {
+  MEDIA_BLOCK,
+};
 
 function mediaStart(context) {
   context.mediaStart(context.buffer);

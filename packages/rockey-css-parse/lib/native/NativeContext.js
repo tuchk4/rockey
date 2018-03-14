@@ -1,7 +1,7 @@
 import Context from 'rockster/Context';
 import { selector } from '../schema/index';
 
-export const SELECTOR_TYPES = {
+export const SELECTORS = {
   CLASS: 0,
   ID: 1,
   PSEUDO: 2,
@@ -97,48 +97,11 @@ export default class CSSContext extends Context {
   startNotSelector() {
     this.appendCSS(':not(');
     this.selectorSeparator = SELECTOR_SEPARATORS.NONE;
-    // this.openedNotSelectors++;
-    // this.nestedSelectorType = NESTED_SELECTORS.NOT_SELECTOR;
   }
 
   endNotSelector() {
-    // this.openedNotSelectors--;
     this.appendCSS(')');
     this.selectorSeparator = SELECTOR_SEPARATORS.NONE;
-    // this.nestedSelectorType = NESTED_SELECTORS.NONE;
-  }
-
-  startSelectors() {
-    // this.selectorsBackups.push({
-    //   selectors: this.selectors,
-    //   selectorSeparator: this.selectorSeparator,
-    //   nestedSelectorType: this.nestedSelectorType,
-    // });
-    // this.selectorSeparator = SELECTOR_SEPARATORS.NONE;
-    // this.selectors = '';
-  }
-
-  endSelectors() {
-    // const selectors = this.selectors;
-    // if (this.selectorsBackups.length) {
-    //   const memo = this.selectorsBackups.pop();
-    //   this.selectorSeparator = memo.selectorSeparator;
-    //   this.selectors = memo.selectors;
-    //   this.nestedSelectorType = memo.nestedSelectorType;
-    // } else {
-    //   this.selectors = '';
-    //   xx;
-    // }
-    // console.log(selectors);
-    // switch (this.nestedSelectorType) {
-    //   case NESTED_SELECTORS.NONE:
-    //     this.selectors = `${this.selectors}${selectors}`;
-    //     break;
-    //   case NESTED_SELECTORS.NOT_SELECTOR:
-    //     this.selectors = `${this.selectors}:not(${selectors})`;
-    //     break;
-    // }
-    // console.log(this.selectors);
   }
 
   addSelector(raw) {

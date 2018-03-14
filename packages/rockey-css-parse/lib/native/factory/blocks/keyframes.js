@@ -2,7 +2,10 @@ import { rule, block, branch, step } from 'rockster/schema';
 import { clearContext, AZ_MARKER } from './utils';
 
 const KEYFRAMES_BLOCK = 'KEYFRAMES_BLOCK';
-export const NAME = KEYFRAMES_BLOCK;
+
+export const blocks = {
+  KEYFRAMES_BLOCK,
+};
 
 function keyframesStart(context) {
   //   context.mediaStart(context.buffer);

@@ -1,18 +1,11 @@
 import { rule, label, block, link, branch, step } from 'rockster/schema';
-import { clearContext } from './utils';
+import { clearContext, belongsAlphabetical, AZ_MARKER } from './utils';
 import { PREFIX_TYPES } from '../../Context';
 
 const SELECTOR_BLOCK = 'SELECTOR_BLOCK';
-export const NAME = SELECTOR_BLOCK;
 
-const belongsAlphabetical = char => {
-  const code = char.charCodeAt(0);
-  return (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
-};
-
-const AZ_MARKER = char => {
-  const code = char.charCodeAt(0);
-  return (code >= 65 && code <= 90) || (code >= 97 && code <= 122);
+export const blocks = {
+  SELECTOR_BLOCK,
 };
 
 const SELECTOR_REGEXP = /^([a-z|.|:|#])[a-z|0-9]+(-[a-z|0-9]+)?$/;
@@ -30,64 +23,13 @@ export const selector = (marker, onEnter, onLeave) =>
     },
   });
 
-// function startSelector({ type }) {
-//   return function(context, value) {
-//     context.addSelector({ type, selector: value });
-//   };
-// }
-
-// function endSelector(context) {
-//   context.endSelector();
-// }
-
-// const startTag = startSelector({
-//   type: 'TAG',
-// });
-
-// const startClass = startSelector({
-//   type: 'CLASS',
-// });
-
-// const startPseudo = startSelector({
-//   type: 'PSEUDO',
-// });
-
-// const startNot = startSelector({
-//   type: 'NOT',
-// });
-
-// function separatorSpace(context) {
-//   context.separator = ' ';
-// }
-
-// function separatorComa(context) {
-//   context.separator = ',';
-// }
-
 const SELECTOR_START = 'SELECTOR_START';
 const SELECTOR_END = 'SELECTOR_END';
-
-// const PREFIX_TYPES = {
-//   SPACE: 1,
-//   DOT: 2,
-//   HASH: 3,
-//   COLUMN: 4,
-//   NOT: 5,
-// };
 
 const PSEUDO_SELECTORS = ['hover', 'active'];
 
 function validateSelector(context, throwSyntaxError) {
   switch (context.prefix) {
-    // case PREFIX_TYPES.DOT:
-    // case PREFIX_TYPES.HASH:
-    //   if (!SELECTOR_REGEXP.test(context.buffer.trim())) {
-    //     throwSyntaxError(
-    //       `CSS Selector should conatin only "a-z" and "-" symbols. "${context.buffer.trim()}"`
-    //     );
-    //   }
-    // break;
-
     case PREFIX_TYPES.COLUMN:
       if (PSEUDO_SELECTORS.indexOf(context.buffer.trim()) === -1) {
         throwSyntaxError(
@@ -104,12 +46,6 @@ function validateSelector(context, throwSyntaxError) {
       }
   }
 }
-
-// function validatePseudoSelector(context, throwSyntaxError) {
-//   if (PSEUDO_SELECTORS.indexOf(context.buffer.trim()) === -1) {
-//     throwSyntaxError(`Not valid pseudo selector"${context.buffer.trim()}"`);
-//   }
-// }
 
 function addPrefix(prefix, symbol) {
   return function addSelectorPrefix(context) {
