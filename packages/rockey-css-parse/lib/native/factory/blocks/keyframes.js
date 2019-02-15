@@ -18,22 +18,20 @@ function keyframesEnd(context) {
 export default function keyframesBlock({ schema, blocks }) {
   schema.block(
     KEYFRAMES_BLOCK,
-    {
-      // onEnter: mediaStart,
-      // onLeave: mediaEnd,
-    },
-    step('@keyframes', clearContext, keyframesStart),
-    step(AZ_MARKER, {}),
+    // {
+    // onEnter: mediaStart,
+    // onLeave: mediaEnd,
+    // },
+    step('@keyframes'),
+    step(AZ_MARKER),
     step('{', clearContext),
     //---
     step(AZ_MARKER),
     step('{'),
-    block('DEFINITIONS'),
+    block(blocks.DEFINITION_BLOCK),
     step('}'),
     //---
-    step('}', {
-      endAction: keyframesEnd,
-    }),
+    step('}'),
     block.out()
   );
 }

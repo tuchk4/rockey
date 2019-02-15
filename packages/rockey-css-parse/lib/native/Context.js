@@ -21,6 +21,10 @@ export default class Context {
     this.updateClassName = updateClassName;
   }
 
+  trim() {
+    this.buffer = this.buffer.trim();
+  }
+
   append(char) {
     this.buffer += char;
   }

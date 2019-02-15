@@ -1,11 +1,11 @@
 import { rule, block, step, branch } from 'rockster/schema';
 import { clearContext, AZ_MARKER } from './utils';
 
-const RULE_BLOCK = 'RULE_BLOCK';
+const CSS_RULE_BLOCK = 'CSS_RULE_BLOCK';
 const DEFINITION_BLOCK = 'DEFINITION_BLOCKS';
 
 export const blocks = {
-  RULE_BLOCK,
+  CSS_RULE_BLOCK,
   DEFINITION_BLOCK,
 };
 
@@ -59,7 +59,7 @@ export default function ruleBlock({ schema, blocks }) {
   );
 
   schema.block(
-    RULE_BLOCK,
+    CSS_RULE_BLOCK,
     {
       onEnter: ruleStart,
       onLeave: ruleEnd,

@@ -87,4 +87,28 @@ div.item.active {
 
     expect(context.export()).toMatchSnapshot();
   });
+
+  test('keyframes', () => {
+    const parse = create({
+      updateClassName: classname => `${classname}-hash`,
+    });
+
+    const context = parse(`
+@keyframes slidein {
+  from {
+    margin-left: 100%;
+    width: 300%; 
+  }
+
+  to {
+    margin-left: 0%;
+    width: 100%;
+  }
+}
+`);
+
+    console.log(context.export());
+
+    // expect(context.export()).toMatchSnapshot();
+  });
 });

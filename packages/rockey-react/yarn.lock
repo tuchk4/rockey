@@ -595,12 +595,6 @@ create-react-class@^15.6.0:
     loose-envify "^1.3.1"
     object-assign "^4.1.1"
 
-css-vendor@^0.3.8:
-  version "0.3.8"
-  resolved "https://registry.yarnpkg.com/css-vendor/-/css-vendor-0.3.8.tgz#6421cfd3034ce664fe7673972fd0119fc28941fa"
-  dependencies:
-    is-in-browser "^1.0.2"
-
 debug@^2.6.8:
   version "2.6.9"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.6.9.tgz#5d128515df134ff327e90a4c93f4e077a536341f"
@@ -660,10 +654,6 @@ invariant@^2.2.2:
   resolved "https://registry.yarnpkg.com/invariant/-/invariant-2.2.3.tgz#1a827dfde7dcbd7c323f0ca826be8fa7c5e9d688"
   dependencies:
     loose-envify "^1.0.0"
-
-is-in-browser@^1.0.2:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/is-in-browser/-/is-in-browser-1.1.3.tgz#56ff4db683a078c6082eb95dad7dc62e1d04f835"
 
 is-react-prop@^0.1.2:
   version "0.1.3"
@@ -792,21 +782,6 @@ regjsparser@^0.1.4:
   resolved "https://registry.yarnpkg.com/regjsparser/-/regjsparser-0.1.5.tgz#7ee8f84dc6fa792d3fd0ae228d24bd949ead205c"
   dependencies:
     jsesc "~0.5.0"
-
-rockey-css-parse@^0.0.15-1-alpha.8d0e3505:
-  version "0.0.15-1-alpha.8d0e3505"
-  resolved "https://registry.yarnpkg.com/rockey-css-parse/-/rockey-css-parse-0.0.15-1-alpha.8d0e3505.tgz#d34b243342cbe5ef9c9a01324c99592267046b7a"
-  dependencies:
-    lodash "^4.17.4"
-
-rockey@^0.0.15-1:
-  version "0.0.15-1-alpha.8d0e3505"
-  resolved "https://registry.yarnpkg.com/rockey/-/rockey-0.0.15-1-alpha.8d0e3505.tgz#5362cfc9dfaae6b0c396d4a5a03d89034c4fa491"
-  dependencies:
-    classnames "^2.2.5"
-    css-vendor "^0.3.8"
-    lodash "^4.17.4"
-    rockey-css-parse "^0.0.15-1-alpha.8d0e3505"
 
 semver@^5.3.0:
   version "5.5.0"

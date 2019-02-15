@@ -2,10 +2,10 @@ import { rule, label, block, link, branch, step } from 'rockster/schema';
 import { clearContext, belongsAlphabetical, AZ_MARKER } from './utils';
 import { PREFIX_TYPES } from '../../Context';
 
-const SELECTOR_BLOCK = 'SELECTOR_BLOCK';
+const SELECTORS_BLOCK = 'SELECTORS_BLOCK';
 
 export const blocks = {
-  SELECTOR_BLOCK,
+  SELECTORS_BLOCK,
 };
 
 const SELECTOR_REGEXP = /^([a-z|.|:|#])[a-z|0-9]+(-[a-z|0-9]+)?$/;
@@ -74,7 +74,7 @@ function notSelectorEnd(context) {
 export default function selectorsBlock({ schema }) {
   // prettier-ignore
   schema.block(
-    SELECTOR_BLOCK,
+    SELECTORS_BLOCK,
     label(SELECTOR_START),
     rule.repeat(
       branch.maybe(
@@ -85,7 +85,7 @@ export default function selectorsBlock({ schema }) {
         }),
         rule(
           step(':not(', notSelectorStart),
-          block(SELECTOR_BLOCK),
+          block(SELECTORS_BLOCK),
           step(')', notSelectorEnd),
           link(SELECTOR_END)
         )
@@ -94,7 +94,9 @@ export default function selectorsBlock({ schema }) {
         // onEnter: context => {
         //   console.log(context.buffer)
         // },
-        beforeEnter: clearContext,
+        beforeEnter: (context) => {
+          context.trim();
+        },
         onLeave: addSelector,
         belongs: belongsAlphabetical,
         validate: validateSelector,
